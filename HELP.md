@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name '.all claer' is invalid and this project uses 'all.claer' instead.
+* The original package name '.all clear' is invalid and this project uses 'all.clear' instead.
 
 # Getting Started
 

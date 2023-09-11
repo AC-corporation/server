@@ -1,10 +1,10 @@
-package all.claer;
+package all.clear;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AllClaerApplicationTests {
+class AllClearApplicationTests {
 
 	@Test
 	void contextLoads() {
