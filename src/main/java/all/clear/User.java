@@ -1,9 +1,6 @@
 package all.clear;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Time;
 import java.util.List;
@@ -40,11 +37,17 @@ public class User {
     @Column(name = "SEMESTER")
     private int semester; //학기
 
+    @OneToOne
+    @JoinColumn(name = "REQ_ID") // REQ 엔티티에 user 필드 추가 필요
     @Column(name = "REQUIREMENT")
     private Requirement requirement;
+
+    @OneToOne
+    @JoinColumn(name = "GRADE_ID") // Grade 엔티티에 user 필드 추가 필요
     @Column(name = "GRADE")
     private Grade grade;
 
+    @OneToMany(mappedBy = "user") // 타임테이블 엔티티에 user FK 외래 키 추가 필요
     @Column(name = "TIMETABLE_LIST")
     private List<TimeTable> timeTable;
 

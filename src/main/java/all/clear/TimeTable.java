@@ -1,9 +1,6 @@
 package all.clear;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import javax.security.auth.Subject;
 import java.util.List;
@@ -22,9 +19,13 @@ public class TimeTable {
     @Column(name = "SEMESTER")
     private int semester; //학기
 
+    @OneToMany(mappedBy = "timeTable") // Subject 엔티티에 timeTable 필드 추가
     @Column(name = "CLASS_LIST")
     private List<Subject> classList;
 
+    @ManyToOne // 추가 연관 관계 매핑
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
 }
 

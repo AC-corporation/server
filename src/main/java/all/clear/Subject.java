@@ -1,9 +1,6 @@
 
 package all.clear;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -12,6 +9,9 @@ public class Subject {
     @Id @GeneratedValue
     @Column(name = "SUBJECT_ID")
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "TIMETABLE_ID") // 추가
+    private TimeTable timeTable;
     @Column(name = "SUBJECT_NAME")
     private String name; //과목 이름
     @Column(name = "PROFESSOR")

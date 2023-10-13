@@ -1,9 +1,6 @@
 package all.clear;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -13,6 +10,10 @@ public class Grade {
     @Column(name = "GRADE_ID")
     private Long id;
 
+    @OneToOne(mappedBy = "grade") // 추가
+    private User user;
+
+    @OneToMany(mappedBy = "grade")
     @Column(name = "GRADE_LIST")
     private List<SemesterGrade> gradeList;
 
@@ -23,7 +24,7 @@ public class Grade {
     private double averageGrade; //평균학점
 
     @Column(name = "AVERAGE_MAJORGRADE")
-    private double averageMajorGrade; //전공 평균학점
+    private double averageMajorGrade; //전공 평균 학점
 }
 
 

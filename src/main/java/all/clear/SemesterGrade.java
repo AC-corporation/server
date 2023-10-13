@@ -1,9 +1,6 @@
 package all.clear;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.extern.java.Log;
 
 import java.util.List;
@@ -13,6 +10,10 @@ public class SemesterGrade {
     @Id @GeneratedValue
     @Column(name = "SEMESTER_ID")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "GRADE_ID") // 추가
+    private Grade grade;
 
     @Column(name = "TOTALCREDIT")
     private Long totalCredit; //이수 학점
