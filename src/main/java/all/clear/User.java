@@ -47,9 +47,12 @@ public class User {
     @Column(name = "GRADE")
     private Grade grade;
 
+
+    /*
     @OneToMany(mappedBy = "user") // 타임테이블 엔티티에 user FK 외래 키 추가 필요
     @Column(name = "TIMETABLE_LIST")
     private List<TimeTable> timeTable;
+    */
 
 }
 
