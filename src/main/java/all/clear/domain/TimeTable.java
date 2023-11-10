@@ -17,7 +17,7 @@ public class TimeTable {
     private int year; //학년
     private int semester; //학기
 
-   @OneToMany(mappedBy = "timetable")
+   @OneToMany(mappedBy = "timeTable")
     @Column(name = "timetable_subject_list")
     private List<TimeTableSubject> timeTableSubjectList;
 
