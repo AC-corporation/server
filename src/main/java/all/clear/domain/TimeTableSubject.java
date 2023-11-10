@@ -1,0 +1,20 @@
+package all.clear.domain;
+
+import jakarta.persistence.*;
+
+@Entity
+public class TimeTableSubject {
+    /**성적 조회, 졸업요건 조회 이후 추후 상의 **/
+    @Id @GeneratedValue
+    @Column(name = "timetable_subject_id")
+    private Long timetableSubjectId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "timetable_id")
+    private TimeTable timeTable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
+}
