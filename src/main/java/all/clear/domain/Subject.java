@@ -14,9 +14,6 @@ public class Subject {
     private String subjectName; //과목 이름
     private String professor;
     private Long credit; //학점
-    /**필드 변경 필요**/
-//    @Column(name = "requirement_list")
-//    private List<String> requirementList; //졸업 요건
 
     @OneToMany(mappedBy = "subject")
     private List<TimeTableSubject> timeTableSubjectList;

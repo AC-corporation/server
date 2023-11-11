@@ -2,6 +2,7 @@ package all.clear.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,11 +29,8 @@ public class SemesterGrade {
     @Column(name = "major_average_grade")
     private double MajorAverageGrade; //전공 평균학점
 
-/**필드 변경 필요**/
-//    @Column(name = "subject_list")
-//    private List<Subject> subjectList; //수강 과목 이름 리스트
-//
-//    @Column(name = "score_list")
-//    private List<Long> scoreList; //수강과목 점수
+    @OneToMany(mappedBy = "semesterGrade")
+    @Column(name = "semester_subject_list")
+    private List<SemesterSubject> semesterSubjectList = new ArrayList<>();
 }
 
