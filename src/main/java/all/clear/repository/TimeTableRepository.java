@@ -18,7 +18,7 @@ public class TimeTableRepository {
     }
 
     public TimeTable findOne(Long id){
-        //timetable_id를 통해 user 찾아 반환
+        //timetable_id를 통해 timetable 찾아 반환
         return em.find(TimeTable.class, id);
     }
 }
