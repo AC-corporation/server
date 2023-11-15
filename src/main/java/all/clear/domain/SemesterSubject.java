@@ -2,9 +2,10 @@ package all.clear.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Getter
+@Getter @Setter
 public class SemesterSubject {
     @Id @GeneratedValue
     @Column(name = "semester_subject_id")

@@ -18,6 +18,18 @@ public class Requirement {
     @OneToMany(mappedBy = "requirement")
     @Column(name = "requirement_component_list")
     private List<RequirementComponent> requirementComponentList;
+
+
+    //==연관관계 메서드==//
+    public void setUser(User user){
+        this.user = user;
+        user.setRequirement(this);
+    }
+
+    public void addRequirementComponent(RequirementComponent requirementComponent){
+        requirementComponentList.add(requirementComponent);
+        requirementComponent.setRequirement(this);
+    }
 }
 
 

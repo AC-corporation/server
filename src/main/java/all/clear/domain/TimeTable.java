@@ -26,6 +26,19 @@ public class TimeTable {
     @ManyToOne(fetch = FetchType.LAZY) // 추가 연관 관계 매핑
     @JoinColumn(name = "user_id")
     private User user;
+
+
+
+    //==연관관계 메서드==//
+    public void setUser(User user){
+        this.user = user;
+        user.getTimeTableList().add(this);
+    }
+
+    public void addTimeTableSubject(TimeTableSubject timeTableSubject){
+        timeTableSubjectList.add(timeTableSubject);
+        timeTableSubject.setTimeTable(this);
+    }
 }
 
 
