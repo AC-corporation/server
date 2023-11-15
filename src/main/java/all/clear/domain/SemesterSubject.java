@@ -1,8 +1,10 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class SemesterSubject {
     @Id @GeneratedValue
     @Column(name = "semester_subject_id")

@@ -1,10 +1,12 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
+@Getter
 public class Grade {
     @Id @GeneratedValue
     @Column(name = "grade_id")

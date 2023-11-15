@@ -1,11 +1,13 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 public class SemesterGrade {
     /**성적 조회, 졸업요건 조회 이후 추후 상의 **/
     @Id @GeneratedValue
