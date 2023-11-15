@@ -12,11 +12,11 @@ public class SemesterGrade {
     @Column(name = "semester_grade_id")
     private Long semesterGradeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id") // 추가
     private Grade grade;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
 

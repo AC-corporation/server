@@ -8,7 +8,7 @@ public class RequirementComponent {
     @Column(name = "requirement_component_id")
     private Long requirementComponentId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 

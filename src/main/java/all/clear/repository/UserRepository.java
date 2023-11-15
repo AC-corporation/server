@@ -2,13 +2,14 @@ package all.clear.repository;
 
 import all.clear.domain.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
-
+    @PersistenceContext
     private final EntityManager em;
 
     public void save(User user){

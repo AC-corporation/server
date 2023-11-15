@@ -8,6 +8,4 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-
 }

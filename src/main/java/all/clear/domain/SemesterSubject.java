@@ -14,7 +14,7 @@ public class SemesterSubject {
     @Column(name = "semester_subject_score")
     private Double semesterSubjectScore;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semester_grade_id")
     private SemesterGrade semesterGrade;
 }
