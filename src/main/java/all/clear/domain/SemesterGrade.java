@@ -23,14 +23,14 @@ public class SemesterGrade {
     @JoinColumn(name="user_id")
     private User user;
 
-    @Column(name = "total_credit")
-    private Long totalCredit; //이수 학점
+//    @Column(name = "total_credit")
+//    private Long totalCredit; //이수 학점
 
     @Column(name = "average_grade")
     private double averageGrade; //평균학점
 
-    @Column(name = "major_average_grade")
-    private double MajorAverageGrade; //전공 평균학점
+//    @Column(name = "major_average_grade")
+//    private double MajorAverageGrade; //전공 평균학점
 
     @OneToMany(mappedBy = "semesterGrade")
     @Column(name = "semester_subject_list")
