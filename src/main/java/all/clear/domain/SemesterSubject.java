@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
 public class SemesterSubject {
     @Id @GeneratedValue
     @Column(name = "semester_subject_id")
@@ -15,9 +15,18 @@ public class SemesterSubject {
     private String semesterSubjectName;
 
     @Column(name = "semester_subject_score")
-    private Double semesterSubjectScore;
+    private double semesterSubjectScore;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semester_grade_id")
     private SemesterGrade semesterGrade;
+
+
+    //==생성 메서드==//
+    public static SemesterSubject createSemesterSubject(String semesterSubjectName, double semesterSubjectScore) {
+        SemesterSubject semesterSubject = new SemesterSubject();
+        semesterSubject.semesterSubjectName = semesterSubjectName;
+        semesterSubject.semesterSubjectScore = semesterSubjectScore;
+        return semesterSubject;
+    }
 }
