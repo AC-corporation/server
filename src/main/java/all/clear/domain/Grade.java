@@ -25,8 +25,8 @@ public class Grade {
     @Column(name = "average_grade")
     private double averageGrade; //평균학점
 
-    @Column(name = "major_average_grade")
-    private double MajorAverageGrade; //전공 평균 학점
+//    @Column(name = "major_average_grade")
+//    private double MajorAverageGrade; //전공 평균 학점
 
 
     //==연관관계 메서드==//
