@@ -1,10 +1,12 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
+@Getter
 public class Grade {
     @Id @GeneratedValue
     @Column(name = "grade_id")
@@ -25,6 +27,18 @@ public class Grade {
 
     @Column(name = "major_average_grade")
     private double MajorAverageGrade; //전공 평균 학점
+
+
+    //==연관관계 메서드==//
+    public void setUser(User user){
+        this.user = user;
+        user.setGrade(this);
+    }
+
+    public void addSemesterGrade(SemesterGrade semesterGrade){
+        semesterGradeList.add(semesterGrade);
+        semesterGrade.setGrade(this);
+    }
 }
 
 
