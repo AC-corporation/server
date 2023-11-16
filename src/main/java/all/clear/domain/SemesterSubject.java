@@ -1,8 +1,11 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 public class SemesterSubject {
     @Id @GeneratedValue
     @Column(name = "semester_subject_id")
@@ -14,7 +17,7 @@ public class SemesterSubject {
     @Column(name = "semester_subject_score")
     private Double semesterSubjectScore;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semester_grade_id")
     private SemesterGrade semesterGrade;
 }

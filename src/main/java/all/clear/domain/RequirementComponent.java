@@ -1,14 +1,17 @@
 package all.clear.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter @Setter
 public class RequirementComponent {
     @Id @GeneratedValue
     @Column(name = "requirement_component_id")
     private Long requirementComponentId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 
