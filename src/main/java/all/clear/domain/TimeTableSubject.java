@@ -20,4 +20,18 @@ public class TimeTableSubject {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
+
+    //==생성 메서드==//
+    public static TimeTableSubject createTimeTableSubject(Subject subject){
+        TimeTableSubject timeTableSubject = new TimeTableSubject();
+        timeTableSubject.setSubject(subject);
+        return timeTableSubject;
+    }
+
+    //==삭제 메서드==//
+    public void remove(){
+        /**로직 구성 필요**/
+    }
+
+
 }
