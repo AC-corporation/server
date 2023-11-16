@@ -17,7 +17,7 @@ public class Requirement {
 
     @OneToMany(mappedBy = "requirement")
     @Column(name = "requirement_component_list")
-    private List<RequirementComponent> requirementComponentList;
+    private List<RequirementComponent> requirementComponentList = new ArrayList<>();
 
 
     //==연관관계 메서드==//

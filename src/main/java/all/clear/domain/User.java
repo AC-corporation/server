@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -40,7 +41,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @Column(name = "timetable_list")
-    private List<TimeTable> timeTableList;
+    private List<TimeTable> timeTableList = new ArrayList<>();
 
 }
 

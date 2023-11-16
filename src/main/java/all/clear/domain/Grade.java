@@ -3,6 +3,7 @@ package all.clear.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Grade {
 
     @OneToMany(mappedBy = "grade")
     @Column(name = "semester_grade_list")
-    private List<SemesterGrade> semesterGradeList;
+    private List<SemesterGrade> semesterGradeList = new ArrayList<>();
 
     @Column(name = "total_credit")
     private Long totalCredit; //총 이수 학점
