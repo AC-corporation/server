@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.security.auth.Subject;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +22,7 @@ public class TimeTable {
 
    @OneToMany(mappedBy = "timeTable")
     @Column(name = "timetable_subject_list")
-    private List<TimeTableSubject> timeTableSubjectList;
+    private List<TimeTableSubject> timeTableSubjectList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY) // 추가 연관 관계 매핑
     @JoinColumn(name = "user_id")

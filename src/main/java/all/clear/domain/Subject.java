@@ -3,6 +3,7 @@ package all.clear.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +19,7 @@ public class Subject {
     private Long credit; //학점
 
     @OneToMany(mappedBy = "subject")
-    private List<TimeTableSubject> timeTableSubjectList;
+    private List<TimeTableSubject> timeTableSubjectList = new ArrayList<>();
 }
 
 
