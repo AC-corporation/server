@@ -26,6 +26,7 @@ public class Grade {
 //    @Column(name = "major_average_grade")
 //    private double MajorAverageGrade; //전공 평균 학점
 
+    //==초기화 메서드==//
     public void setTotalCredit(Long totalCredit) {
         this.totalCredit = totalCredit;
     }

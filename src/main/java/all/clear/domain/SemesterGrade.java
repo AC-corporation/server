@@ -29,7 +29,7 @@ public class SemesterGrade {
     @Column(name = "semester_subject_list")
     private List<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
-
+    //==초기화 메서드==//
     public void setGrade(Grade grade) {
         this.grade = grade;
     }
