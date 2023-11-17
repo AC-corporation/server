@@ -15,7 +15,7 @@ public class SemesterSubject {
     private String semesterSubjectName;
 
     @Column(name = "semester_subject_score")
-    private double semesterSubjectScore;
+    private String semesterSubjectScore;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "semester_grade_id")
@@ -27,7 +27,7 @@ public class SemesterSubject {
     }
 
     //==생성 메서드==//
-    public static SemesterSubject createSemesterSubject(String semesterSubjectName, double semesterSubjectScore) {
+    public static SemesterSubject createSemesterSubject(String semesterSubjectName, String semesterSubjectScore) {
         SemesterSubject semesterSubject = new SemesterSubject();
         semesterSubject.semesterSubjectName = semesterSubjectName;
         semesterSubject.semesterSubjectScore = semesterSubjectScore;
