@@ -26,4 +26,7 @@ public class RequirementComponent {
     @Column(name = "requirement_complete")
     private Double requirementComplete; //계산값
 
+    @Column(name = "requirement_result")
+    private String requirementResult; //중족여부
+
 }

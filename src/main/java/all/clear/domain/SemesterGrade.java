@@ -19,16 +19,17 @@ public class SemesterGrade {
     @JoinColumn(name = "grade_id") // 추가
     private Grade grade;
 
-//    @Column(name = "total_credit")
-//    private Long totalCredit; //이수 학점
-
-//    @Column(name = "major_average_grade")
-//    private double MajorAverageGrade; //전공 평균학점
+    @JoinColumn(name = "semester_average_grade")
+    private String semesterAverageGrade;
 
     @OneToMany(mappedBy = "semesterGrade")
     @Column(name = "semester_subject_list")
     private List<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
+    //==초기화 메서드==//
+    public void setSemesterAverageGrade(String semesterAverageGrade) {
+        this.semesterAverageGrade = semesterAverageGrade;
+    }
 
     public void setGrade(Grade grade) {
         this.grade = grade;
@@ -41,23 +42,15 @@ public class SemesterGrade {
     }
 
     //==생성 메서드==//
-    public static SemesterGrade createSemesterGrade(Grade grade, SemesterSubject... semesterSubjects){
+    public static SemesterGrade createSemesterGrade(Grade grade, String semesterAverageGrade, SemesterSubject... semesterSubjects){
         SemesterGrade semesterGrade = new SemesterGrade();
         semesterGrade.setGrade(grade);
+        semesterGrade.setSemesterAverageGrade(semesterAverageGrade);
         for (SemesterSubject semesterSubject : semesterSubjects) {
+            semesterSubject.setSemesterGrade(semesterGrade);
             semesterGrade.addSemesterSubject(semesterSubject);
         }
         return semesterGrade;
-    }
-
-    //==조회 로직==//
-    public double getAverageGrade() {
-        double averageGrade = 0;
-        for (SemesterSubject subject : semesterSubjectList) {
-            averageGrade += subject.getSemesterSubjectScore();
-        }
-        averageGrade /= semesterSubjectList.stream().count();
-        return averageGrade;
     }
 }
 

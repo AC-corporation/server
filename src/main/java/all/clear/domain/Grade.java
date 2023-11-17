@@ -23,11 +23,16 @@ public class Grade {
     @Column(name = "total_credit")
     private Long totalCredit; //총 이수 학점
 
-//    @Column(name = "major_average_grade")
-//    private double MajorAverageGrade; //전공 평균 학점
+    @Column(name = "average_grade")
+    private String averageGrade;
 
+    //==초기화 메서드==//
     public void setTotalCredit(Long totalCredit) {
         this.totalCredit = totalCredit;
+    }
+
+    public void setAverageGrade(String averageGrade) {
+        this.averageGrade = averageGrade;
     }
 
     //==연관관계 메서드==//
@@ -39,16 +44,6 @@ public class Grade {
     public void addSemesterGrade(SemesterGrade semesterGrade){
         semesterGradeList.add(semesterGrade);
         semesterGrade.setGrade(this);
-    }
-
-    //==조회 로직==//
-    public double getAverageGrade(){
-        double averageGrade = 0;
-        for (SemesterGrade semesterGrade : semesterGradeList) {
-            averageGrade += semesterGrade.getAverageGrade();
-        }
-        averageGrade /= semesterGradeList.stream().count();
-        return averageGrade;
     }
 }
 
