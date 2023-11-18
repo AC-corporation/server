@@ -1,5 +1,6 @@
 package all.clear.domain;
 
+import all.clear.domain.subject.Subject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,11 +28,4 @@ public class TimeTableSubject {
         timeTableSubject.setSubject(subject);
         return timeTableSubject;
     }
-
-    //==삭제 메서드==//
-    public void remove(){
-        /**로직 구성 필요**/
-    }
-
-
 }

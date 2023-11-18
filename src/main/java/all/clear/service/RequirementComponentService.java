@@ -1,6 +1,6 @@
 package all.clear.service;
 
-import all.clear.domain.RequirementComponent;
+import all.clear.domain.requirement.RequirementComponent;
 import all.clear.repository.RequirementComponentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

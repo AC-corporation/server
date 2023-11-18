@@ -1,6 +1,6 @@
 package all.clear.repository;
 
-import all.clear.domain.Subject;
+import all.clear.domain.subject.Subject;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package all.clear.service;
 
-import all.clear.domain.SemesterGrade;
+import all.clear.domain.grade.SemesterGrade;
 import all.clear.repository.SemesterGradeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,5 +1,6 @@
-package all.clear.domain;
+package all.clear.domain.grade;
 
+import all.clear.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 

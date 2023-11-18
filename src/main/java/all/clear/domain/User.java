@@ -1,5 +1,7 @@
 package all.clear.domain;
 
+import all.clear.domain.grade.Grade;
+import all.clear.domain.requirement.Requirement;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

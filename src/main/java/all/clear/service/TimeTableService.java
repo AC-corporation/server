@@ -1,6 +1,6 @@
 package all.clear.service;
 
-import all.clear.domain.Subject;
+import all.clear.domain.subject.Subject;
 import all.clear.domain.TimeTable;
 import all.clear.domain.TimeTableSubject;
 import all.clear.domain.User;
@@ -35,10 +35,10 @@ public class TimeTableService {
     }
 
     //==삭제 메서드==//
-    @Transactional
-    public void removeTimeTable(Long timeTableId){
-        TimeTable timeTable = timeTableRepository.findOne(timeTableId);
-        timeTable.remove();
-    }
+//    @Transactional
+//    public void removeTimeTable(Long timeTableId){
+//        TimeTable timeTable = timeTableRepository.findOne(timeTableId);
+//        // timeTable.remove();
+//    }
 
 }

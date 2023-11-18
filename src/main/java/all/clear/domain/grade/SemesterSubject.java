@@ -1,8 +1,7 @@
-package all.clear.domain;
+package all.clear.domain.grade;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter

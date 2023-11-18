@@ -1,6 +1,6 @@
 package all.clear.service;
 
-import all.clear.domain.Subject;
+import all.clear.domain.subject.Subject;
 import all.clear.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

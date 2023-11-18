@@ -1,5 +1,6 @@
-package all.clear.domain;
+package all.clear.domain.requirement;
 
+import all.clear.domain.requirement.Requirement;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
