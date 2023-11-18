@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: org.seleniumhq.selenium:selenium-firefox-driver:4.8.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="org.seleniumhq.selenium" artifactId="selenium-firefox-driver" version="4.8.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-firefox-driver/4.8.3/9fef8f1dc7deb0f444c7605b6380d76b1001860/selenium-firefox-driver-4.8.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.seleniumhq.selenium/selenium-firefox-driver/4.8.3/6f25d17024f0c4644862238eb10fe757d01d3465/selenium-firefox-driver-4.8.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
