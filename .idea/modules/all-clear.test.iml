@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="all-clear:test" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="com.example" external.system.module.type="sourceSet" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_17">
     <output-test url="file://$MODULE_DIR$/../../build/classes/java/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/test/resources" type="java-test-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="all-clear.main" />
+    <orderEntry type="module" module-name="com.example.all-clear.main" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-data-jpa:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-thymeleaf:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-web:3.1.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-validation:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-java:4.15.0" level="project" />
     <orderEntry type="library" name="Gradle: io.github.bonigarcia:webdrivermanager:5.6.2" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.13.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-aop:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-jdbc:3.1.3" level="project" />
@@ -26,6 +29,8 @@
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-tomcat:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-webmvc:6.0.11" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-web:6.0.11" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:10.1.12" level="project" />
+    <orderEntry type="library" name="Gradle: org.hibernate.validator:hibernate-validator:8.0.1.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-chrome-driver:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-devtools-v117:4.15.0" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-devtools-v118:4.15.0" level="project" />
@@ -46,6 +51,7 @@
     <orderEntry type="library" name="Gradle: org.brotli:dec:0.1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.12.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.24.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:2.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test-autoconfigure:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-test:3.1.3" level="project" />
     <orderEntry type="library" name="Gradle: com.jayway.jsonpath:json-path:2.8.0" level="project" />
@@ -84,9 +90,11 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.15.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-websocket:10.1.12" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-core:10.1.12" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.tomcat.embed:tomcat-embed-el:10.1.12" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-expression:6.0.11" level="project" />
     <orderEntry type="library" name="Gradle: io.micrometer:micrometer-observation:1.11.3" level="project" />
+    <orderEntry type="library" name="Gradle: jakarta.validation:jakarta.validation-api:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.jboss.logging:jboss-logging:3.5.3.Final" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-chromium-driver:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-manager:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-json:4.8.3" level="project" />
@@ -172,11 +180,10 @@
     <orderEntry type="library" name="Gradle: io.opentelemetry:opentelemetry-api-events:1.25.0-alpha" level="project" />
     <orderEntry type="library" name="Gradle: org.bouncycastle:bcutil-jdk18on:1.76" level="project" />
     <orderEntry type="library" name="Gradle: org.bouncycastle:bcprov-jdk18on:1.76" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.h2database:h2:2.1.214" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.glassfish.jaxb:jaxb-runtime:4.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jboss.logging:jboss-logging:3.5.3.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.hibernate.common:hibernate-commons-annotations:6.0.6.Final" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: io.smallrye:jandex:3.0.5" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: jakarta.inject:jakarta.inject-api:2.0.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: io.opentelemetry:opentelemetry-semconv:1.25.0-alpha" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.junit.jupiter:junit-jupiter-engine:5.9.3" level="project" />
