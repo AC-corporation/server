@@ -1,5 +1,6 @@
 package all.clear.global.response;
 
+import all.clear.global.exception.SuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,9 @@ public class ApiResponse<T> {
 
 
     //성공시 응답
-//    public static <T>ApiResponse<T> onSuccess(String message, T result){
-//        return new ApiResponse<>(true, HttpStatus.OK.value(), message, result);
-//    }
+    public static <T>ApiResponse<T> onSuccess(T result){
+        return new ApiResponse<>(true, SuccessCode._OK.getCode(), SuccessCode._OK.getMessage(), result);
+    }
 
 //    public static <T> ApiResponse<T> of(BaseCode code, T result){
 //        return new ApiResponse<>();
