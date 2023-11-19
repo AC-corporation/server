@@ -1,5 +1,7 @@
 package all.clear.crwal;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.WebDriver;
@@ -8,13 +10,20 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
+@Setter
+@Getter
 public class CrwalUserInfo {
-
-    ArrayList<String> userInfoList = new ArrayList<>();
-    ArrayList<String> requirementComponentList = new ArrayList<>();
+    private String userName;
+    private String university;
+    private String major;
+    private String mail;
+    private String classType; //분반
+    private int year; //학년
+    private int semester; //학기
+    private ArrayList<String> requirementComponentList = new ArrayList<>();
     WebDriver driver;
 
-    public void loginUsaint(String usaintId, String usaintPassword){
+    public void loginUsaint(String usaintId, String usaintPassword){ // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
         // 로그인 페이지 주소
@@ -41,10 +50,49 @@ public class CrwalUserInfo {
             e.printStackTrace();
         }
         // 학사관리 클릭
-        WebElement degreeManagebutton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
-        degreeManagebutton.click();
+        WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
+        degreeManageButton.click();
+        crwalUserComponent();
+        crwalRequirementComponent();
     }
-    public void crwalRequirementComponent(){
+
+    public void crwalUserComponent(){ // 사용자 정보 크롤링 함수
+        WebElement target;
+        try {
+            Thread.sleep(2000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //프레임 이동
+        WebElement iframe1Element = driver.findElement(By.name("contentAreaFrame"));
+        driver.switchTo().frame(iframe1Element);
+        WebElement iframe2Element = driver.findElement(By.name("isolatedWorkArea"));
+        driver.switchTo().frame(iframe2Element);
+        // username 크롤링
+        target = driver.findElement(By.id("WDA1"));
+        userName = target.getAttribute("value");
+        // university 크롤링
+        target = driver.findElement(By.id("WD93"));
+        university = target.getAttribute("value");
+        // major 크롤링
+        target = driver.findElement(By.id("WD9C"));
+        major = target.getAttribute("value");
+        // mail 크롤링
+        target = driver.findElement(By.id("WDCE"));
+        mail =  target.getAttribute("value");
+        // classType 크롤링
+        target = driver.findElement(By.id("WDAE"));
+        classType = target.getAttribute("value");
+        // year 크롤링
+        target = driver.findElement(By.id("WDB9"));
+        year = Integer.parseInt(target.getAttribute("value").strip());
+        // semester 크롤링
+        target = driver.findElement(By.id("WDBD"));
+        semester = Integer.parseInt(target.getAttribute("value").strip());
+        // 기본 프레임으로 돌아가기
+        driver.switchTo().defaultContent();
+    }
+    public void crwalRequirementComponent(){ // 졸업요건 조회 크롤링 함수
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
@@ -94,8 +142,6 @@ public class CrwalUserInfo {
                 break;
             i = i+1;
         }
-        for(int j=0;j<requirementComponentList.size();j++)
-            System.out.println(requirementComponentList.get(j));
     }
 }
 
