@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all-clear.iml" filepath="$PROJECT_DIR$/.idea/modules/all-clear.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/all-clear.main.iml" filepath="$PROJECT_DIR$/.idea/modules/all-clear.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/all-clear.test.iml" filepath="$PROJECT_DIR$/.idea/modules/all-clear.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.example.all-clear.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.example.all-clear.main.iml" />
     </modules>
