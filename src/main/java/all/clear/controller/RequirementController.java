@@ -17,7 +17,7 @@ public class RequirementController {
 
     //@Operation(summary = "졸업요건 조회", description = "졸업요건 조회")
     //@GetMapping("/look") // string 수정 필요
-    public ResponseEntity look(Long userId){
-        return new ResponseEntity(requirementService.getRequirementComponent(userId), HttpStatus.OK);
+    public ResponseEntity get(Long userId){
+        return new ResponseEntity(requirementService.getRequirement(userId), HttpStatus.OK);
     }
 }

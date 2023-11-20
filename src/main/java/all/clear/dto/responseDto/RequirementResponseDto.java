@@ -22,21 +22,10 @@ public class RequirementResponseDto {
         this.requirementId = requirement.getRequirementId();
         List<RequirementComponentResponseDto> requirementComponentResponseDtoList = requirement.getRequirementComponentList()
                 .stream()
-                .map(RequirementComponentResponseDto::from)
+                .map(RequirementComponentResponseDto::new)
                 .collect(Collectors.toList());
         this.requirementComponentList = requirementComponentResponseDtoList;
     }
 
-    public RequirementResponseDto of(Requirement requirement){
-        List<RequirementComponentResponseDto> requirementComponentResponseDtoList = requirement.getRequirementComponentList()
-                .stream()
-                .map(RequirementComponentResponseDto::from)
-                .collect(Collectors.toList());
-
-        return RequirementResponseDto.builder()
-                .requirementId(requirement.getRequirementId())
-                .requirementComponentList(requirementComponentResponseDtoList)
-                .build();
-    }
 
 }

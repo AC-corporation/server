@@ -18,15 +18,13 @@ public class RequirementComponentResponseDto {
     private Double requirementComplete; //계산값
     private String requirementResult; //중족여부
 
-    public static RequirementComponentResponseDto from(RequirementComponent requirementComponent){
-        return RequirementComponentResponseDto.builder()
-                .requirementComponentId(requirementComponent.getRequirementComponentId())
-                .requirementCategory(requirementComponent.getRequirementCategory())
-                .requirementArgument(requirementComponent.getRequirementArgument())
-                .requirementCriteria(requirementComponent.getRequirementCriteria())
-                .requirementComplete(requirementComponent.getRequirementComplete())
-                .requirementResult(requirementComponent.getRequirementResult())
-                .build();
+    public RequirementComponentResponseDto(RequirementComponent requirementComponent) {
+        this.requirementComponentId = requirementComponent.getRequirementComponentId();
+        this.requirementCategory = requirementComponent.getRequirementCategory();
+        this.requirementArgument = requirementComponent.getRequirementArgument();
+        this.requirementCriteria = requirementComponent.getRequirementCriteria();
+        this.requirementComplete = requirementComponent.getRequirementComplete();
+        this.requirementResult = requirementComponent.getRequirementResult();
     }
 
 
