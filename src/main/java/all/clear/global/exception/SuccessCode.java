@@ -13,4 +13,22 @@ public enum SuccessCode {
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;
+
+    public ResponseDto getReason() {
+        return ResponseDto.builder()
+                .code(code)
+                .message(message)
+                .isSuccess(true)
+                .build();
+    }
+
+
+    public ResponseDto getReasonHttpStatus() {
+        return ResponseDto.builder()
+                .code(code)
+                .message(message)
+                .isSuccess(true)
+                .httpStatus(httpStatus)
+                .build();
+    }
 }
