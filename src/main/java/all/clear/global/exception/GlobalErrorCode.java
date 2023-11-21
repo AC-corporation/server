@@ -15,4 +15,22 @@ public enum GlobalErrorCode {
     private final String code;
     private final String message;
 
+
+    public ErrorResponseDto getReason(){
+        return ErrorResponseDto.builder()
+                .code(code)
+                .message(message)
+                .isSuccess(false)
+                .build();
+    }
+
+    public ErrorResponseDto getReasonHttpStatus(){
+        return ErrorResponseDto.builder()
+                .code(code)
+                .message(message)
+                .isSuccess(false)
+                .httpStatus(httpStatus)
+                .build();
+    }
+
 }

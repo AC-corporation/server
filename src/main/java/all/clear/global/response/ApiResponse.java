@@ -19,9 +19,9 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, SuccessCode._OK.getCode(), SuccessCode._OK.getMessage(), result);
     }
 
-//    public static <T> ApiResponse<T> of(BaseCode code, T result){
-//        return new ApiResponse<>();
-//    }
+    public static <T> ApiResponse<T> of(SuccessCode code, T result){
+        return new ApiResponse<>(true, code.getReasonHttpStatus().getCode(), code.getReasonHttpStatus().getMessage(), result);
+    }
 
 
     //실패시 응답
