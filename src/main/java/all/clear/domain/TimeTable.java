@@ -58,16 +58,6 @@ public class TimeTable {
         return timeTable;
     }
 
-    //==삭제 메서드==//
-    public void removeTimeTableSubject(TimeTableSubject timeTableSubject) {
-        // 동일성 보장 확인해야 함
-        timeTableSubjectList.remove(timeTableSubject);
-    }
-
-    public void removeTimeTable(User user) {
-        // 메서드 태스트 필요
-        user.removeTimetable(this);
-    }
 }
 
 

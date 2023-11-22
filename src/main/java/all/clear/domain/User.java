@@ -44,11 +44,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Column(name = "timetable_list")
     private List<TimeTable> timeTableList = new ArrayList<>();
-
-    //==연관관계 메서드==//
-    public void removeTimetable(TimeTable timeTable) {
-        timeTableList.remove(timeTable);
-    }
 }
 
 
