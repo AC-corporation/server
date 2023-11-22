@@ -31,7 +31,7 @@ public class SubjectRepository {
     }
 
     public void delete(Subject subject) {
-
+        //유저의 시간표 삭제할 때 유저가 생성한 Subject 삭제
         em.remove(subject);
     }
 }
