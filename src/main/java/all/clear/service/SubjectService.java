@@ -15,7 +15,7 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
 
     @Transactional
-    public void saveItem(Subject subject){
+    public void saveSubject(Subject subject){
         subjectRepository.save(subject);
     }
 

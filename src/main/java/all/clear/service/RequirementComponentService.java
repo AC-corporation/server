@@ -14,8 +14,7 @@ public class RequirementComponentService {
     /**
      * 크롤링해온 졸업요건 행을 DB에 추가
      */
-    public Long saveRequirementComponent(RequirementComponent requirementComponent){
+    public void saveRequirementComponent(RequirementComponent requirementComponent){
         requirementComponentRepository.save(requirementComponent);
-        return requirementComponent.getRequirementComponentId();
     }
 }

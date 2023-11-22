@@ -25,6 +25,6 @@ public class RequirementService {
         User user = userService.findOne(userId);
         Requirement requirement = requirementRepository.findOne(userId);
         //userId를 통해 requirementRepo에서 찾은 Requirement를 Dto로 감싸서 반환
-       return new RequirementResponseDto(requirement);
+        return new RequirementResponseDto(requirement);
     }
 }
