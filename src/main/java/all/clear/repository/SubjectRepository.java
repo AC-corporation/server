@@ -29,4 +29,9 @@ public class SubjectRepository {
     public List<Subject> findAll(){
         return em.createQuery("select s from Subject s", Subject.class).getResultList();
     }
+
+    public void delete(Subject subject) {
+
+        em.remove(subject);
+    }
 }
