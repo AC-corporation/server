@@ -23,7 +23,7 @@ public class TimeTableRepository {
     }
 
     public void delete(TimeTable timeTable){
-        /**연관된 timeTableSubject 삭제 필요**/
+        /**연관된 timeTableSubject 삭제 코드 추가해야함**/
         em.remove(timeTable);
     }
 }
