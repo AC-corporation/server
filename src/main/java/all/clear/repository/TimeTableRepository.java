@@ -21,4 +21,9 @@ public class TimeTableRepository {
         //timetable_id를 통해 timetable 찾아 반환
         return em.find(TimeTable.class, id);
     }
+
+    public void delete(TimeTable timeTable){
+        //연관된 timeTableSubject 삭제 필요
+        em.remove(timeTable);
+    }
 }
