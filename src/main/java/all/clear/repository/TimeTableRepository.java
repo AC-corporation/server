@@ -22,8 +22,9 @@ public class TimeTableRepository {
         return em.find(TimeTable.class, id);
     }
 
-    public void delete(TimeTable timeTable){
+    public void delete(Long id){
         /**연관된 timeTableSubject 삭제 코드 추가해야함**/
+        TimeTable timeTable = findOne(id);
         em.remove(timeTable);
     }
 }

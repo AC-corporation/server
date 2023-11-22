@@ -35,10 +35,9 @@ public class TimeTableService {
     }
 
     //==삭제 메서드==//
-//    @Transactional
-//    public void removeTimeTable(Long timeTableId){
-//        TimeTable timeTable = timeTableRepository.findOne(timeTableId);
-//        // timeTable.remove();
-//    }
+    @Transactional
+    public void removeTimeTable(Long timeTableId){
+        timeTableRepository.delete(timeTableId);
+    }
 
 }
