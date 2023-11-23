@@ -22,7 +22,7 @@ public class RequirementRepository {
     }
 
     public Requirement findByUserId(Long userId) {
-
+        return em.find(Requirement.class, userId);
     }
 
 }
