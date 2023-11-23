@@ -21,6 +21,8 @@ public class RequirementRepository {
         return em.find(Requirement.class, id);
     }
 
+    public Requirement findByUserId(Long userId) {
 
+    }
 
 }
