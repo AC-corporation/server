@@ -37,12 +37,12 @@ public class Grade {
     }
 
     //==연관관계 메서드==//
-    public void setUser(User user){
+    public void setUser(User user) {
         this.user = user;
         user.setGrade(this);
     }
 
-    public void addSemesterGrade(SemesterGrade semesterGrade){
+    public void addSemesterGrade(SemesterGrade semesterGrade) {
         semesterGradeList.add(semesterGrade);
         semesterGrade.setGrade(this);
     }
