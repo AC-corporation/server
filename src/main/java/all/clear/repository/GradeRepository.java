@@ -21,5 +21,6 @@ public class GradeRepository {
     }
 
     public Grade findByUserId() {
+
     }
 }
