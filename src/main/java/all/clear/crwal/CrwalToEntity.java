@@ -5,6 +5,7 @@ import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
 import all.clear.service.RequirementComponentService;
 import all.clear.service.RequirementService;
+import all.clear.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +17,19 @@ import java.util.ArrayList;
 @Getter
 @RequiredArgsConstructor
 public class CrwalToEntity {
-
+    private final UserService userService;
     private final RequirementComponentService requirementComponentService;
     private final RequirementService requirementService;
 
-    public CrwalToEntity(RequirementService requirementService,RequirementComponentService requirementComponentService){
+    public CrwalToEntity(UserService userService,RequirementService requirementService,
+                         RequirementComponentService requirementComponentService){
+        this.userService = userService;
         this.requirementService =requirementService;
         this.requirementComponentService = requirementComponentService;
     }
 
     public void makeUserEntity(CrwalUserInfo crwalUserInfo){
+        Long userId;
         User user = new User();
         user.setUserName(crwalUserInfo.getUserName()); // 이름
         user.setUniversity(crwalUserInfo.getUniversity()); // 단과대
@@ -34,6 +38,7 @@ public class CrwalToEntity {
         user.setClassType(crwalUserInfo.getClassType()); // 분반
         user.setYear(crwalUserInfo.getYear()); // 학년
         user.setSemester(crwalUserInfo.getSemester()); // 학기
+        // userId userService.join(user);
     }
     public void makeRequirementComponentEntity(CrwalUserInfo crwalUserInfo){
         Requirement requirement = null;
@@ -58,9 +63,9 @@ public class CrwalToEntity {
                 RequirementComponent requirementComponent = new RequirementComponent();
                 requirementComponent.setRequirementCategory(category); // 이수구분
                 requirementComponent.setRequirementArgument(tmpList.get(i)); // 졸업요건
-                requirementComponent.setRequirementArgument(tmpList.get(i+1)); // 기준값
-                requirementComponent.setRequirementArgument(tmpList.get(i+2)); // 계산값
-                requirementComponent.setRequirementArgument(tmpList.get(i+4)); // 충족여부
+                requirementComponent.setRequirementCriteria(Double.parseDouble(tmpList.get(i+1))); // 기준값
+                requirementComponent.setRequirementComplete(Double.parseDouble(tmpList.get(i+2))); // 계산값
+                requirementComponent.setRequirementResult(tmpList.get(i+4)); // 충족여부
                 requirementComponentService.saveRequirementComponent(requirementComponent); // 졸업요건 행 DB에 저장
                 assert requirement != null;
                 requirement.addRequirementComponent(requirementComponent); // 졸업요건 행들을 모으기
