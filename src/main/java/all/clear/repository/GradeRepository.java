@@ -21,9 +21,8 @@ public class GradeRepository {
         return em.find(Grade.class, id);
     }
 
-    public Grade findByUser(User user) {
-        return em.createQuery("select m from Member m where m.name = :name", Member.class)
-                .setParameter("user", user)
-                .getResultList();
+    public Grade findByUserId(Long userId) {
+        return em.createQuery("select m from Grade m where m.user_id = :user_id", Grade.class)
+                .setParameter("user_id", userId).getSingleResult();
     }
 }
