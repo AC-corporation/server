@@ -10,14 +10,15 @@ import java.util.List;
 @Entity
 @Getter
 public class Grade {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "grade_id")
     private Long gradeId;
 
     @OneToOne(mappedBy = "grade", fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "grade")
+    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)
     @Column(name = "semester_grade_list")
     private List<SemesterGrade> semesterGradeList = new ArrayList<>();
 
@@ -27,6 +28,7 @@ public class Grade {
     @Column(name = "average_grade")
     private String averageGrade;
 
+
     //==초기화 메서드==//
     public void setTotalCredit(Long totalCredit) {
         this.totalCredit = totalCredit;
@@ -35,6 +37,7 @@ public class Grade {
     public void setAverageGrade(String averageGrade) {
         this.averageGrade = averageGrade;
     }
+
 
     //==연관관계 메서드==//
     public void setUser(User user) {
