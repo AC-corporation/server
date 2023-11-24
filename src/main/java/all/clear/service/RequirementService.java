@@ -16,7 +16,6 @@ import java.util.List;
 public class RequirementService {
     private final RequirementRepository requirementRepository;
     private final UserService userService;
-    private final RequirementComponentRepository requirementComponentRepository;
 
     public void saveRequirement(Requirement requirement){
         requirementRepository.save(requirement);

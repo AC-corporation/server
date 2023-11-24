@@ -1,5 +1,6 @@
 package all.clear.repository;
 
+import all.clear.domain.User;
 import all.clear.domain.grade.Grade;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -20,7 +21,9 @@ public class GradeRepository {
         return em.find(Grade.class, id);
     }
 
-    public Grade findByUserId() {
-
+    public Grade findByUser(User user) {
+        return em.createQuery("select m from Member m where m.name = :name", Member.class)
+                .setParameter("user", user)
+                .getResultList();
     }
 }
