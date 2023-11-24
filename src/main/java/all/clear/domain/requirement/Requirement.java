@@ -16,7 +16,7 @@ public class Requirement {
     @OneToOne(mappedBy = "requirement", fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(mappedBy = "requirement")
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)
     @Column(name = "requirement_component_list")
     private List<RequirementComponent> requirementComponentList = new ArrayList<>();
 
