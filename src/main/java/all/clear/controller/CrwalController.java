@@ -1,7 +1,8 @@
 package all.clear.controller;
+import all.clear.crwal.CrwalToEntity;
 import all.clear.crwal.CrwalUserInfo;
-import all.clear.domain.User;
-import all.clear.domain.requirement.Requirement;
+import all.clear.service.RequirementComponentService;
+import all.clear.service.RequirementService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/Crawl")
 public class CrwalController {
+    private final RequirementService requirementService;
+    private final RequirementComponentService requirementComponentService;
+
     @GetMapping("/crwalData")
     public String crwalData(@Valid UserIdPwdForm form, BindingResult bindingResult){
         if (bindingResult.hasErrors())
@@ -22,10 +26,11 @@ public class CrwalController {
         CrwalUserInfo crwalUserInfo = new CrwalUserInfo();
         String usaintId = form.getUsaintId().toString();
         crwalUserInfo.loginUsaint(usaintId, form.getUsaintPassword());
-        // 폼의 내용을 바탕으로 Requirement 객체 생성
-        Requirement requirement = new Requirement();
-        // 폼의 내용을 바탕으로 User 객체 생성
-        User user = new User();
+        // 크롤링한 데이터를 엔티티로 변환 위한 객체생성
+        CrwalToEntity crwalToEntity = new CrwalToEntity(requirementService,requirementComponentService);
+        // 폼의 내용을 바탕으로 Requirement 객체 저장
+        crwalToEntity.makeRequirementComponentEntity(crwalUserInfo);
+        // 폼의 내용을 바탕으로 User 객체 저장
 
         return "redirect:/";
     }
