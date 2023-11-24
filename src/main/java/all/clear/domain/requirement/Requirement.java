@@ -13,7 +13,8 @@ public class Requirement {
     @Id @GeneratedValue
     @Column(name = "requirement_id")
     private Long requirementId;
-    @OneToOne(mappedBy = "requirement", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)

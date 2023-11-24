@@ -15,7 +15,8 @@ public class Grade {
     @Column(name = "grade_id")
     private Long gradeId;
 
-    @OneToOne(mappedBy = "grade", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)

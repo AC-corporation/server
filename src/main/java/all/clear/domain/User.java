@@ -33,11 +33,11 @@ public class User {
     private int year; //학년
     private int semester; //학기
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     @JoinColumn(name = "grade_id")
     private Grade grade;
 
