@@ -14,11 +14,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RequirementService {
-    private RequirementRepository requirementRepository;
-    private UserService userService;
-    private RequirementComponentRepository requirementComponentRepository;
+    private final RequirementRepository requirementRepository;
+    private final UserService userService;
+    private final RequirementComponentRepository requirementComponentRepository;
 
-
+    public void saveRequirement(Requirement requirement){
+        requirementRepository.save(requirement);
+    }
     public Requirement findOne(Long id){return requirementRepository.findOne(id);}
 
     public RequirementResponseDto getRequirement(Long userId){
