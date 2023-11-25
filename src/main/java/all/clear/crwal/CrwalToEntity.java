@@ -58,9 +58,8 @@ public class CrwalToEntity {
                 requirementComponent.setRequirementCriteria(Double.parseDouble(tmpList.get(i+1))); // 기준값
                 requirementComponent.setRequirementComplete(Double.parseDouble(tmpList.get(i+2))); // 계산값
                 requirementComponent.setRequirementResult(tmpList.get(i+4)); // 충족여부
-                requirement.addRequirementComponent(requirementComponent);
-                assert requirement != null;
                 requirement.addRequirementComponent(requirementComponent); // 졸업요건 행들을 모으기
+                assert requirement != null;
                 i = i +4;
             }
         }
