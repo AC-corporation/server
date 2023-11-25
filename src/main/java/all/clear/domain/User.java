@@ -34,11 +34,9 @@ public class User {
     private int semester; //학기
 
     @OneToOne(mappedBy = "user")
-    @JoinColumn(name = "requirement_id")
     private Requirement requirement;
 
     @OneToOne(mappedBy = "user")
-    @JoinColumn(name = "grade_id")
     private Grade grade;
 
     @OneToMany(mappedBy = "user")
