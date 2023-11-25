@@ -22,7 +22,7 @@ public class GradeService {
         Grade existingGrade = gradeRepository.findById(updatedGrade.getGradeId()).orElse(null);
 
         if (existingGrade != null) {
-            // 업데이트할 정보를 설정합니다.
+            /** 업데이트할 정보를 설정합니다. **/
             // save 메서드를 사용하여 엔터티를 업데이트합니다.
             gradeRepository.save(existingGrade);
         } else {
