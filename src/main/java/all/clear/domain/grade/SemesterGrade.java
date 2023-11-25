@@ -21,7 +21,7 @@ public class SemesterGrade {
     @JoinColumn(name = "grade_id") // 추가
     private Grade grade;
 
-    @JoinColumn(name = "semester_average_grade")
+    @Column(name = "semester_average_grade")
     private String semesterAverageGrade;
 
     @OneToMany(mappedBy = "semesterGrade", cascade = CascadeType.ALL)
