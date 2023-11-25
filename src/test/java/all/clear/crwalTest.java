@@ -9,7 +9,7 @@ public class crwalTest {
     @Test
     public static void main(String[] args) {
         CrwalUserInfo crwalUserinfo = new CrwalUserInfo();
-        crwalUserinfo.loginUsaint("학번","비밀번호");
+        crwalUserinfo.loginUsaint("20223168","todo!9844");
         System.out.println(crwalUserinfo.getUserName());
         System.out.println(crwalUserinfo.getUniversity());
         System.out.println(crwalUserinfo.getMajor());
@@ -18,6 +18,17 @@ public class crwalTest {
         System.out.println(crwalUserinfo.getYear());
         System.out.println(crwalUserinfo.getSemester());
         ArrayList<String> tmpList = crwalUserinfo.getRequirementComponentList();
+        System.out.println("==============getRequirementComponentList===============");
+        for (int i=0;i<tmpList.size();i++){
+            System.out.println(tmpList.get(i));
+        }
+        System.out.println("==============getEntireGrades===============");
+        tmpList = crwalUserinfo.getEntireGrades();
+        for (int i=0;i<tmpList.size();i++){
+            System.out.println(tmpList.get(i));
+        }
+        System.out.println("==============getDetailGrades===============");
+        tmpList = crwalUserinfo.getDetailGrades();
         for (int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
         }
