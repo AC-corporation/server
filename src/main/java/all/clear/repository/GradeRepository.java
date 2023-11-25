@@ -1,6 +1,5 @@
 package all.clear.repository;
 
-import all.clear.domain.User;
 import all.clear.domain.grade.Grade;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
