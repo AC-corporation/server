@@ -20,7 +20,7 @@ public class GradeRepository {
         return em.find(Grade.class, id);
     }
 
-    public Grade findByUserId() {
-
-    }
+//    public Grade findByUserId() {
+//
+//    }
 }

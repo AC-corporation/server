@@ -341,6 +341,12 @@ public class CrwalUserInfo {
             // 이전 학기 버튼 클릭
             prevBtn.click();
 
+            try {
+                Thread.sleep(3000); // 3초 동안 실행을 멈추기
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             WebElement iframe3 = driver.findElement(By.xpath("//*[@id=\"URLSPW-0\"]"));
             // 버튼 클릭시 팝업 처리 로직 시작
             driver.switchTo().frame(iframe3);
@@ -358,6 +364,11 @@ public class CrwalUserInfo {
                     e.printStackTrace();
                 }
 
+                try {
+                    Thread.sleep(3000); // 3초 동안 실행을 멈추기
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 driver.switchTo().frame(iframe1);
                 driver.switchTo().frame(iframe2);
             }

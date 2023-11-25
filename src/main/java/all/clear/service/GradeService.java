@@ -19,12 +19,12 @@ public class GradeService {
     /**
      * 성적 업데이트
      */
-    public Grade update(Long gradeId) {
-    }
+//    public Grade update(Long gradeId) {
+//    }
 
     /**
      * 성적 조회
      */
-    public Grade findByUserId() {
-    }
+//    public Grade findByUserId() {
+//    }
 }
