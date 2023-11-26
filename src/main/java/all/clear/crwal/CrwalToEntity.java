@@ -3,7 +3,6 @@ package all.clear.crwal;
 import all.clear.domain.User;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
-import all.clear.service.RequirementComponentService;
 import all.clear.service.RequirementService;
 import all.clear.service.UserService;
 import jakarta.transaction.Transactional;
@@ -18,15 +17,8 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class CrwalToEntity {
     private final UserService userService;
-    private final RequirementComponentService requirementComponentService;
     private final RequirementService requirementService;
 
-    public CrwalToEntity(UserService userService,RequirementService requirementService,
-                         RequirementComponentService requirementComponentService){
-        this.userService = userService;
-        this.requirementService =requirementService;
-        this.requirementComponentService = requirementComponentService;
-    }
 
     public void makeUserEntity(CrwalUserInfo crwalUserInfo){
         Long userId;
@@ -66,9 +58,8 @@ public class CrwalToEntity {
                 requirementComponent.setRequirementCriteria(Double.parseDouble(tmpList.get(i+1))); // 기준값
                 requirementComponent.setRequirementComplete(Double.parseDouble(tmpList.get(i+2))); // 계산값
                 requirementComponent.setRequirementResult(tmpList.get(i+4)); // 충족여부
-                requirementComponentService.saveRequirementComponent(requirementComponent); // 졸업요건 행 DB에 저장
-                assert requirement != null;
                 requirement.addRequirementComponent(requirementComponent); // 졸업요건 행들을 모으기
+                assert requirement != null;
                 i = i +4;
             }
         }

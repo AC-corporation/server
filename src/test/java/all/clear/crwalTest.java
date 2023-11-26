@@ -18,6 +18,7 @@ public class crwalTest {
         System.out.println(crwalUserinfo.getYear());
         System.out.println(crwalUserinfo.getSemester());
         ArrayList<String> tmpList = crwalUserinfo.getRequirementComponentList();
+        System.out.println("************졸업 요건 리스트****************");
         for (int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
         }

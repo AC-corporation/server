@@ -1,5 +1,7 @@
 package all.clear.repository;
 
+import all.clear.domain.User;
+import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -22,7 +24,7 @@ public class RequirementRepository {
     }
 
     public Requirement findByUserId(Long userId) {
-        return em.find(Requirement.class, userId);
+        return em.createQuery("select m from Requirement m where m.user_id = :user_id", Requirement.class)
+                .setParameter("user_id", userId).getSingleResult();
     }
-
 }
