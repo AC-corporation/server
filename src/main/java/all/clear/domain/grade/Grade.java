@@ -51,5 +51,3 @@ public class Grade {
         semesterGrade.setGrade(this);
     }
 }
-
-
