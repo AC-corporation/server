@@ -1,22 +1,18 @@
 package all.clear;
 
-
 import all.clear.domain.User;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.grade.SemesterGrade;
 import all.clear.domain.grade.SemesterSubject;
-import all.clear.dto.responseDto.GradeDto;
-import all.clear.service.SemesterGradeService;
+import all.clear.repository.GradeRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,7 +22,7 @@ public class GradeTest {
     EntityManager em;
 
     @Autowired
-    SemesterGradeService semesterGradeService;
+    GradeRepository gradeRepository;
 
     @Test
     public void 성적_조회(){
@@ -48,14 +44,19 @@ public class GradeTest {
         grade.addSemesterGrade(semestergrade1);
         grade.addSemesterGrade(semestergrade2);
 
-        //when
-        /**리포지토리에서 조회하는 코드 추가 필요**/
+        em.persist(grade);
 
-        /**아래는 임시 코드**/
-        
+        //when
+        Long userId = user.getUserId();
+
+        Grade sampleGrade = gradeRepository.findByUserId(userId);
 
         //then
-        /**조회한 성정 print**/
+        System.out.println("gradeId = "+sampleGrade.getGradeId());
+        System.out.println("averageGrade = "+sampleGrade.getAverageGrade());
+        System.out.println("totalCredit = "+sampleGrade.getTotalCredit());
+        System.out.println();
+        System.out.println();
     }
 
 }

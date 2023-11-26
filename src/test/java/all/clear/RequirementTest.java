@@ -22,10 +22,6 @@ import java.util.ArrayList;
 class RequirementTest {
     @Autowired
     RequirementRepository requirementRepository;
-    @Autowired
-    RequirementService requirementService;
-    @Autowired
-    UserRepository userRepository;
 
     @Test
     void getRequirement(){

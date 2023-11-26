@@ -13,10 +13,11 @@ public class Requirement {
     @Id @GeneratedValue
     @Column(name = "requirement_id")
     private Long requirementId;
-    @OneToOne(mappedBy = "requirement", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "requirement")
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)
     @Column(name = "requirement_component_list")
     private List<RequirementComponent> requirementComponentList = new ArrayList<>();
 

@@ -5,18 +5,15 @@ import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
 import all.clear.dto.responseDto.RequirementComponentResponseDto;
 import all.clear.dto.responseDto.RequirementResponseDto;
-import all.clear.repository.RequirementComponentRepository;
 import all.clear.repository.RequirementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class RequirementService {
     private final RequirementRepository requirementRepository;
     private final UserService userService;
-    private final RequirementComponentRepository requirementComponentRepository;
 
     public void saveRequirement(Requirement requirement){
         requirementRepository.save(requirement);
