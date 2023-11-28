@@ -9,7 +9,7 @@ public class crwalTest {
     @Test
     public static void main(String[] args) {
         CrwalUserInfo crwalUserinfo = new CrwalUserInfo();
-        crwalUserinfo.loginUsaint("20192396","wjdtntkdtjs13@26");
+        crwalUserinfo.loginUsaint("20203058","비밀번호");
         System.out.println(crwalUserinfo.getUserName());
         System.out.println(crwalUserinfo.getUniversity());
         System.out.println(crwalUserinfo.getMajor());
