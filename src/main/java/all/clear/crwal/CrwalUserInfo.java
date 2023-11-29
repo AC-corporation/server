@@ -76,25 +76,30 @@ public class CrwalUserInfo {
         WebElement iframe2Element = driver.findElement(By.name("isolatedWorkArea"));
         driver.switchTo().frame(iframe2Element);
         // username 크롤링
-        target = driver.findElement(By.id("WDA1"));
+        try {
+            Thread.sleep(5000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        target = driver.findElement(By.id("WDD9"));
         userName = target.getAttribute("value");
         // university 크롤링
-        target = driver.findElement(By.id("WD93"));
+        target = driver.findElement(By.id("WDCB"));
         university = target.getAttribute("value");
         // major 크롤링
-        target = driver.findElement(By.id("WD9C"));
+        target = driver.findElement(By.id("WDD4"));
         major = target.getAttribute("value");
         // mail 크롤링
-        target = driver.findElement(By.id("WDCE"));
+        target = driver.findElement(By.id("WD0106"));
         mail =  target.getAttribute("value");
         // classType 크롤링
-        target = driver.findElement(By.id("WDAE"));
+        target = driver.findElement(By.id("WDE6"));
         classType = target.getAttribute("value");
         // year 크롤링
-        target = driver.findElement(By.id("WDB9"));
+        target = driver.findElement(By.id("WDF1"));
         year = Integer.parseInt(target.getAttribute("value").strip());
         // semester 크롤링
-        target = driver.findElement(By.id("WDBD"));
+        target = driver.findElement(By.id("WDF5"));
         semester = Integer.parseInt(target.getAttribute("value").strip());
         // 기본 프레임으로 돌아가기
         driver.switchTo().defaultContent();
@@ -132,9 +137,9 @@ public class CrwalUserInfo {
         String text;
         while (true){
             for (int j=1;j<=6;j++){
-                targetRoot = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/div/table/tbody/tr[3]/td/" +
+                targetRoot = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[4]/td/" +
                         "table/tbody[2]/tr/td/div/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr["+i+"]/td["+j+"]";
-                try {
+                 try {
                     target = driver.findElement(By.xpath(targetRoot));
                     text = target.getText().strip();
                     if (text.equals("채플"))
@@ -149,7 +154,6 @@ public class CrwalUserInfo {
                 break;
             i = i+1;
         }
-
         // 기본 프레임 이동
         driver.switchTo().defaultContent();
     }
