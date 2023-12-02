@@ -2,6 +2,7 @@ package all.clear.service;
 
 import all.clear.crwal.CrwalUserInfo;
 import all.clear.domain.grade.Grade;
+import all.clear.dto.responseDto.GradeResponseDto;
 import all.clear.repository.GradeRepository;
 import all.clear.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,9 @@ public class GradeService {
         }
     }
 
-    /**
-     * 성적 조회
-     */
-    public Grade findByUserId(Long userId) {
-        return gradeRepository.findByUserId(userId);
+   //성적 조회
+    public GradeResponseDto getGrade(Long userId) {
+        Grade grade = gradeRepository.findByUserId(userId);
+        return new GradeResponseDto(grade);
     }
 }
