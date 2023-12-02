@@ -9,11 +9,11 @@ import lombok.Getter;
 @Data
 @Getter
 @AllArgsConstructor
-public class SemesterSubjectDto {
+public class SemesterSubjectResponseDto {
     private String semesterSubjectName;
     private String semesterSubjectScore;
 
-    public SemesterSubjectDto(SemesterSubject semesterSubject) {
+    public SemesterSubjectResponseDto(SemesterSubject semesterSubject) {
         this.semesterSubjectName = semesterSubject.getSemesterSubjectName();
         this.semesterSubjectScore = semesterSubject.getSemesterSubjectScore();
     }

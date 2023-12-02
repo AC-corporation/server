@@ -8,6 +8,7 @@ import all.clear.dto.responseDto.RequirementResponseDto;
 import all.clear.repository.RequirementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,7 @@ public class RequirementService {
     private final RequirementRepository requirementRepository;
     private final UserService userService;
 
+    @Transactional
     public void saveRequirement(Requirement requirement){
         requirementRepository.save(requirement);
     }

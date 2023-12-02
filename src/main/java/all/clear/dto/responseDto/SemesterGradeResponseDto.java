@@ -11,15 +11,15 @@ import java.util.stream.Collectors;
 @Data
 @Getter
 @AllArgsConstructor
-public class SemesterGradeDto {
+public class SemesterGradeResponseDto {
     private String semesterAverageGrade; // 평균 학점
-    private List<SemesterSubjectDto> semesterSubjectDtoList; // 학기 과목 리스트
+    private List<SemesterSubjectResponseDto> semesterSubjectDtoList; // 학기 과목 리스트
 
-    public SemesterGradeDto(SemesterGrade semesterGrade) {
+    public SemesterGradeResponseDto(SemesterGrade semesterGrade) {
         this.semesterAverageGrade = semesterGrade.getSemesterAverageGrade();
-        List<SemesterSubjectDto> semesterSubjectDtoList = semesterGrade.getSemesterSubjectList()
+        List<SemesterSubjectResponseDto> semesterSubjectDtoList = semesterGrade.getSemesterSubjectList()
                 .stream()
-                .map(SemesterSubjectDto::new)
+                .map(SemesterSubjectResponseDto::new)
                 .collect(Collectors.toList());
         this.semesterSubjectDtoList = semesterSubjectDtoList;
     }
