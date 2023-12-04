@@ -21,4 +21,9 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
+    /**수정 필요**/
+    public User findByAppId(Long appId){
+        return  em.find(User.class, appId);
+    }
+
 }

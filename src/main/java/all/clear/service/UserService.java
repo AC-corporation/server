@@ -24,6 +24,12 @@ public class UserService {
 
     //로그인
     public void login(LoginRequesetDto request){
+        Long appId = request.getAppId();
+        String appPasword = request.getAppPassword();
+
+        User user = userRepository.findByAppId(appId);
+
+        /**추가 기능 구현 필요**/
 
     }
 
