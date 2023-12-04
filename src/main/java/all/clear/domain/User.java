@@ -3,6 +3,7 @@ package all.clear.domain;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
 @Getter @Setter
 public class User {
 
@@ -17,10 +19,10 @@ public class User {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "usaint_id", nullable = false)
-    private Long usaintId;
-    @Column(name = "usaint_password", nullable = false)
-    private String usaintPassword;
+    @Column(name = "app_id", nullable = false)
+    private Long appId;
+    @Column(name = "app_password", nullable = false)
+    private String appPassword;
 
     @Column(name = "user_name")
     private String userName;
