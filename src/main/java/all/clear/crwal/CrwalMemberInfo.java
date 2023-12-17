@@ -1,6 +1,5 @@
 package all.clear.crwal;
 
-import com.beust.ah.A;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.*;
@@ -9,14 +8,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import java.lang.reflect.Array;
 import java.time.Duration;
 import java.util.ArrayList;
 
 @Setter
 @Getter
-public class CrwalUserInfo {
-    private String userName;
+public class CrwalMemberInfo {
+    private String memberName;
     private String university;
     private String major;
     private String mail;
@@ -36,7 +34,7 @@ public class CrwalUserInfo {
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
         // 입력 받은 아이디와 비밀번호
-        String userId = usaintId;
+        String memberId = usaintId;
         String password = usaintPassword;
 
         driver = new ChromeDriver();
@@ -45,9 +43,9 @@ public class CrwalUserInfo {
          *사용자 정보 획득을 위한 로그인
          */
         driver.get(loginUrl); // 로그인 접속
-        WebElement usernameElement = driver.findElement(By.name("userid"));
+        WebElement memberNameElement = driver.findElement(By.name("memberid"));
         WebElement passwordElement = driver.findElement(By.name("pwd")); // 로그인 시도
-        usernameElement.sendKeys(userId);
+        memberNameElement.sendKeys(memberId);
         passwordElement.sendKeys(password);
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
         loginButton.click();
@@ -59,11 +57,11 @@ public class CrwalUserInfo {
         // 학사관리 클릭
         WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
         degreeManageButton.click();
-        crwalUserComponent();
+        crwalMemberComponent();
         crwalRequirementComponent();
     }
 
-    public void crwalUserComponent(){ // 사용자 정보 크롤링 함수
+    public void crwalMemberComponent(){ // 사용자 정보 크롤링 함수
         WebElement target;
         try {
             Thread.sleep(2000); // 1초 동안 실행을 멈추기
@@ -75,14 +73,14 @@ public class CrwalUserInfo {
         driver.switchTo().frame(iframe1Element);
         WebElement iframe2Element = driver.findElement(By.name("isolatedWorkArea"));
         driver.switchTo().frame(iframe2Element);
-        // username 크롤링
+        // memberName 크롤링
         try {
             Thread.sleep(5000); // 1초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         target = driver.findElement(By.id("WDD9"));
-        userName = target.getAttribute("value");
+        memberName = target.getAttribute("value");
         // university 크롤링
         target = driver.findElement(By.id("WDCB"));
         university = target.getAttribute("value");

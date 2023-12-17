@@ -1,6 +1,6 @@
 package all.clear.service;
 
-import all.clear.crwal.CrwalUserInfo;
+import all.clear.crwal.CrwalMemberInfo;
 import all.clear.domain.grade.Grade;
 import all.clear.repository.GradeRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class GradeService {
     /**
      * 성적 업데이트
      */
-    public void updateGradeInformation(Grade updatedGrade, CrwalUserInfo userInfo) {
+    public void updateGradeInformation(Grade updatedGrade, CrwalMemberInfo userInfo) {
         // 업데이트할 Grade 엔터티를 가져오거나, 새로운 인스턴스를 생성하여 업데이트할 정보를 설정합니다.
         Grade existingGrade = gradeRepository.findById(updatedGrade.getGradeId()).orElse(null);
 
@@ -35,7 +35,7 @@ public class GradeService {
      * 성적 조회
      */
     public Grade findByMemberId(Long memberId) {
-//        return gradeRepository.findByUserId(memberId);
+//        return gradeRepository.findByMemberId(memberId);
         return null;
     }
 }
