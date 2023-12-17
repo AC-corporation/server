@@ -11,35 +11,35 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class User {
+public class Member {
 
     @Id @GeneratedValue
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "member_id")
+    private Long memberId;
 
     @Column(name = "usaint_id", nullable = false)
     private Long usaintId;
     @Column(name = "usaint_password", nullable = false)
     private String usaintPassword;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "member_name")
+    private String memberName;
     private String university;
     private String major;
     private String mail;
 
     @Column(name = "class_type")
-    private String classType;
-    private int year; //학년
+    private String classType; //분반
+    private int level; //학년
     private int semester; //학기
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "member")
     private Requirement requirement;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "member")
     private Grade grade;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "member")
     @Column(name = "timetable_list")
     private List<TimeTable> timeTableList = new ArrayList<>();
 }

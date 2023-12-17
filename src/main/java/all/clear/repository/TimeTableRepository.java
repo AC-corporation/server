@@ -1,7 +1,6 @@
 package all.clear.repository;
 
 import all.clear.domain.TimeTable;
-import all.clear.domain.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;

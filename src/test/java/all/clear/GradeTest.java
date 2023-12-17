@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.domain.User;
+import all.clear.domain.Member;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.grade.SemesterGrade;
 import all.clear.domain.grade.SemesterSubject;
@@ -27,7 +27,7 @@ public class GradeTest {
     @Test
     public void 성적_조회(){
         //given
-        User user = new User();
+        Member member = new Member();
         Grade grade = new Grade();
 
         SemesterSubject subject1 = SemesterSubject.createSemesterSubject("데통네", "1.0");
@@ -38,7 +38,7 @@ public class GradeTest {
         SemesterSubject subject4 = SemesterSubject.createSemesterSubject("생명", "2.5");
         SemesterGrade semestergrade2 = SemesterGrade.createSemesterGrade(grade, "2.25", subject3, subject4);
 
-        grade.setUser(user);
+        grade.setMember(member);
         grade.setAverageGrade("1.75");
         grade.setTotalCredit(130L);
         grade.addSemesterGrade(semestergrade1);
@@ -47,9 +47,10 @@ public class GradeTest {
         em.persist(grade);
 
         //when
-        Long userId = user.getUserId();
+        Long memberId = member.getMemberId();
 
-        Grade sampleGrade = gradeRepository.findByUserId(userId);
+//        Grade sampleGrade = gradeRepository.findByMemberId(memberId);
+        Grade sampleGrade = grade;
 
         //then
         System.out.println("gradeId = "+sampleGrade.getGradeId());

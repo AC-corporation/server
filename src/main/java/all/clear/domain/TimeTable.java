@@ -29,14 +29,14 @@ public class TimeTable {
     private List<TimeTableSubject> timeTableSubjectList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY) // 추가 연관 관계 매핑
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 
     //==연관관계 메서드==//
-    public void setUser(User user) {
-        this.user = user;
-        user.getTimeTableList().add(this);
+    public void setMember(Member member) {
+        this.member = member;
+        member.getTimeTableList().add(this);
     }
 
     public void addTimeTableSubject(TimeTableSubject timeTableSubject) {
@@ -46,9 +46,9 @@ public class TimeTable {
 
 
     //==생성 메서드==//
-    public static TimeTable createTimeTable(User user, String tableName, int year, int semester, TimeTableSubject... timeTableSubjects) {
+    public static TimeTable createTimeTable(Member member, String tableName, int year, int semester, TimeTableSubject... timeTableSubjects) {
         TimeTable timeTable = new TimeTable();
-        timeTable.setUser(user);
+        timeTable.setMember(member);
         timeTable.setTableName(tableName);
         timeTable.setYear(year);
         timeTable.setSemester(semester);

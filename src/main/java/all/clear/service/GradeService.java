@@ -3,7 +3,6 @@ package all.clear.service;
 import all.clear.crwal.CrwalUserInfo;
 import all.clear.domain.grade.Grade;
 import all.clear.repository.GradeRepository;
-import all.clear.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,8 @@ public class GradeService {
     /**
      * 성적 조회
      */
-    public Grade findByUserId(Long userId) {
-        return gradeRepository.findByUserId(userId);
+    public Grade findByMemberId(Long memberId) {
+//        return gradeRepository.findByUserId(memberId);
+        return null;
     }
 }
