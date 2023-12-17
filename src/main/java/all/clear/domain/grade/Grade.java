@@ -1,6 +1,6 @@
 package all.clear.domain.grade;
 
-import all.clear.domain.User;
+import all.clear.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -16,8 +16,8 @@ public class Grade {
     private Long gradeId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)
     @Column(name = "semester_grade_list")
@@ -41,9 +41,9 @@ public class Grade {
 
 
     //==연관관계 메서드==//
-    public void setUser(User user) {
-        this.user = user;
-        user.setGrade(this);
+    public void setMember(Member member) {
+        this.member = member;
+        member.setGrade(this);
     }
 
     public void addSemesterGrade(SemesterGrade semesterGrade) {

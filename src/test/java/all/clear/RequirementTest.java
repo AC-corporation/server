@@ -1,13 +1,11 @@
 package all.clear;
 
 import all.clear.crwal.CrwalUserInfo;
-import all.clear.domain.User;
+import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
 import all.clear.dto.responseDto.RequirementResponseDto;
 import all.clear.repository.RequirementRepository;
-import all.clear.repository.UserRepository;
-import all.clear.service.RequirementService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +26,11 @@ class RequirementTest {
         CrwalUserInfo crwalUserinfo = new CrwalUserInfo();
         crwalUserinfo.loginUsaint("20221826","jk03daeun!");
 
-        //로그인하고 임시로 user, requirement 생성
-        User user = new User();
+        //로그인하고 임시로 member, requirement 생성
+        Member member = new Member();
         Requirement requirement = new Requirement();
-        user.setRequirement(requirement);
-        requirement.setUser(user);
+        member.setRequirement(requirement);
+        requirement.setMember(member);
 
         //requirement save
         requirementRepository.save(requirement);

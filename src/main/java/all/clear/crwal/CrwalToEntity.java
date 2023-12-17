@@ -1,10 +1,10 @@
 package all.clear.crwal;
 
-import all.clear.domain.User;
+import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
 import all.clear.service.RequirementService;
-import all.clear.service.UserService;
+import all.clear.service.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +16,21 @@ import java.util.ArrayList;
 @Getter
 @RequiredArgsConstructor
 public class CrwalToEntity {
-    private final UserService userService;
+    private final MemberService memberService;
     private final RequirementService requirementService;
 
 
     public void makeUserEntity(CrwalUserInfo crwalUserInfo){
         Long userId;
-        User user = new User();
-        user.setUserName(crwalUserInfo.getUserName()); // 이름
-        user.setUniversity(crwalUserInfo.getUniversity()); // 단과대
-        user.setMail(crwalUserInfo.getMail()); // 메일
-        user.setMajor(crwalUserInfo.getMajor()); // 전공
-        user.setClassType(crwalUserInfo.getClassType()); // 분반
-        user.setYear(crwalUserInfo.getYear()); // 학년
-        user.setSemester(crwalUserInfo.getSemester()); // 학기
-        // userId userService.join(user);
+        Member member = new Member();
+        member.setUserName(crwalUserInfo.getUserName()); // 이름
+        member.setUniversity(crwalUserInfo.getUniversity()); // 단과대
+        member.setMail(crwalUserInfo.getMail()); // 메일
+        member.setMajor(crwalUserInfo.getMajor()); // 전공
+        member.setClassType(crwalUserInfo.getClassType()); // 분반
+        member.setLevel(crwalUserInfo.getYear()); // 학년
+        member.setSemester(crwalUserInfo.getSemester()); // 학기
+        // userId memberService.join(member);
     }
     public void makeRequirementComponentEntity(CrwalUserInfo crwalUserInfo){
         Requirement requirement = null;

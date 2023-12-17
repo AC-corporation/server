@@ -1,6 +1,6 @@
 package all.clear.domain.requirement;
 
-import all.clear.domain.User;
+import all.clear.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -14,8 +14,8 @@ public class Requirement {
     @Column(name = "requirement_id")
     private Long requirementId;
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)
     @Column(name = "requirement_component_list")
@@ -23,9 +23,9 @@ public class Requirement {
 
 
     //==연관관계 메서드==//
-    public void setUser(User user){
-        this.user = user;
-        user.setRequirement(this);
+    public void setMember(Member member){
+        this.member = member;
+        member.setRequirement(this);
     }
 
     public void addRequirementComponent(RequirementComponent requirementComponent){
