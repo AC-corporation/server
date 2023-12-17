@@ -20,10 +20,4 @@ public class MemberRepository {
         //user_id를 통해 user 찾아 반환
         return em.find(Member.class, id);
     }
-
-    /**수정 필요**/
-    public User findByAppId(Long appId){
-        return  em.find(User.class, appId);
-    }
-
 }
