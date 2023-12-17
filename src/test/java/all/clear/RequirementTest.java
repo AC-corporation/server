@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.crwal.CrwalUserInfo;
+import all.clear.crwal.CrwalMemberInfo;
 import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
@@ -23,8 +23,8 @@ class RequirementTest {
 
     @Test
     void getRequirement(){
-        CrwalUserInfo crwalUserinfo = new CrwalUserInfo();
-        crwalUserinfo.loginUsaint("20221826","jk03daeun!");
+        CrwalMemberInfo crwalMemberinfo = new CrwalMemberInfo();
+        crwalMemberinfo.loginUsaint("20221826","jk03daeun!");
 
         //로그인하고 임시로 member, requirement 생성
         Member member = new Member();
@@ -36,7 +36,7 @@ class RequirementTest {
         requirementRepository.save(requirement);
 
         //login해서 가져온 졸업요건 요소 리스트
-        ArrayList<String> tmpList = crwalUserinfo.getRequirementComponentList();
+        ArrayList<String> tmpList = crwalMemberinfo.getRequirementComponentList();
         //객체 생성
          RequirementComponent requirementComponent = new RequirementComponent();
 

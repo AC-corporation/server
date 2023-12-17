@@ -20,21 +20,21 @@ public class CrwalToEntity {
     private final RequirementService requirementService;
 
 
-    public void makeUserEntity(CrwalUserInfo crwalUserInfo){
-        Long userId;
+    public void makeMemberEntity(CrwalMemberInfo crwalMemberInfo){
+        Long memberId;
         Member member = new Member();
-        member.setUserName(crwalUserInfo.getUserName()); // 이름
-        member.setUniversity(crwalUserInfo.getUniversity()); // 단과대
-        member.setMail(crwalUserInfo.getMail()); // 메일
-        member.setMajor(crwalUserInfo.getMajor()); // 전공
-        member.setClassType(crwalUserInfo.getClassType()); // 분반
-        member.setLevel(crwalUserInfo.getYear()); // 학년
-        member.setSemester(crwalUserInfo.getSemester()); // 학기
-        // userId memberService.join(member);
+        member.setMemberName(crwalMemberInfo.getMemberName()); // 이름
+        member.setUniversity(crwalMemberInfo.getUniversity()); // 단과대
+        member.setMail(crwalMemberInfo.getMail()); // 메일
+        member.setMajor(crwalMemberInfo.getMajor()); // 전공
+        member.setClassType(crwalMemberInfo.getClassType()); // 분반
+        member.setLevel(crwalMemberInfo.getYear()); // 학년
+        member.setSemester(crwalMemberInfo.getSemester()); // 학기
+        // memberId memberService.join(member);
     }
-    public void makeRequirementComponentEntity(CrwalUserInfo crwalUserInfo){
+    public void makeRequirementComponentEntity(CrwalMemberInfo crwalMemberInfo){
         Requirement requirement = null;
-        ArrayList<String> tmpList=  crwalUserInfo.getRequirementComponentList(); // 크롤링해온 졸업요건 문자열을 리스트로 반환
+        ArrayList<String> tmpList=  crwalMemberInfo.getRequirementComponentList(); // 크롤링해온 졸업요건 문자열을 리스트로 반환
         String tmp;
         String category = "";
         for(int i=0;i<tmpList.size();i++){
