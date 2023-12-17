@@ -26,7 +26,7 @@ public class UserController {
     }
 
 
-    //로그읜
+    //로그인
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "로그인")
     public ApiResponse login(@RequestBody LoginRequesetDto loginRequesetDto){
