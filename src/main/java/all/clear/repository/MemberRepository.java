@@ -20,5 +20,4 @@ public class MemberRepository {
         //user_id를 통해 user 찾아 반환
         return em.find(Member.class, id);
     }
-
 }
