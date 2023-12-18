@@ -18,6 +18,7 @@ public class RequirementService {
     public Requirement findOne(Long id){
         return requirementRepository.findById(id).get();
     }
+
     public RequirementResponseDto getRequirement(Long userId){
         return null;
     }

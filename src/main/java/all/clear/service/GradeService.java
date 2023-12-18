@@ -1,6 +1,5 @@
 package all.clear.service;
 
-import all.clear.crwal.CrwalMemberInfo;
 import all.clear.domain.grade.Grade;
 import all.clear.dto.responseDto.GradeResponseDto;
 import all.clear.repository.GradeRepository;
