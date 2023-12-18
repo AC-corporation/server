@@ -1,4 +1,4 @@
-package all.clear.dto.responseDto;
+package all.clear.dto.responseDto.grade;
 
 import all.clear.domain.grade.SemesterGrade;
 import lombok.AllArgsConstructor;

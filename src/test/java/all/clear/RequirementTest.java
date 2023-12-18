@@ -4,7 +4,7 @@ import all.clear.crwal.CrawlMemberInfo;
 import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
-import all.clear.dto.responseDto.RequirementResponseDto;
+import all.clear.dto.responseDto.requirement.RequirementResponseDto;
 import all.clear.repository.RequirementRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

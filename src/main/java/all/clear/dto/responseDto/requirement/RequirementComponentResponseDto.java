@@ -1,4 +1,4 @@
-package all.clear.dto.responseDto;
+package all.clear.dto.responseDto.requirement;
 
 import all.clear.domain.requirement.RequirementComponent;
 import lombok.AllArgsConstructor;

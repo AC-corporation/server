@@ -1,12 +1,11 @@
-package all.clear.dto.responseDto;
+package all.clear.dto.responseDto.requirement;
 
 import all.clear.domain.requirement.Requirement;
-import all.clear.domain.requirement.RequirementComponent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
