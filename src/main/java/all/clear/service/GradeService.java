@@ -3,6 +3,7 @@ package all.clear.service;
 import all.clear.domain.grade.Grade;
 import all.clear.dto.responseDto.GradeResponseDto;
 import all.clear.repository.GradeRepository;
+import all.clear.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,15 +14,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class GradeService {
     private final GradeRepository gradeRepository;
 
-    public void save(Grade grade){
-        gradeRepository.save(grade);
+    private final MemberRepository memberRepository;
+
+
+    public Grade findByMemberId(Long memberId){
+        return memberRepository.findById(memberId).get().getGrade();
     }
 
-    public Grade findOne(Long id){
-        return gradeRepository.findById(id).get();
-    }
-
+    /**
+     * 성적 조회
+     */
     public GradeResponseDto getGrade(Long memberId){
-        return null;
+        Grade grade = findByMemberId(memberId);
+        return new GradeResponseDto(grade);회
     }
 }
