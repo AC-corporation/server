@@ -26,6 +26,6 @@ public class GradeService {
      */
     public GradeResponseDto getGrade(Long memberId){
         Grade grade = findByMemberId(memberId);
-        return new GradeResponseDto(grade);회
+        return new GradeResponseDto(grade);
     }
 }
