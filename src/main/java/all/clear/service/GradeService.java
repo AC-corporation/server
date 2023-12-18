@@ -18,6 +18,10 @@ public class GradeService {
         gradeRepository.save(grade);
     }
 
+    public Grade findOne(Long id){
+        return gradeRepository.findById(id).get();
+    }
+
     public GradeResponseDto getGrade(Long memberId){
         return null;
     }

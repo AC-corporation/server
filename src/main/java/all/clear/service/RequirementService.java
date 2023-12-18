@@ -1,7 +1,5 @@
 package all.clear.service;
 
-import all.clear.domain.Member;
-import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
 import all.clear.dto.responseDto.RequirementResponseDto;
 import all.clear.repository.RequirementRepository;
@@ -17,6 +15,9 @@ public class RequirementService {
         requirementRepository.save(requirement);
     }
 
+    public Requirement findOne(Long id){
+        return requirementRepository.findById(id).get();
+    }
     public RequirementResponseDto getRequirement(Long userId){
         return null;
     }
