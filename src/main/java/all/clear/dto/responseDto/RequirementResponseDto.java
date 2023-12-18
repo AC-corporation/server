@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class RequirementResponseDto {
     private Long requirementId;
-    private List<RequirementComponentResponseDto> requirementComponentList = new ArrayList<>();
+    private List<RequirementComponentResponseDto> requirementComponentList;
 
     public RequirementResponseDto(Requirement requirement) {
         this.requirementId = requirement.getRequirementId();
