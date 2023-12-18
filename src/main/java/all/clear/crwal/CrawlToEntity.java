@@ -15,26 +15,26 @@ import java.util.ArrayList;
 @Transactional
 @Getter
 @RequiredArgsConstructor
-public class CrwalToEntity {
+public class CrawlToEntity {
     private final MemberService memberService;
     private final RequirementService requirementService;
 
 
-    public void makeMemberEntity(CrwalMemberInfo crwalMemberInfo){
+    public void makeMemberEntity(CrawlMemberInfo crawlMemberInfo){
         Long memberId;
         Member member = new Member();
-        member.setMemberName(crwalMemberInfo.getMemberName()); // 이름
-        member.setUniversity(crwalMemberInfo.getUniversity()); // 단과대
-        member.setMail(crwalMemberInfo.getMail()); // 메일
-        member.setMajor(crwalMemberInfo.getMajor()); // 전공
-        member.setClassType(crwalMemberInfo.getClassType()); // 분반
-        member.setLevel(crwalMemberInfo.getYear()); // 학년
-        member.setSemester(crwalMemberInfo.getSemester()); // 학기
+        member.setMemberName(crawlMemberInfo.getMemberName()); // 이름
+        member.setUniversity(crawlMemberInfo.getUniversity()); // 단과대
+        member.setMail(crawlMemberInfo.getMail()); // 메일
+        member.setMajor(crawlMemberInfo.getMajor()); // 전공
+        member.setClassType(crawlMemberInfo.getClassType()); // 분반
+        member.setLevel(crawlMemberInfo.getYear()); // 학년
+        member.setSemester(crawlMemberInfo.getSemester()); // 학기
         // memberId memberService.join(member);
     }
-    public void makeRequirementComponentEntity(CrwalMemberInfo crwalMemberInfo){
+    public void makeRequirementComponentEntity(CrawlMemberInfo crawlMemberInfo){
         Requirement requirement = null;
-        ArrayList<String> tmpList=  crwalMemberInfo.getRequirementComponentList(); // 크롤링해온 졸업요건 문자열을 리스트로 반환
+        ArrayList<String> tmpList=  crawlMemberInfo.getRequirementComponentList(); // 크롤링해온 졸업요건 문자열을 리스트로 반환
         String tmp;
         String category = "";
         for(int i=0;i<tmpList.size();i++){

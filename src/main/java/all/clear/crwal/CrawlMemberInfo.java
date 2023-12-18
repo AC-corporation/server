@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 @Setter
 @Getter
-public class CrwalMemberInfo {
+public class CrawlMemberInfo {
     private String memberName;
     private String university;
     private String major;

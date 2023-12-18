@@ -1,6 +1,6 @@
 package all.clear.controller;
-import all.clear.crwal.CrwalToEntity;
-import all.clear.crwal.CrwalMemberInfo;
+import all.clear.crwal.CrawlToEntity;
+import all.clear.crwal.CrawlMemberInfo;
 import all.clear.service.RequirementService;
 import all.clear.service.MemberService;
 import jakarta.validation.Valid;
@@ -23,13 +23,13 @@ public class CrwalController {
         if (bindingResult.hasErrors())
             return "/crwalData";
         // 폼의 내용을 바탕으로 크롤링 객체 생성 및 크롤링
-        CrwalMemberInfo crwalMemberInfo = new CrwalMemberInfo();
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo();
         String usaintId = form.getUsaintId().toString();
-        crwalMemberInfo.loginUsaint(usaintId, form.getUsaintPassword());
+        crawlMemberInfo.loginUsaint(usaintId, form.getUsaintPassword());
         // 크롤링한 데이터를 엔티티로 변환 위한 객체생성
-        CrwalToEntity crwalToEntity = new CrwalToEntity(memberService, requirementService);
+        CrawlToEntity crawlToEntity = new CrawlToEntity(memberService, requirementService);
         // 폼의 내용을 바탕으로 Requirement 객체 저장
-        crwalToEntity.makeRequirementComponentEntity(crwalMemberInfo);
+        crawlToEntity.makeRequirementComponentEntity(crawlMemberInfo);
         // 폼의 내용을 바탕으로 Member 객체 저장
 
         return "redirect:/";
