@@ -14,14 +14,7 @@ public class RequirementService {
 
     private final MemberRepository memberRepository;
 
-    public void saveRequirement(Requirement requirement){
-        requirementRepository.save(requirement);
-    }
-
-    public void deleteRequirement(Requirement requirement){
-        requirementRepository.delete(requirement);
-    }
-
+    
     public Requirement findByMemberId(Long memberId){
         return memberRepository.findById(memberId).get().getRequirement();
     }
