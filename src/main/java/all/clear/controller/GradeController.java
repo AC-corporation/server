@@ -1,12 +1,9 @@
 package all.clear.controller;
 
-import all.clear.dto.responseDto.GradeResponseDto;
-import all.clear.dto.responseDto.SemesterGradeResponseDto;
+import all.clear.dto.responseDto.grade.GradeResponseDto;
 import all.clear.global.response.ApiResponse;
 import all.clear.service.GradeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
