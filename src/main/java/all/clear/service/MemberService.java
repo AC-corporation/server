@@ -42,7 +42,7 @@ public class MemberService {
      */
     // 크롤링 실패했을 때 처리 추가 필요
     // 유저 정보 없을 때 처리 추가 필요
-    public void update(Long id, int usaintId, String usaintPasswd){
+    public void update(Long id, String usaintId, String usaintPasswd){
         Member member = findOne(id);
         CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPasswd);
 
