@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.crwal.CrawlMemberInfo;
+import all.clear.crawl.CrawlMemberInfo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

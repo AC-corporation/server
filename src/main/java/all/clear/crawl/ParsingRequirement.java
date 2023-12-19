@@ -1,4 +1,4 @@
-package all.clear.crwal;
+package all.clear.crawl;
 
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
