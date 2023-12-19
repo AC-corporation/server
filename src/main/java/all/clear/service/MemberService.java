@@ -19,7 +19,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Autowired
-    private final RequirementService requirementService;
+    private final RequirementRepository requirementRepository;
 
     @Autowired
     private final GradeRepository gradeRepository;
@@ -48,7 +48,7 @@ public class MemberService {
         member.setSemester(newMember.getSemester());
 
         //졸업요건 초기화
-        requirementService.deleteRequirement(member.getRequirement());
+        requirementRepository.delete(member.getRequirement());
         Requirement newRequirement = crawlInfo.getRequirement();
         newRequirement.setMember(member);
         requirementService.saveRequirement(newRequirement);
