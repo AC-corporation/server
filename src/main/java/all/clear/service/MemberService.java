@@ -64,17 +64,29 @@ public class MemberService {
 
     //회원가입
     @Transactional
-    public void createUser(MemberSignupRequestDto request){
+    public void createUser(MemberSignupRequestDto request) {
         String password = passwordEncoder.encode(request.getPassword());
         Member member = Member.builder()
                 .email(request.getEmail())
                 .password(password)
                 .build();
 
+        String usaintId = request.getUsaintId();
+        String usaintPassword = request.getUsaintPassword();
+
         //멤버 정보 크롤링
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo();
+        crawlMemberInfo.loginUsaint(usaintId, usaintPassword);
+        if(/**로그인이 성공적으로 된다면**/){
+
+            //크롤링 한 데이터 member에 저장
 
 
-        memberRepository.save(member);
+            memberRepository.save(member);
+        }
+        else{
+               throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        }
     }
 
 
