@@ -19,16 +19,16 @@ public class Member {
     @Column(name = "member_id")
     private Long memberId;
 
-    @Column(name = "app_id", nullable = false)
-    private Long appId;
-    @Column(name = "app_password", nullable = false)
-    private String appPassword;
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     @Column(name = "member_name")
     private String memberName;
     private String university;
     private String major;
-    private String mail;
 
     @Column(name = "class_type")
     private String classType; //분반

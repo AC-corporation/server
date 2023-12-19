@@ -33,18 +33,23 @@ public class MemberService {
 
     //로그인
     public void login(LoginRequestDto request){
-        Long appId = request.getAppId();
-        String appPasword = request.getAppPassword();
+        String email = request.getEmail();
+        String pasword = request.getPassword();
 
-        Member member = memberRepository.findByAppId(appId);
+        Member member = memberRepository.findByEmail(email);
+
+        /**
+         * 수정필요
+         */
+
     }
 
 
     //회원가입
     public void createUser(MemberSignupRequestDto request){
         Member member = Member.builder()
-                .appId(request.getId())
-                .appPassword(request.getPassword())
+                .email(request.getEmail())
+                .password(request.getPassword())
                 .build();
         memberRepository.save(member);
     }
