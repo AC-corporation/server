@@ -12,9 +12,8 @@ public class ParsingRequirement {
     /*
     졸업요건 문자열 파싱함수
      */
-    public Requirement parsingRequirement(CrawlMemberInfo crawlMemberInfo){
+    public Requirement parsingRequirementString(ArrayList<String> requirementStringList){
         requirement = new Requirement();
-        ArrayList<String> requirementStringList=  crawlMemberInfo.getRequirementComponentList();
         String requirementString;
         String category = "";
         for(int i=0;i<requirementStringList.size();i++){

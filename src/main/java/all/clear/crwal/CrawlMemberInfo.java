@@ -1,5 +1,6 @@
 package all.clear.crwal;
 
+import all.clear.domain.requirement.Requirement;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.*;
@@ -27,6 +28,7 @@ public class CrawlMemberInfo {
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
     WebDriver driver;
+    private ParsingRequirement parsingRequirement;
 
     public void loginUsaint(String usaintId, String usaintPassword){ // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
@@ -394,5 +396,12 @@ public class CrawlMemberInfo {
     // 웹 드라이버 닫는 함수
     public void closeDriver(){
         driver.quit();
+    }
+
+    // 졸업요건 객체 얻는 함수
+    public Requirement getRequirement(){
+        Requirement requirement;
+        requirement = parsingRequirement.parsingRequirementString(requirementComponentList);
+        return requirement;
     }
 }
