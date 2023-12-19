@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.crwal.CrawlMemberInfo;
+import all.clear.crawl.CrawlMemberInfo;
 import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;

@@ -1,19 +1,29 @@
 package all.clear.service;
 
-import all.clear.crwal.CrawlMemberInfo;
+import all.clear.crawl.CrawlMemberInfo;
 import all.clear.domain.Member;
+import all.clear.domain.UserDetailsImpl;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
+import all.clear.dto.requestDto.EmailIsValidRequestDto;
 import all.clear.dto.requestDto.LoginRequestDto;
 import all.clear.dto.requestDto.MemberSignupRequestDto;
+import all.clear.dto.requestDto.UpdateRequestDto;
+import all.clear.global.exception.GlobalErrorCode;
+import all.clear.global.exception.GlobalException;
 import all.clear.repository.GradeRepository;
 import all.clear.repository.MemberRepository;
 import all.clear.repository.RequirementRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 //@Transactional
 public class MemberService {
@@ -25,6 +35,7 @@ public class MemberService {
 
     @Autowired
     private final GradeRepository gradeRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
@@ -34,9 +45,15 @@ public class MemberService {
     //로그인
     public void login(LoginRequestDto request){
         String email = request.getEmail();
-        String pasword = request.getPassword();
+        String password = request.getPassword();
 
         Member member = memberRepository.findByEmail(email);
+
+        //비밀번호 확인
+        if(!passwordEncoder.matches(password, member.getPassword())){
+            throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
+        }
+
 
         /**
          * 수정필요
@@ -46,12 +63,39 @@ public class MemberService {
 
 
     //회원가입
+    @Transactional
     public void createUser(MemberSignupRequestDto request){
+        String password = passwordEncoder.encode(request.getPassword());
         Member member = Member.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(password)
                 .build();
+
+        //멤버 정보 크롤링
+
+
         memberRepository.save(member);
+    }
+
+
+    //회원가입 - 이메일 인증 코드 보내기
+    public void sendEmailCode(String email){
+
+        /**
+         * 수정필요
+         */
+
+    }
+
+
+    //회원가입 - 이메일 인증 코드 확인
+    public boolean isEmailValid(EmailIsValidRequestDto request){
+        String email = request.getEmail();
+        String code = request.getCode();
+        /**
+         * 수정필요
+         */
+        return true;
     }
 
 
@@ -60,16 +104,20 @@ public class MemberService {
      */
     // 크롤링 실패했을 때 처리 추가 필요
     // 유저 정보 없을 때 처리 추가 필요
-    public void update(Long id, int usaintId, String usaintPasswd){
-        Member member = findOne(id);
-        CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPasswd);
+    @Transactional
+    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto){
+        Member member = findOne(userDetails.getUser().getMemberId());
+        String usaintId = updateRequestDto.getUsaintId();
+        String usaintPassword = updateRequestDto.getUsaintPassword();
+
+        CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
         //멤버 초기화
         Member newMember = crawlInfo.getMember();
         member.setMemberName(newMember.getMemberName());
         member.setUniversity(newMember.getUniversity());
         member.setMajor(newMember.getMajor());
-        member.setMail(newMember.getMail());
+        member.setEmail(newMember.getEmail());
         member.setClassType(newMember.getClassType());
         member.setLevel(newMember.getLevel());
         member.setSemester(newMember.getSemester());
