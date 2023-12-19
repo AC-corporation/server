@@ -4,6 +4,8 @@ import all.clear.crwal.CrawlMemberInfo;
 import all.clear.domain.Member;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
+import all.clear.dto.requestDto.LoginRequestDto;
+import all.clear.dto.requestDto.MemberSignupRequestDto;
 import all.clear.repository.GradeRepository;
 import all.clear.repository.MemberRepository;
 import all.clear.repository.RequirementRepository;
@@ -27,6 +29,26 @@ public class MemberService {
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
     }
+
+
+    //로그인
+    public void login(LoginRequestDto request){
+        Long appId = request.getAppId();
+        String appPasword = request.getAppPassword();
+
+        Member member = memberRepository.findByAppId(appId);
+    }
+
+
+    //회원가입
+    public void createUser(MemberSignupRequestDto request){
+        Member member = Member.builder()
+                .appId(request.getId())
+                .appPassword(request.getPassword())
+                .build();
+        memberRepository.save(member);
+    }
+
 
     /**
      * 유저 정보 업데이트
