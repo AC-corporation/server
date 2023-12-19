@@ -14,7 +14,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
-@Setter
 public class CrawlMemberInfo {
 
     private Member member;
@@ -33,10 +32,15 @@ public class CrawlMemberInfo {
     public CrawlMemberInfo(String usaintId, String usaintPwd) {
         loginUsaint(usaintId, usaintPwd);
 
+        member = Member.builder().build();
+
         crwalMemberComponent();
         crwalRequirementComponent();
+        // 성적 크롤링 추가 필요
 
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
+        // 성적 파싱 후 객체 초기화 필요
+
     }
 
 
