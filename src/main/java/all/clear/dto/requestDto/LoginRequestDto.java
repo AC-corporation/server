@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class LoginRequesetDto {
+public class LoginRequestDto {
     @NotBlank(message = "ID를 입력해 주세요.")
     private Long appId;
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-public class CrwalTest {
+public class CrawalTest {
     @Test
     public static void main(String[] args) {
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo();
