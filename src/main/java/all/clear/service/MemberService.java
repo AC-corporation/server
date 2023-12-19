@@ -51,7 +51,7 @@ public class MemberService {
         requirementRepository.delete(member.getRequirement());
         Requirement newRequirement = crawlInfo.getRequirement();
         newRequirement.setMember(member);
-        requirementRepository.save(newRequirement))
+        requirementRepository.save(newRequirement);
 
         //성적 초기화
         gradeRepository.delete(member.getGrade());

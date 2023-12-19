@@ -14,7 +14,7 @@ public class RequirementService {
 
     private final MemberRepository memberRepository;
 
-
+    
     public Requirement findByMemberId(Long memberId){
         return memberRepository.findById(memberId).get().getRequirement();
     }
