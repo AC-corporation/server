@@ -40,27 +40,25 @@ public class MemberService {
     }
 
 
-    //로그인
-    public void login(LoginRequestDto request) {
+    /**
+     * 로그인
+     */
+    public Long login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
         Member member = memberRepository.findByEmail(email);
 
         //비밀번호 확인
-        if (!passwordEncoder.matches(password, member.getPassword())) {
+        if (!passwordEncoder.matches(password, member.getPassword()))
             throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
-        }
-
-
-        /**
-         * 수정필요
-         */
-
+        return member.getMemberId();
     }
 
 
-    //회원가입
+    /**
+     * 회원가입
+     */
     @Transactional
     public void createMember(MemberSignupRequestDto request) throws GlobalException {
         String password = passwordEncoder.encode(request.getPassword());
