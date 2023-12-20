@@ -43,14 +43,14 @@ public class MemberService {
 
 
     //로그인
-    public void login(LoginRequestDto request){
+    public void login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
         Member member = memberRepository.findByEmail(email);
 
         //비밀번호 확인
-        if(!passwordEncoder.matches(password, member.getPassword())){
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
@@ -76,7 +76,7 @@ public class MemberService {
 
         //멤버 정보 크롤링
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
-        if(/**로그인이 성공적으로 된다면**/){
+        if (/**로그인이 성공적으로 된다면**/) {
 
             //크롤링 한 데이터 member에 저장
             Member newMember = crawlMemberInfo.getMember();
@@ -98,15 +98,14 @@ public class MemberService {
             gradeRepository.save(newGrade);
 
             memberRepository.save(member);
-        }
-        else{
-               throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        } else {
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
         }
     }
 
 
     //회원가입 - 이메일 인증 코드 보내기
-    public void sendEmailCode(String email){
+    public void sendEmailCode(String email) {
 
         /**
          * 수정필요
@@ -116,7 +115,7 @@ public class MemberService {
 
 
     //회원가입 - 이메일 인증 코드 확인
-    public boolean isEmailValid(EmailIsValidRequestDto request){
+    public boolean isEmailValid(EmailIsValidRequestDto request) {
         String email = request.getEmail();
         String code = request.getCode();
         /**
@@ -132,21 +131,21 @@ public class MemberService {
     // 크롤링 실패했을 때 처리 추가 필요
     // 유저 정보 없을 때 처리 추가 필요
     @Transactional
-    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto){
+    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) {
         Member member = findOne(userDetails.getUser().getMemberId());
         String usaintId = updateRequestDto.getUsaintId();
         String usaintPassword = updateRequestDto.getUsaintPassword();
 
         CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
-        if(/**로그인이 성공적으로 된다면**/){
+        if (/**로그인이 성공적으로 된다면**/) {
 
             //멤버 초기화
             Member newMember = crawlInfo.getMember();
             member.setMemberName(newMember.getMemberName());
             member.setUniversity(newMember.getUniversity());
             member.setMajor(newMember.getMajor());
-           // member.setEmail(newMember.getEmail());
+            // member.setEmail(newMember.getEmail());
             member.setClassType(newMember.getClassType());
             member.setLevel(newMember.getLevel());
             member.setSemester(newMember.getSemester());
@@ -162,8 +161,7 @@ public class MemberService {
             Grade newGrade = crawlInfo.getGrade();
             newGrade.setMember(member);
             gradeRepository.save(newGrade);
-        }
-        else{
+        } else {
             throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
         }
     }
