@@ -12,9 +12,14 @@ public enum GlobalErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
     //회원가입 이메일 인증 코드
-    _INVALID_CODE(HttpStatus.UNAUTHORIZED, "4001", "유효하지 않은 코드입니다"),
-    _PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "4002", "비밀번호가 일치하지 않습니다"),
-    _ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "4004", "존재하지 않는 계정입니다")
+    _INVALID_CODE(HttpStatus.UNAUTHORIZED, "4001", "유효하지 않은 코드입니다."),
+    _PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "4002", "비밀번호가 일치하지 않습니다."),
+    _ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "4004", "존재하지 않는 계정입니다."),
+
+    //유세인트
+    _USAINT_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "4101", "유세인트 아이디 또는 비밀번호가 잘못되었습니다."),
+    _USAINT_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "4102", "유세인트 서버를 이용할 수 없습니다."),
+    _USAINT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "크롤링에 실패했습니다.")
         ;
 
 
