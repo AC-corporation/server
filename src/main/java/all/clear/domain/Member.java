@@ -41,9 +41,9 @@ public class Member {
     @OneToOne(mappedBy = "member")
     private Grade grade;
 
-    @OneToMany(mappedBy = "member")
-    @Column(name = "timetable_list")
-    private List<TimeTable> timeTableList = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    @Column(name = "timetable_list")
+//    private List<TimeTable> timeTableList = new ArrayList<>();
 }
 
 
