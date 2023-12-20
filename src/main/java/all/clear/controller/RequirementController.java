@@ -1,6 +1,6 @@
 package all.clear.controller;
 
-import all.clear.dto.responseDto.RequirementResponseDto;
+import all.clear.dto.responseDto.requirement.RequirementResponseDto;
 import all.clear.global.response.ApiResponse;
 import all.clear.service.RequirementService;
 import io.swagger.v3.oas.annotations.Operation;

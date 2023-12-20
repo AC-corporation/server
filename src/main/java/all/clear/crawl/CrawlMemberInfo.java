@@ -14,12 +14,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
-@Setter
-@Getter
 public class CrawlMemberInfo {
 
+    @Getter
     private Member member;
+    @Getter
     private Requirement requirement;
+    @Getter
     private Grade grade;
 
     private ArrayList<String> requirementComponentList = new ArrayList<>();
@@ -400,12 +401,5 @@ public class CrawlMemberInfo {
     // 웹 드라이버 닫는 함수
     public void closeDriver() {
         driver.quit();
-    }
-
-    // 졸업요건 객체 얻는 함수
-    public Requirement getRequirement() {
-        Requirement requirement;
-        requirement = parsingRequirement.parsingRequirementString(requirementComponentList);
-        return requirement;
     }
 }

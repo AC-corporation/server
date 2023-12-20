@@ -1,7 +1,7 @@
 package all.clear.service;
 
 import all.clear.domain.requirement.Requirement;
-import all.clear.dto.responseDto.RequirementResponseDto;
+import all.clear.dto.responseDto.requirement.RequirementResponseDto;
 import all.clear.repository.MemberRepository;
 import all.clear.repository.RequirementRepository;
 import lombok.RequiredArgsConstructor;

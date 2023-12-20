@@ -1,7 +1,7 @@
 package all.clear.service;
 
 import all.clear.domain.grade.Grade;
-import all.clear.dto.responseDto.GradeResponseDto;
+import all.clear.dto.responseDto.grade.GradeResponseDto;
 import all.clear.repository.GradeRepository;
 import all.clear.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
