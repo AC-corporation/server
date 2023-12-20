@@ -1,8 +1,8 @@
-package all.clear.crwal;
+package all.clear.crawl;
 
-import all.clear.domain.Member;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
+import all.clear.domain.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.*;
@@ -16,8 +16,11 @@ import java.util.ArrayList;
 
 public class CrawlMemberInfo {
 
+    @Getter
     private Member member;
+    @Getter
     private Requirement requirement;
+    @Getter
     private Grade grade;
 
     private ArrayList<String> requirementComponentList = new ArrayList<>();
@@ -28,14 +31,13 @@ public class CrawlMemberInfo {
     WebDriver driver;
     private ParsingRequirement parsingRequirement;
 
-
-    public CrawlMemberInfo(String usaintId, String usaintPwd) {
-        loginUsaint(usaintId, usaintPwd);
+    public CrawlMemberInfo(String usaintId, String usaintPassword) {
+        loginUsaint(usaintId, usaintPassword);
 
         member = Member.builder().build();
 
-        crwalMemberComponent();
-        crwalRequirementComponent();
+        crawlMemberComponent();
+        crawlRequirementComponent();
         // 성적 크롤링 추가 필요
 
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
@@ -43,18 +45,12 @@ public class CrawlMemberInfo {
 
     }
 
-
-    /**
-     * 유세인트 로그인
-     */
-    private void loginUsaint(String usaintId, String usaintPassword) {
+    public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
         // 입력 받은 아이디와 비밀번호
-        String memberId = usaintId;
-        String password = usaintPassword;
 
         driver = new ChromeDriver();
         driver.manage().window().maximize();
@@ -64,8 +60,8 @@ public class CrawlMemberInfo {
         driver.get(loginUrl); // 로그인 접속
         WebElement memberNameElement = driver.findElement(By.name("memberid"));
         WebElement passwordElement = driver.findElement(By.name("pwd")); // 로그인 시도
-        memberNameElement.sendKeys(memberId);
-        passwordElement.sendKeys(password);
+        memberNameElement.sendKeys(usaintId);
+        passwordElement.sendKeys(usaintPassword);
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
         loginButton.click();
         try {
@@ -76,12 +72,11 @@ public class CrawlMemberInfo {
         // 학사관리 클릭
         WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
         degreeManageButton.click();
+        crawlMemberComponent();
+        crawlRequirementComponent();
     }
 
-    /**
-     * 멤버 정보 크롤링
-     */
-    private void crwalMemberComponent() {
+    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
         WebElement target;
         try {
             Thread.sleep(2000); // 1초 동안 실행을 멈추기
@@ -109,7 +104,7 @@ public class CrawlMemberInfo {
         member.setMajor(target.getAttribute("value"));
         // mail 크롤링
         target = driver.findElement(By.id("WD0106"));
-        member.setMail(target.getAttribute("value"));
+        member.setEmail(target.getAttribute("value"));
         // classType 크롤링
         target = driver.findElement(By.id("WDE6"));
         member.setClassType(target.getAttribute("value"));
@@ -123,7 +118,7 @@ public class CrawlMemberInfo {
         driver.switchTo().defaultContent();
     }
 
-    private void crwalRequirementComponent() { // 졸업요건 조회 크롤링 함수
+    public void crawlRequirementComponent() { // 졸업요건 조회 크롤링 함수
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
@@ -176,10 +171,8 @@ public class CrawlMemberInfo {
         driver.switchTo().defaultContent();
     }
 
-    /**
-     * 전체 성적 크롤링
-     */
-    private void crawlEntireGrades() {
+    // 전체 성적 조회 함수
+    public void crawlEntireGrades() {
 
         // 추출 할 xpath 경로를 가지는 문자열
         String targetPath;
@@ -265,16 +258,17 @@ public class CrawlMemberInfo {
                     break;
                 }
             }
-            if (endFlag)
+
+            if (endFlag) {
                 break;
+            }
+
             cnt++;
         }
     }
 
-    /**
-     * 학기별 세부 성적 크롤링
-     */
-    private void crawlDetailGrades() {
+    // 학기별 세부 성적 크롤링
+    public void crawlDetailGrades() {
         String selectedYear; // 현재 선택된 학년 ex) 2023학년도
         String selectedSemester; // 현재 선택된 학기 ex) 2 학기
         WebElement prevBtn = null; // 이전 학기 버튼
@@ -405,20 +399,7 @@ public class CrawlMemberInfo {
     }
 
     // 웹 드라이버 닫는 함수
-    private void closeDriver() {
+    public void closeDriver() {
         driver.quit();
-    }
-
-    //==Getter==//
-    public Member getMember() {
-        return this.member;
-    }
-
-    public Grade getGrade() {
-        return this.grade;
-    }
-
-    public Requirement getRequirement() {
-        return this.requirement;
     }
 }

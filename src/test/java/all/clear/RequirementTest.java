@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.crwal.CrawlMemberInfo;
+import all.clear.crawl.CrawlMemberInfo;
 import all.clear.domain.Member;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
@@ -21,8 +22,8 @@ class RequirementTest {
     RequirementRepository requirementRepository;
 
     @Test
-    void getRequirement() {
-        CrawlMemberInfo crawlMemberinfo = new CrawlMemberInfo("20221826", "jk03daeun!");
+    void getRequirement(){
+        CrawlMemberInfo crawlMemberinfo = new CrawlMemberInfo("아이디", "비밀번호");
 
         //로그인하고 임시로 member, requirement 생성
         Member member = Member.builder().build();

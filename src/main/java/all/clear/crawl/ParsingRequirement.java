@@ -1,4 +1,4 @@
-package all.clear.crwal;
+package all.clear.crawl;
 
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.requirement.RequirementComponent;
@@ -8,11 +8,12 @@ import java.util.ArrayList;
 
 @Getter
 public class ParsingRequirement {
-    /**
-     * 졸업요건 문자열 파싱함수
+    static Requirement requirement;
+    /*
+    졸업요건 문자열 파싱함수
      */
-     public static Requirement parsingRequirementString(ArrayList<String> requirementStringList){
-        Requirement requirement = new Requirement();
+    public static Requirement parsingRequirementString(ArrayList<String> requirementStringList){
+        requirement = new Requirement();
         String requirementString;
         String category = "";
         for(int i=0;i<requirementStringList.size();i++){
