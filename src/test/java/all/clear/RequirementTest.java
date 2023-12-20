@@ -23,8 +23,7 @@ class RequirementTest {
 
     @Test
     void getRequirement(){
-        CrawlMemberInfo crawlMemberinfo = new CrawlMemberInfo();
-        crawlMemberinfo.loginUsaint("20221826","jk03daeun!");
+        CrawlMemberInfo crawlMemberinfo = new CrawlMemberInfo("아이디", "비밀번호");
 
         //로그인하고 임시로 member, requirement 생성
         Member member = Member.builder().build();

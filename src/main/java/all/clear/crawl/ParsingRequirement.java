@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 @Getter
 public class ParsingRequirement {
-    Requirement requirement;
+    static Requirement requirement;
     /*
     졸업요건 문자열 파싱함수
      */
-    public Requirement parsingRequirementString(ArrayList<String> requirementStringList){
+    public static Requirement parsingRequirementString(ArrayList<String> requirementStringList){
         requirement = new Requirement();
         String requirementString;
         String category = "";

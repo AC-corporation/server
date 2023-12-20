@@ -1,6 +1,7 @@
 package all.clear;
 
 import all.clear.crawl.CrawlMemberInfo;
+import all.clear.domain.Member;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,15 +9,15 @@ import java.util.ArrayList;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo();
-        crawlMemberInfo.loginUsaint("20203058","비밀번호");
-        System.out.println(crawlMemberInfo.getMemberName());
-        System.out.println(crawlMemberInfo.getUniversity());
-        System.out.println(crawlMemberInfo.getMajor());
-        System.out.println(crawlMemberInfo.getMail());
-        System.out.println(crawlMemberInfo.getClassType());
-        System.out.println(crawlMemberInfo.getYear());
-        System.out.println(crawlMemberInfo.getSemester());
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("id", "password");
+        Member member = crawlMemberInfo.getMember();
+        System.out.println(member.getMemberName());
+        System.out.println(member.getUniversity());
+        System.out.println(member.getMajor());
+        System.out.println(member.getEmail());
+        System.out.println(member.getClassType());
+        System.out.println(member.getLevel());
+        System.out.println(member.getSemester());
         ArrayList<String> tmpList = crawlMemberInfo.getRequirementComponentList();
         System.out.println("************졸업 요건 리스트****************");
         for (int i=0;i<tmpList.size();i++){
