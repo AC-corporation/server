@@ -122,8 +122,6 @@ public class MemberService {
     /**
      * 유저 정보 업데이트
      */
-    // 크롤링 실패했을 때 처리 추가 필요
-    // 유저 정보 없을 때 처리 추가 필요
     @Transactional
     public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) throws GlobalException {
         Member member = findOne(userDetails.getUser().getMemberId());
