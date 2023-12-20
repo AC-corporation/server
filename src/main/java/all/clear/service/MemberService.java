@@ -64,7 +64,7 @@ public class MemberService {
 
     //회원가입
     @Transactional
-    public void createUser(MemberSignupRequestDto request) {
+    public void createMember(MemberSignupRequestDto request) {
         String password = passwordEncoder.encode(request.getPassword());
         Member member = Member.builder()
                 .email(request.getEmail())
@@ -75,12 +75,27 @@ public class MemberService {
         String usaintPassword = request.getUsaintPassword();
 
         //멤버 정보 크롤링
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo();
-        crawlMemberInfo.loginUsaint(usaintId, usaintPassword);
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
         if(/**로그인이 성공적으로 된다면**/){
 
             //크롤링 한 데이터 member에 저장
+            Member newMember = crawlMemberInfo.getMember();
+            member.setMemberName(newMember.getMemberName());
+            member.setUniversity(newMember.getUniversity());
+            member.setMajor(newMember.getMajor());
+            member.setClassType(newMember.getClassType());
+            member.setLevel(newMember.getLevel());
+            member.setSemester(newMember.getSemester());
 
+            //졸업요건
+            Requirement newRequirement = crawlMemberInfo.getRequirement();
+            newRequirement.setMember(member);
+            requirementRepository.save(newRequirement);
+
+            //성적
+            Grade newGrade = crawlMemberInfo.getGrade();
+            newGrade.setMember(member);
+            gradeRepository.save(newGrade);
 
             memberRepository.save(member);
         }
@@ -124,26 +139,32 @@ public class MemberService {
 
         CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
-        //멤버 초기화
-        Member newMember = crawlInfo.getMember();
-        member.setMemberName(newMember.getMemberName());
-        member.setUniversity(newMember.getUniversity());
-        member.setMajor(newMember.getMajor());
-        member.setEmail(newMember.getEmail());
-        member.setClassType(newMember.getClassType());
-        member.setLevel(newMember.getLevel());
-        member.setSemester(newMember.getSemester());
+        if(/**로그인이 성공적으로 된다면**/){
 
-        //졸업요건 초기화
-        requirementRepository.delete(member.getRequirement());
-        Requirement newRequirement = crawlInfo.getRequirement();
-        newRequirement.setMember(member);
-        requirementRepository.save(newRequirement);
+            //멤버 초기화
+            Member newMember = crawlInfo.getMember();
+            member.setMemberName(newMember.getMemberName());
+            member.setUniversity(newMember.getUniversity());
+            member.setMajor(newMember.getMajor());
+           // member.setEmail(newMember.getEmail());
+            member.setClassType(newMember.getClassType());
+            member.setLevel(newMember.getLevel());
+            member.setSemester(newMember.getSemester());
 
-        //성적 초기화
-        gradeRepository.delete(member.getGrade());
-        Grade newGrade = crawlInfo.getGrade();
-        newGrade.setMember(member);
-        gradeRepository.save(newGrade);
+            //졸업요건 초기화
+            requirementRepository.delete(member.getRequirement());
+            Requirement newRequirement = crawlInfo.getRequirement();
+            newRequirement.setMember(member);
+            requirementRepository.save(newRequirement);
+
+            //성적 초기화
+            gradeRepository.delete(member.getGrade());
+            Grade newGrade = crawlInfo.getGrade();
+            newGrade.setMember(member);
+            gradeRepository.save(newGrade);
+        }
+        else{
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        }
     }
 }

@@ -23,7 +23,7 @@ public class MemberController {
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
     public ApiResponse signup(@RequestBody MemberSignupRequestDto userSignupRequestDto){
-        memberService.createUser(userSignupRequestDto);
+        memberService.createMember(userSignupRequestDto);
         return ApiResponse.onSuccess("회원가입에 성공했습니다","");
     }
 
