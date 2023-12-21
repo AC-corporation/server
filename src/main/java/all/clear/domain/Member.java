@@ -7,9 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Builder
 @Getter @Setter
@@ -35,10 +32,10 @@ public class Member {
     private int level; //학년
     private int semester; //학기
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Requirement requirement;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Grade grade;
 
 //    @OneToMany(mappedBy = "member")

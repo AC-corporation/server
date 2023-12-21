@@ -153,5 +153,7 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
-
+    public void deleteMember(Long id) {
+        memberRepository.deleteById(id);
+    }
 }
