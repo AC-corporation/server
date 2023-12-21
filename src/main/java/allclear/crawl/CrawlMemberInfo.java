@@ -2,7 +2,7 @@ package allclear.crawl;
 
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
-import allclear.domain.Member;
+import allclear.domain.Member.Member;
 import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;

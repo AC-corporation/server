@@ -1,6 +1,6 @@
 package allclear.controller;
 
-import allclear.domain.UserDetailsImpl;
+import allclear.domain.Member.UserDetailsImpl;
 import allclear.dto.requestDto.EmailIsValidRequestDto;
 import allclear.dto.requestDto.LoginRequestDto;
 import allclear.dto.requestDto.MemberSignupRequestDto;

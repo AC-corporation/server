@@ -1,8 +1,8 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
-import allclear.domain.Member;
-import allclear.domain.UserDetailsImpl;
+import allclear.domain.Member.Member;
+import allclear.domain.Member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.dto.requestDto.EmailIsValidRequestDto;
@@ -12,6 +12,7 @@ import allclear.dto.requestDto.UpdateRequestDto;
 import allclear.global.email.EmailService;
 import allclear.global.exception.GlobalErrorCode;
 import allclear.global.exception.GlobalException;
+import allclear.global.exception.GlobalExceptionHandler;
 import allclear.repository.GradeRepository;
 import allclear.repository.MemberRepository;
 import allclear.repository.RequirementRepository;
@@ -56,7 +57,7 @@ public class MemberService {
 
         //비밀번호 확인
         if(!passwordEncoder.matches(password, member.getPassword())){
-            throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
+            new GlobalExceptionHandler(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
 
@@ -105,7 +106,7 @@ public class MemberService {
             memberRepository.save(member);
 //        }
 //        else{
-//               throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+//              new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 //        }
     }
 
@@ -173,7 +174,7 @@ public class MemberService {
             gradeRepository.save(newGrade);
 //        }
 //        else{
-//            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+//              new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 //        }
     }
 

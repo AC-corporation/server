@@ -1,4 +1,4 @@
-package allclear.domain;
+package allclear.domain.Member;
 
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;

@@ -1,4 +1,4 @@
-package allclear.domain;
+package allclear.domain.timetable;
 
 import allclear.domain.subject.Subject;
 import jakarta.persistence.*;

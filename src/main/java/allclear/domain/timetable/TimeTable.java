@@ -1,5 +1,6 @@
-package allclear.domain;
+package allclear.domain.timetable;
 
+import allclear.domain.Member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
