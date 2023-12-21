@@ -43,7 +43,7 @@ public class MemberService {
     /**
      * 로그인
      */
-    public Long login(LoginRequestDto request) {
+    public void login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
@@ -52,12 +52,11 @@ public class MemberService {
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword()))
             throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
-        return member.getMemberId();
     }
 
 
     /**
-     * 회원가입
+     * 회원 가입
      */
     @Transactional
     public void createMember(MemberSignupRequestDto request) throws GlobalException {
@@ -118,7 +117,7 @@ public class MemberService {
 
 
     /**
-     * 유저 정보 업데이트
+     * 회원 정보 업데이트
      */
     @Transactional
     public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) throws GlobalException {
@@ -150,4 +149,9 @@ public class MemberService {
         newGrade.setMember(member);
         gradeRepository.save(newGrade);
     }
+
+    /**
+     * 회원 탈퇴
+     */
+
 }
