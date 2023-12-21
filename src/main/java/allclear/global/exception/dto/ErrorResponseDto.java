@@ -1,4 +1,4 @@
-package allclear.global.exception;
+package allclear.global.exception.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @AllArgsConstructor
 @Getter
-public class ResponseDto {
+public class ErrorResponseDto {
     private  Boolean isSuccess;
     private String code;
     private String message;

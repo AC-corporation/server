@@ -1,13 +1,16 @@
-package allclear.global.exception;
+package allclear.global.exception.code;
 
+import allclear.global.exception.dto.ErrorResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Getter
 @AllArgsConstructor
-@Component
+//@Component
+//@Slf4j
 public enum GlobalErrorCode {
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
@@ -19,7 +22,6 @@ public enum GlobalErrorCode {
     _PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "4002", "비밀번호가 일치하지 않습니다"),
     _ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "4004", "존재하지 않는 계정입니다")
         ;
-
 
     private final HttpStatus httpStatus;
     private final String code;

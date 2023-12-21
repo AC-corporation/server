@@ -5,7 +5,7 @@ import allclear.dto.requestDto.EmailIsValidRequestDto;
 import allclear.dto.requestDto.LoginRequestDto;
 import allclear.dto.requestDto.MemberSignupRequestDto;
 import allclear.dto.requestDto.UpdateRequestDto;
-import allclear.global.exception.GlobalErrorCode;
+import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;

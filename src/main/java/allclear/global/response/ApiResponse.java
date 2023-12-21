@@ -1,7 +1,7 @@
 package allclear.global.response;
 
-import allclear.global.exception.GlobalErrorCode;
-import allclear.global.exception.SuccessCode;
+import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.exception.code.SuccessCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

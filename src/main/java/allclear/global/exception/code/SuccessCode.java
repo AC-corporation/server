@@ -1,5 +1,6 @@
-package allclear.global.exception;
+package allclear.global.exception.code;
 
+import allclear.global.exception.dto.ResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
