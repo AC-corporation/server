@@ -2,7 +2,7 @@ package allclear.crawl;
 
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
-import allclear.domain.Member.Member;
+import allclear.domain.member.Member;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package allclear.domain.requirement;
 
-import allclear.domain.Member.Member;
+import allclear.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 

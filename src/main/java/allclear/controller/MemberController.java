@@ -1,6 +1,6 @@
 package allclear.controller;
 
-import allclear.domain.Member.UserDetailsImpl;
+import allclear.domain.member.UserDetailsImpl;
 import allclear.dto.requestDto.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.exception.code.GlobalErrorCode;

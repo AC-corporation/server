@@ -1,7 +1,7 @@
 package allclear;
 
 import allclear.crawl.CrawlMemberInfo;
-import allclear.domain.Member.Member;
+import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.responseDto.requirement.RequirementResponseDto;

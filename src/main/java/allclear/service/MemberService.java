@@ -1,8 +1,8 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
-import allclear.domain.Member.Member;
-import allclear.domain.Member.UserDetailsImpl;
+import allclear.domain.member.Member;
+import allclear.domain.member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.dto.requestDto.*;

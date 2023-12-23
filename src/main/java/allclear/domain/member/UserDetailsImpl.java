@@ -1,4 +1,4 @@
-package allclear.domain.Member;
+package allclear.domain.member;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
