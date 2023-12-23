@@ -47,7 +47,7 @@ public class SemesterGrade {
 
 
     //==생성 메서드==//
-    public static SemesterGrade createSemesterGrade(Grade grade, String semesterAverageGrade, SemesterSubject... semesterSubjects) {
+    public static SemesterGrade createSemesterGrade(Grade grade, String semesterAverageGrade, ArrayList<SemesterSubject> semesterSubjects) {
         SemesterGrade semesterGrade = new SemesterGrade();
         semesterGrade.setGrade(grade);
         semesterGrade.setSemesterAverageGrade(semesterAverageGrade);

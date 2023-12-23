@@ -10,7 +10,7 @@ public class CrawlSpeedExceptionTest {
     @Test
     public static void main(String[] args){
         CrawlTestInfo crawlInfo = new CrawlTestInfo();
-        crawlInfo.loginUsaint("id","pwd");
+        crawlInfo.loginUsaint("20203058","Jjw112233@");
         crawlInfo.crawlRequirementComponent();
 
         ArrayList<String> tmpList = crawlInfo.getRequirementComponentList();

@@ -72,8 +72,7 @@ public class CrawlMemberInfo {
         // 학사관리 클릭
         WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
         degreeManageButton.click();
-        crawlMemberComponent();
-        crawlRequirementComponent();
+
     }
 
     public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
