@@ -9,6 +9,7 @@ import all.clear.dto.requestDto.EmailIsValidRequestDto;
 import all.clear.dto.requestDto.LoginRequestDto;
 import all.clear.dto.requestDto.MemberSignupRequestDto;
 import all.clear.dto.requestDto.UpdateRequestDto;
+import all.clear.dto.responseDto.MemberResponseDto;
 import all.clear.global.exception.GlobalErrorCode;
 import all.clear.global.exception.GlobalException;
 import all.clear.repository.GradeRepository;
@@ -39,6 +40,12 @@ public class MemberService {
         return memberRepository.findById(id).get();
     }
 
+    /**
+     * 유저 조회
+     */
+    public MemberResponseDto getMember(Long id) {
+        return new MemberResponseDto(findOne(id));
+    }
 
     /**
      * 로그인
