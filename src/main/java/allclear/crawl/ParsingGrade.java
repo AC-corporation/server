@@ -8,17 +8,20 @@ import java.util.ArrayList;
 
 public class ParsingGrade {
     /*
- 성적 문자열 파싱함수
-  */
+    성적 문자열 파싱함수
+    */
     static Grade grade;
 
-    public static Grade parsingGradeString(ArrayList<String> entireGrades, ArrayList<String> detailGrades){
+    public static Grade parsingGradeString(String totalCredit, String averageGrade,ArrayList<String> entireGrades, ArrayList<String> detailGrades){
         String year; // 학년
         String semester; // 학기
         String semesterAverageGrade; // 학기 평균 학점
 
         semesterAverageGrade = "";
         grade = new Grade();
+        grade.setTotalCredit(Long.parseLong(totalCredit));
+        grade.setAverageGrade(averageGrade);
+
         ArrayList<SemesterSubject> tmpList = new ArrayList<>();
 
         for(int i=0;i<detailGrades.size();i++){

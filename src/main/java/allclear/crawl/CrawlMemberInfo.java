@@ -57,7 +57,7 @@ public class CrawlMemberInfo {
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        grade = ParsingGrade.parsingGradeString(entireGrades, detailGrades);
+        grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
 
     }
 
