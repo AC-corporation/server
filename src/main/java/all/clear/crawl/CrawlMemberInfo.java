@@ -330,7 +330,7 @@ public class CrawlMemberInfo {
             targetText = target.getAttribute("value").strip();
             selectedSemester = targetText;
 
-            detailGrades.add("*"+selectedYear+ " "+selectedSemester);
+            detailGrades.add("*"+selectedYear+ " "+selectedSemester); //구분해주는용
 
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
