@@ -42,6 +42,10 @@ public class MemberService {
         return memberRepository.findById(id).get();
     }
 
+    //user/test/error controller test용 method
+    public void temp(){
+        throw new GlobalExceptionHandler(GlobalErrorCode._FORBIDDEN);
+    }
 
     @Transactional
     //로그인
@@ -53,7 +57,7 @@ public class MemberService {
 
         //비밀번호 확인
         if(!passwordEncoder.matches(password, member.getPassword())){
-            new GlobalExceptionHandler(GlobalErrorCode._PASSWORD_MISMATCH);
+           throw new GlobalExceptionHandler(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
 
@@ -102,7 +106,7 @@ public class MemberService {
             memberRepository.save(member);
 //        }
 //        else{
-//              new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+//              throw new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 //        }
     }
 
@@ -172,7 +176,7 @@ public class MemberService {
             gradeRepository.save(newGrade);
 //        }
 //        else{
-//              new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+//             throw new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 //        }
     }
 

@@ -30,6 +30,12 @@ public class MemberController {
         return ApiResponse.onSuccess(string, "");
     }
 
+    @GetMapping("/test/error")
+    public ApiResponse test4(){
+        memberService.temp();
+        return ApiResponse.onSuccess("exception2", "");
+    }
+
     //회원가입
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
