@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20192396", "wjdtntkdtjs13@26");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("id", "pwd");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getMemberName());
         System.out.println(member.getUniversity());

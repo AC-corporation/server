@@ -21,6 +21,9 @@ public class CrawlTestInfo {
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
+
+    private String totalCredit; // 총 이수 학점
+    private String averageGrade; // 평균 학점
     WebDriver driver;
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
@@ -142,13 +145,13 @@ public class CrawlTestInfo {
 
         // 총 신청 학점
         target = driver.findElement(By.id("WD0148"));
-        targetText = target.getAttribute("value");
-        entireGrades.add(targetText);
+        totalCredit = target.getAttribute("value");
+
 
         // 전체 평균 학점
         target = driver.findElement(By.id("WD0151"));
-        targetText = target.getAttribute("value");
-        entireGrades.add(targetText);
+        averageGrade = target.getAttribute("value");
+
 
 
         // 팝업 창 닫기 클릭
