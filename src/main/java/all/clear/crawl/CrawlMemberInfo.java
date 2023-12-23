@@ -38,11 +38,11 @@ public class CrawlMemberInfo {
 
         crawlMemberComponent();
         crawlRequirementComponent();
-        // 성적 크롤링 추가 필요
+        crawlEntireGrades();
+        crawlDetailGrades();
 
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        // 성적 파싱 후 객체 초기화 필요
-
+        grade = ParsingGrade.parsingGradeString(entireGrades, detailGrades);
     }
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
