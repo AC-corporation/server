@@ -1,7 +1,7 @@
 package allclear;
 
 import allclear.crawl.CrawlMemberInfo;
-import allclear.domain.Member;
+import allclear.domain.Member.Member;
 import org.junit.jupiter.api.Test;
 
 public class CrawalTest {
