@@ -1,10 +1,7 @@
 package allclear.controller;
 
 import allclear.domain.Member.UserDetailsImpl;
-import allclear.dto.requestDto.EmailIsValidRequestDto;
-import allclear.dto.requestDto.LoginRequestDto;
-import allclear.dto.requestDto.MemberSignupRequestDto;
-import allclear.dto.requestDto.UpdateRequestDto;
+import allclear.dto.requestDto.*;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
@@ -18,6 +15,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class MemberController {
     private final MemberService memberService;
+    @GetMapping("/test/ok")
+    public ApiResponse test(){
+        return ApiResponse.onSuccess("mapping test", "");
+    }
+
+    @GetMapping("/test/exception")
+    public ApiResponse test2(){
+        return ApiResponse.onFailure(GlobalErrorCode._BAD_REQUEST, "");
+    }
+
+    @PostMapping("/test/post")
+    public ApiResponse test3(@RequestBody String string){
+        return ApiResponse.onSuccess(string, "");
+    }
 
     //회원가입
     @Operation(summary = "회원가입", description = "회원가입")
@@ -28,14 +39,14 @@ public class MemberController {
     }
 
     @Operation(summary = "회원가입 - 이메일 인증")
-    @PostMapping("/emailAuth")
-    public ApiResponse emailAuth(String email){
-        memberService.sendEmailCode(email);
+    @PostMapping("/signup/emailAuth")
+    public ApiResponse emailAuth(@RequestBody EmailAuthRequestDto emailAuthRequestDto){
+        memberService.sendEmailCode(emailAuthRequestDto);
         return ApiResponse.onSuccess("이메일 인증 코드를 발송했습니다","");
     }
 
     @Operation(summary = "회원가입 - 이메일 인증 코드 확인")
-    @PostMapping("/emailIsValid")
+    @PostMapping("/signup/emailIsValid")
     public ApiResponse emailIsValid(@RequestBody EmailIsValidRequestDto emailIsValidRequestDto){
         Boolean isValid = memberService.isEmailValid(emailIsValidRequestDto);
         if(isValid)

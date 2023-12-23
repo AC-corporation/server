@@ -5,10 +5,7 @@ import allclear.domain.Member.Member;
 import allclear.domain.Member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
-import allclear.dto.requestDto.EmailIsValidRequestDto;
-import allclear.dto.requestDto.LoginRequestDto;
-import allclear.dto.requestDto.MemberSignupRequestDto;
-import allclear.dto.requestDto.UpdateRequestDto;
+import allclear.dto.requestDto.*;
 import allclear.global.email.EmailService;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.exception.GlobalExceptionHandler;
@@ -112,13 +109,12 @@ public class MemberService {
 
     @Transactional
     //회원가입 - 이메일 인증 코드 보내기
-    public void sendEmailCode(String email){
-
-        String subject = "AllClear 회원가입 인증 번호";
-        String authCode = createCode();
-        String text = "인증코드는 "+authCode+"입니다";
-        //저장 기능 구현 필요
-
+    public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto){
+        String email = emailAuthRequestDto.getEmail();
+        String subject = "AllClear 회원가입 인증 번호\n";
+        String authCode = createCode(); //8글자 랜덤
+        String text = "인증코드는 "+authCode+" 입니다\n";
+        //저장 기능 구현 필요(이메일, 코드 쌍)
         emailService.sendEmail(email, subject, text);
     }
 
@@ -130,6 +126,9 @@ public class MemberService {
         String code = request.getCode();
         /**
          * 수정필요
+         * 이메일과 코드 쌍이 일치하면 true 반환
+         * 일치하지 않으면 false 반환
+         * boolean 값에 따라 exception은 contoller에서 발생
          */
         return true;
     }
