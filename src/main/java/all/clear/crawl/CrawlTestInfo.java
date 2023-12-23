@@ -140,6 +140,16 @@ public class CrawlTestInfo {
         WebElement iframe2 = driver.findElement(By.xpath("//*[@id=\"isolatedWorkArea\"]"));
         driver.switchTo().frame(iframe2);
 
+        // 총 신청 학점
+        target = driver.findElement(By.id("WD0148"));
+        targetText = target.getAttribute("value");
+        entireGrades.add(targetText);
+
+        // 전체 평균 학점
+        target = driver.findElement(By.id("WD0151"));
+        targetText = target.getAttribute("value");
+        entireGrades.add(targetText);
+
 
         // 팝업 창 닫기 클릭
         try{

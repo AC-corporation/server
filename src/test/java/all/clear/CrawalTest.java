@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("id", "pwd");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20192396", "wjdtntkdtjs13@26");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getMemberName());
         System.out.println(member.getUniversity());
@@ -18,6 +18,8 @@ public class CrawalTest {
         System.out.println(member.getClassType());
         System.out.println(member.getLevel());
         System.out.println(member.getSemester());
+
+
 //        ArrayList<String> tmpList = crawlMemberInfo.getRequirementComponentList();
 //        System.out.println("************졸업 요건 리스트****************");
 //        for (int i=0;i<tmpList.size();i++){
