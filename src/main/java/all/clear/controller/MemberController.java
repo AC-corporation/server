@@ -5,6 +5,7 @@ import all.clear.dto.requestDto.EmailIsValidRequestDto;
 import all.clear.dto.requestDto.LoginRequestDto;
 import all.clear.dto.requestDto.MemberSignupRequestDto;
 import all.clear.dto.requestDto.UpdateRequestDto;
+import all.clear.dto.responseDto.MemberResponseDto;
 import all.clear.global.exception.GlobalErrorCode;
 import all.clear.global.exception.GlobalException;
 import all.clear.global.response.ApiResponse;
@@ -77,5 +78,14 @@ public class MemberController {
     @GetMapping("/logout")
     public void logout(){
 
+    }
+
+
+    //회원탈퇴
+    @Operation(summary = "회원탈퇴", description = "회원탈퇴")
+    @GetMapping("/delete")
+    public ApiResponse delete(Long userId) { //인자 수정 필요
+        memberService.deleteMember(userId);
+        return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
     }
 }
