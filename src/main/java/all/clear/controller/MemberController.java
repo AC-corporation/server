@@ -88,4 +88,12 @@ public class MemberController {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
     }
+
+
+    //유저조회
+    @Operation(summary = "유저 조회", description = "유저 조회")
+    //@GetMapping("") //string 수정 필요
+    public ApiResponse<MemberResponseDto> get(Long userId) { //인자 수정 필요
+        return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
+    }
 }
