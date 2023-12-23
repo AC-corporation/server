@@ -2,6 +2,7 @@ package allclear.controller;
 
 import allclear.domain.Member.UserDetailsImpl;
 import allclear.dto.requestDto.*;
+import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
@@ -85,5 +86,21 @@ public class MemberController {
     @GetMapping("/logout")
     public void logout(){
 
+    }
+
+    //회원탈퇴
+    @Operation(summary = "회원탈퇴", description = "회원탈퇴")
+    @GetMapping("/delete")
+    public ApiResponse delete(Long userId) { //인자 수정 필요
+        memberService.deleteMember(userId);
+        return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
+    }
+
+
+    //유저조회
+    @Operation(summary = "유저 조회", description = "유저 조회")
+    //@GetMapping("") //string 수정 필요
+    public ApiResponse<MemberResponseDto> get(Long userId) { //인자 수정 필요
+        return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 }

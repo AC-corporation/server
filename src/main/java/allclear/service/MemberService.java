@@ -6,12 +6,18 @@ import allclear.domain.Member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.dto.requestDto.*;
+import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.exception.GlobalExceptionHandler;
 import allclear.repository.GradeRepository;
 import allclear.repository.MemberRepository;
 import allclear.repository.RequirementRepository;
+import allclear.dto.requestDto.EmailIsValidRequestDto;
+import allclear.dto.requestDto.LoginRequestDto;
+import allclear.dto.requestDto.MemberSignupRequestDto;
+import allclear.dto.requestDto.UpdateRequestDto;
+import allclear.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +35,8 @@ import java.util.Random;
 public class MemberService {
     @Autowired
     private final MemberRepository memberRepository;
-
     @Autowired
     private final RequirementRepository requirementRepository;
-
     @Autowired
     private final GradeRepository gradeRepository;
     private final PasswordEncoder passwordEncoder;
@@ -84,24 +88,24 @@ public class MemberService {
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 //        if(/**로그인이 성공적으로 된다면**/){
 
-            //크롤링 한 데이터 member에 저장
-            Member newMember = crawlMemberInfo.getMember();
-            member.setMemberName(newMember.getMemberName());
-            member.setUniversity(newMember.getUniversity());
-            member.setMajor(newMember.getMajor());
-            member.setClassType(newMember.getClassType());
-            member.setLevel(newMember.getLevel());
-            member.setSemester(newMember.getSemester());
+        //크롤링 한 데이터 member에 저장
+        Member newMember = crawlMemberInfo.getMember();
+        member.setMemberName(newMember.getMemberName());
+        member.setUniversity(newMember.getUniversity());
+        member.setMajor(newMember.getMajor());
+        member.setClassType(newMember.getClassType());
+        member.setLevel(newMember.getLevel());
+        member.setSemester(newMember.getSemester());
 
-            //졸업요건
-            Requirement newRequirement = crawlMemberInfo.getRequirement();
-            newRequirement.setMember(member);
-            requirementRepository.save(newRequirement);
+        //졸업요건
+        Requirement newRequirement = crawlMemberInfo.getRequirement();
+        newRequirement.setMember(member);
+        requirementRepository.save(newRequirement);
 
-            //성적
-            Grade newGrade = crawlMemberInfo.getGrade();
-            newGrade.setMember(member);
-            gradeRepository.save(newGrade);
+        //성적
+        Grade newGrade = crawlMemberInfo.getGrade();
+        newGrade.setMember(member);
+        gradeRepository.save(newGrade);
 
             memberRepository.save(member);
 //        }
@@ -139,12 +143,12 @@ public class MemberService {
 
 
     /**
-     * 유저 정보 업데이트
+     * 회원 정보 업데이트
      */
     // 크롤링 실패했을 때 처리 추가 필요
     // 유저 정보 없을 때 처리 추가 필요
     @Transactional
-    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto){
+    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) throws GlobalException {
         Member member = findOne(userDetails.getUser().getMemberId());
         String usaintId = updateRequestDto.getUsaintId();
         String usaintPassword = updateRequestDto.getUsaintPassword();
@@ -163,11 +167,11 @@ public class MemberService {
             member.setLevel(newMember.getLevel());
             member.setSemester(newMember.getSemester());
 
-            //졸업요건 초기화
-            requirementRepository.delete(member.getRequirement());
-            Requirement newRequirement = crawlInfo.getRequirement();
-            newRequirement.setMember(member);
-            requirementRepository.save(newRequirement);
+        //졸업요건 초기화
+        requirementRepository.delete(member.getRequirement());
+        Requirement newRequirement = crawlInfo.getRequirement();
+        newRequirement.setMember(member);
+        requirementRepository.save(newRequirement);
 
             //성적 초기화
             gradeRepository.delete(member.getGrade());
@@ -203,5 +207,19 @@ public class MemberService {
             }
         }
         return key.toString();
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    public void deleteMember(Long id) {
+        memberRepository.deleteById(id);
+    }
+
+    /**
+     * 유저 조회
+     */
+    public MemberResponseDto getMember(Long id) {
+        return new MemberResponseDto(findOne(id));
     }
 }
