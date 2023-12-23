@@ -94,7 +94,7 @@ public class CrawlMemberInfo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        target = driver.findElement(By.id("WDD9"));
+        target = driver.findElement(By.id("WDC9"));
         member.setMemberName(target.getAttribute("value"));
         // university 크롤링
         target = driver.findElement(By.id("WDCB"));
@@ -313,7 +313,7 @@ public class CrawlMemberInfo {
 
         // 세부 성적 크롤링
         while (true) {
-            int cnt = 1;
+            int cnt = 2;
             Boolean inEndFlag = false;
             int yearFlag = 0; // 학년도 충족 플래그
             int semesterFlag = 0; // 학기 충족 플래그
@@ -329,6 +329,8 @@ public class CrawlMemberInfo {
             target = driver.findElement(By.xpath(targetPath));
             targetText = target.getAttribute("value").strip();
             selectedSemester = targetText;
+
+            detailGrades.add("*"+selectedYear+ " "+selectedSemester);
 
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
@@ -352,7 +354,6 @@ public class CrawlMemberInfo {
                         detailGrades.add(targetText);
                     } catch (Exception e) {
                         inEndFlag = true;
-                        detailGrades.add("------------------------------------------");
                         break;
                     }
                 }

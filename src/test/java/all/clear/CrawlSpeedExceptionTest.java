@@ -1,6 +1,6 @@
 package all.clear;
 
-import all.clear.crawl.CrawlInfo;
+import all.clear.crawl.CrawlTestInfo;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ public class CrawlSpeedExceptionTest {
 
     @Test
     public static void main(String[] args){
-        CrawlInfo crawlInfo = new CrawlInfo();
-        crawlInfo.loginUsaint("20192396","wjdtntkdtjs13@26");
+        CrawlTestInfo crawlInfo = new CrawlTestInfo();
+        crawlInfo.loginUsaint("id","pwd");
         crawlInfo.crawlRequirementComponent();
 
         ArrayList<String> tmpList = crawlInfo.getRequirementComponentList();

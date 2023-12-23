@@ -6,13 +6,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class CrawlInfo {
+public class CrawlTestInfo {
 
     @Getter
     private ArrayList<String> requirementComponentList = new ArrayList<>();
@@ -248,7 +247,7 @@ public class CrawlInfo {
 
         // 세부 성적 크롤링
         while (true) {
-            int cnt = 1;
+            int cnt = 2;
             Boolean inEndFlag = false;
             int yearFlag = 0; // 학년도 충족 플래그
             int semesterFlag = 0; // 학기 충족 플래그
@@ -264,6 +263,8 @@ public class CrawlInfo {
             target = driver.findElement(By.xpath(targetPath));
             targetText = target.getAttribute("value").strip();
             selectedSemester = targetText;
+
+            detailGrades.add("*"+selectedYear+ " "+selectedSemester);
 
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
@@ -287,7 +288,6 @@ public class CrawlInfo {
                         detailGrades.add(targetText);
                     } catch (Exception e) {
                         inEndFlag = true;
-                        detailGrades.add("------------------------------------------");
                         break;
                     }
                 }
