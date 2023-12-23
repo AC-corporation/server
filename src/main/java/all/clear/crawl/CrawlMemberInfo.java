@@ -4,7 +4,6 @@ import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.Member;
 import lombok.Getter;
-import lombok.Setter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.WebDriver;
@@ -32,10 +31,14 @@ public class CrawlMemberInfo {
     private ParsingRequirement parsingRequirement;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) {
+        // 로그인 실패하면
+        // GlobalErrorCode._USAINT_LOGIN_FAILED 이나
+        // GlobalErrorCode._USAINT_UNAVAILABLE 던저야함
         loginUsaint(usaintId, usaintPassword);
 
         member = Member.builder().build();
 
+        // 크롤링 실패하면 GlobalErrorCode._USAINT_CRAWLING_FAILED 던저야함
         crawlMemberComponent();
         crawlRequirementComponent();
         // 성적 크롤링 추가 필요
@@ -69,20 +72,23 @@ public class CrawlMemberInfo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
+        WebElement target;
+
         // 학사관리 클릭
         WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
         degreeManageButton.click();
         crawlMemberComponent();
         crawlRequirementComponent();
-    }
 
-    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
-        WebElement target;
         try {
-            Thread.sleep(2000); // 1초 동안 실행을 멈추기
+            Thread.sleep(2000); // 2초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         //프레임 이동
         WebElement iframe1Element = driver.findElement(By.name("contentAreaFrame"));
         driver.switchTo().frame(iframe1Element);
@@ -90,7 +96,7 @@ public class CrawlMemberInfo {
         driver.switchTo().frame(iframe2Element);
         // memberName 크롤링
         try {
-            Thread.sleep(5000); // 1초 동안 실행을 멈추기
+            Thread.sleep(5000); // 5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,7 +143,7 @@ public class CrawlMemberInfo {
         WebElement iframe2Element = driver.findElement(By.name("isolatedWorkArea"));
         driver.switchTo().frame(iframe2Element);
         try {
-            Thread.sleep(5000); // 1초 동안 실행을 멈추기
+            Thread.sleep(5000); // 5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

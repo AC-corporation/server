@@ -5,7 +5,9 @@ import all.clear.dto.requestDto.EmailIsValidRequestDto;
 import all.clear.dto.requestDto.LoginRequestDto;
 import all.clear.dto.requestDto.MemberSignupRequestDto;
 import all.clear.dto.requestDto.UpdateRequestDto;
+import all.clear.dto.responseDto.MemberResponseDto;
 import all.clear.global.exception.GlobalErrorCode;
+import all.clear.global.exception.GlobalException;
 import all.clear.global.response.ApiResponse;
 import all.clear.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +25,11 @@ public class MemberController {
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
     public ApiResponse signup(@RequestBody MemberSignupRequestDto userSignupRequestDto){
-        memberService.createMember(userSignupRequestDto);
+        try { //크롤링 실패 가능
+            memberService.createMember(userSignupRequestDto);
+        } catch (GlobalException e) {
+            return ApiResponse.onFailure(e.getErrorCode(), "");
+        }
         return ApiResponse.onSuccess("회원가입에 성공했습니다","");
     }
 
@@ -58,7 +64,11 @@ public class MemberController {
     @PostMapping("/update")
     public ApiResponse update(@AuthenticationPrincipal UserDetailsImpl userDetails,
                               @RequestBody UpdateRequestDto updateRequestDto){
-        memberService.updateMember(userDetails, updateRequestDto);
+        try { //크롤링 실패 가능
+            memberService.updateMember(userDetails, updateRequestDto);
+        } catch (GlobalException e) {
+            return ApiResponse.onFailure(e.getErrorCode(), "");
+        }
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다","");
     }
 
@@ -68,5 +78,22 @@ public class MemberController {
     @GetMapping("/logout")
     public void logout(){
 
+    }
+
+
+    //회원탈퇴
+    @Operation(summary = "회원탈퇴", description = "회원탈퇴")
+    @GetMapping("/delete")
+    public ApiResponse delete(Long userId) { //인자 수정 필요
+        memberService.deleteMember(userId);
+        return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
+    }
+
+
+    //유저조회
+    @Operation(summary = "유저 조회", description = "유저 조회")
+    //@GetMapping("") //string 수정 필요
+    public ApiResponse<MemberResponseDto> get(Long userId) { //인자 수정 필요
+        return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 }
