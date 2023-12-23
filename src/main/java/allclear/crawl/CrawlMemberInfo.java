@@ -27,23 +27,25 @@ public class CrawlMemberInfo {
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
+    private String totalCredit; // 총 이수 학점
+    private String averageGrade; // 평균 학점
     WebDriver driver;
     private ParsingRequirement parsingRequirement;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) {
+
         // 로그인 실패하면
         // GlobalErrorCode._USAINT_LOGIN_FAILED 이나
         // GlobalErrorCode._USAINT_UNAVAILABLE 던저야함
-        loginUsaint(usaintId, usaintPassword);
-
         member = Member.builder().build();
+        loginUsaint(usaintId, usaintPassword);
 
         // 크롤링 실패하면 GlobalErrorCode._USAINT_CRAWLING_FAILED 던저야함
         crawlMemberComponent();
         crawlRequirementComponent();
-        // 성적 크롤링 추가 필요
-
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
+
+//        crawlEntireGrades();
         // 성적 파싱 후 객체 초기화 필요
 
     }
@@ -77,12 +79,6 @@ public class CrawlMemberInfo {
     public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
         WebElement target;
 
-        // 학사관리 클릭
-        WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
-        degreeManageButton.click();
-        crawlMemberComponent();
-        crawlRequirementComponent();
-
         try {
             Thread.sleep(2000); // 2초 동안 실행을 멈추기
         } catch (InterruptedException e) {
@@ -100,26 +96,35 @@ public class CrawlMemberInfo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // user_name 크롤링
         target = driver.findElement(By.id("WDC9"));
         member.setMemberName(target.getAttribute("value"));
+
         // university 크롤링
-        target = driver.findElement(By.id("WDCB"));
+        target = driver.findElement(By.id("WDBB"));
         member.setUniversity(target.getAttribute("value"));
+
         // major 크롤링
-        target = driver.findElement(By.id("WDD4"));
+        target = driver.findElement(By.id("WDC4"));
         member.setMajor(target.getAttribute("value"));
+
         // mail 크롤링
-        target = driver.findElement(By.id("WD0106"));
+        target = driver.findElement(By.id("WDF6"));
         member.setEmail(target.getAttribute("value"));
+
         // classType 크롤링
-        target = driver.findElement(By.id("WDE6"));
+        target = driver.findElement(By.id("WDD6"));
         member.setClassType(target.getAttribute("value"));
+
         // year 크롤링
-        target = driver.findElement(By.id("WDF1"));
+        target = driver.findElement(By.id("WDE1"));
         member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
+
         // semester 크롤링
-        target = driver.findElement(By.id("WDF5"));
+        target = driver.findElement(By.id("WDE5"));
         member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
+
         // 기본 프레임으로 돌아가기
         driver.switchTo().defaultContent();
     }
@@ -151,8 +156,8 @@ public class CrawlMemberInfo {
          * 졸업요건 정보 획득
          */
         int exit_flag = 0;
-        int i = 2;
         String targetRoot;
+        int i = 2;
         WebElement target;
         String text;
         while (true) {
@@ -211,6 +216,15 @@ public class CrawlMemberInfo {
 
         WebElement iframe2 = driver.findElement(By.xpath("//*[@id=\"isolatedWorkArea\"]"));
         driver.switchTo().frame(iframe2);
+
+        // 총 신청 학점
+        target = driver.findElement(By.id("WD0148"));
+        totalCredit = target.getAttribute("value");
+
+
+        // 전체 평균 학점
+        target = driver.findElement(By.id("WD0151"));
+        averageGrade = target.getAttribute("value");
 
 
         // 팝업 창 닫기 클릭

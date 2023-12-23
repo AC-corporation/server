@@ -16,6 +16,8 @@ public class CrawalTest {
         System.out.println(member.getClassType());
         System.out.println(member.getLevel());
         System.out.println(member.getSemester());
+
+
 //        ArrayList<String> tmpList = crawlMemberInfo.getRequirementComponentList();
 //        System.out.println("************졸업 요건 리스트****************");
 //        for (int i=0;i<tmpList.size();i++){
