@@ -1,49 +1,27 @@
 package all.clear.crawl;
 
-import all.clear.domain.grade.Grade;
-import all.clear.domain.requirement.Requirement;
-import all.clear.domain.Member;
-import lombok.Getter;
-import lombok.Setter;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.Getter;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
 
-public class CrawlMemberInfo {
+public class CrawlTestInfo {
 
     @Getter
-    private Member member;
-    @Getter
-    private Requirement requirement;
-    @Getter
-    private Grade grade;
-
     private ArrayList<String> requirementComponentList = new ArrayList<>();
+    @Getter
     private ArrayList<String> entireGrades = new ArrayList<>();  //  전체 성적 리스트
+    @Getter
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
     WebDriver driver;
-    private ParsingRequirement parsingRequirement;
-
-    public CrawlMemberInfo(String usaintId, String usaintPassword) {
-        loginUsaint(usaintId, usaintPassword);
-
-        member = Member.builder().build();
-
-        crawlMemberComponent();
-        crawlRequirementComponent();
-        // 성적 크롤링 추가 필요
-
-        requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        // 성적 파싱 후 객체 초기화 필요
-
-    }
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
@@ -72,50 +50,6 @@ public class CrawlMemberInfo {
         // 학사관리 클릭
         WebElement degreeManageButton = driver.findElement(By.xpath("//*[@id=\"ddba4fb5fbc996006194d3c0c0aea5c4\"]/a"));
         degreeManageButton.click();
-        crawlMemberComponent();
-        crawlRequirementComponent();
-    }
-
-    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
-        WebElement target;
-        try {
-            Thread.sleep(2000); // 1초 동안 실행을 멈추기
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //프레임 이동
-        WebElement iframe1Element = driver.findElement(By.name("contentAreaFrame"));
-        driver.switchTo().frame(iframe1Element);
-        WebElement iframe2Element = driver.findElement(By.name("isolatedWorkArea"));
-        driver.switchTo().frame(iframe2Element);
-        // memberName 크롤링
-        try {
-            Thread.sleep(5000); // 1초 동안 실행을 멈추기
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        target = driver.findElement(By.id("WDC9"));
-        member.setMemberName(target.getAttribute("value"));
-        // university 크롤링
-        target = driver.findElement(By.id("WDCB"));
-        member.setUniversity(target.getAttribute("value"));
-        // major 크롤링
-        target = driver.findElement(By.id("WDD4"));
-        member.setMajor(target.getAttribute("value"));
-        // mail 크롤링
-        target = driver.findElement(By.id("WD0106"));
-        member.setEmail(target.getAttribute("value"));
-        // classType 크롤링
-        target = driver.findElement(By.id("WDE6"));
-        member.setClassType(target.getAttribute("value"));
-        // year 크롤링
-        target = driver.findElement(By.id("WDF1"));
-        member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
-        // semester 크롤링
-        target = driver.findElement(By.id("WDF5"));
-        member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
-        // 기본 프레임으로 돌아가기
-        driver.switchTo().defaultContent();
     }
 
     public void crawlRequirementComponent() { // 졸업요건 조회 크롤링 함수
@@ -209,31 +143,31 @@ public class CrawlMemberInfo {
 
         // 팝업 창 닫기 클릭
         try{
-            WebElement iframe3 = driver.findElement(By.xpath("//*[@id=\"URLSPW-0\"]"));
-            driver.switchTo().frame(iframe3);
+        WebElement iframe3 = driver.findElement(By.xpath("//*[@id=\"URLSPW-0\"]"));
+        driver.switchTo().frame(iframe3);
 
-            try {
-                Thread.sleep(3000); // 3초 동안 실행을 멈추기
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            Thread.sleep(3000); // 3초 동안 실행을 멈추기
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
 
 
-            WebElement closePopUpBtn = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/div[1]/div/div[1]/table/tbody/tr/td[3]/a"));
-            closePopUpBtn.click();
+        WebElement closePopUpBtn = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/div[1]/div/div[1]/table/tbody/tr/td[3]/a"));
+        closePopUpBtn.click();
 
-            // 기본 frame으로 frame 재설정
-            driver.switchTo().defaultContent();
+        // 기본 frame으로 frame 재설정
+        driver.switchTo().defaultContent();
 
-            try {
-                Thread.sleep(5000); // 5초 동안 실행을 멈추기
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            Thread.sleep(5000); // 5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-            // web frame 변경
-            driver.switchTo().frame(iframe1);
-            driver.switchTo().frame(iframe2);
+        // web frame 변경
+        driver.switchTo().frame(iframe1);
+        driver.switchTo().frame(iframe2);
         }catch(Exception e){
             // 기본 frame으로 frame 재설정
             driver.switchTo().defaultContent();
@@ -330,7 +264,7 @@ public class CrawlMemberInfo {
             targetText = target.getAttribute("value").strip();
             selectedSemester = targetText;
 
-            detailGrades.add("*"+selectedYear+ " "+selectedSemester); //구분해주는용
+            detailGrades.add("*"+selectedYear+ " "+selectedSemester);
 
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
