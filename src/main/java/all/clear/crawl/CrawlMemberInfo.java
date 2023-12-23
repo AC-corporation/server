@@ -3,6 +3,8 @@ package all.clear.crawl;
 import all.clear.domain.grade.Grade;
 import all.clear.domain.requirement.Requirement;
 import all.clear.domain.Member;
+import all.clear.global.exception.GlobalErrorCode;
+import all.clear.global.exception.GlobalException;
 import lombok.Getter;
 import lombok.Setter;
 import org.openqa.selenium.*;
@@ -32,20 +34,28 @@ public class CrawlMemberInfo {
     private ParsingRequirement parsingRequirement;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) {
-        loginUsaint(usaintId, usaintPassword);
+        try{
+            loginUsaint(usaintId, usaintPassword);
+        }
+        catch (GlobalException e){ // 로그인 실패시 예외 처리
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        }
+        // crawlMemberComponent(); // 크롤링 함수 수정 필요
+        try{
+            crawlRequirementComponent();
+            crawlEntireGrades();
+            crawlDetailGrades();
+        }
+        catch (GlobalException e){ // 크롤링 중 예외 처리
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+        }
 
         member = Member.builder().build();
-
-        crawlMemberComponent();
-        crawlRequirementComponent();
-        crawlEntireGrades();
-        crawlDetailGrades();
-
         requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
         grade = ParsingGrade.parsingGradeString(entireGrades, detailGrades);
     }
 
-    public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
+    public void loginUsaint(String usaintId, String usaintPassword) throws GlobalException { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
         // 로그인 페이지 주소
@@ -75,7 +85,7 @@ public class CrawlMemberInfo {
 
     }
 
-    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
+    public void crawlMemberComponent() throws GlobalException{ // 사용자 정보 크롤링 함수
         WebElement target;
         try {
             Thread.sleep(2000); // 1초 동안 실행을 멈추기
@@ -117,7 +127,7 @@ public class CrawlMemberInfo {
         driver.switchTo().defaultContent();
     }
 
-    public void crawlRequirementComponent() { // 졸업요건 조회 크롤링 함수
+    public void crawlRequirementComponent() throws GlobalException{ // 졸업요건 조회 크롤링 함수
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
@@ -171,7 +181,7 @@ public class CrawlMemberInfo {
     }
 
     // 전체 성적 조회 함수
-    public void crawlEntireGrades() {
+    public void crawlEntireGrades() throws GlobalException{
 
         // 추출 할 xpath 경로를 가지는 문자열
         String targetPath;
@@ -284,7 +294,7 @@ public class CrawlMemberInfo {
     }
 
     // 학기별 세부 성적 크롤링
-    public void crawlDetailGrades() {
+    public void crawlDetailGrades() throws GlobalException{
         String selectedYear; // 현재 선택된 학년 ex) 2023학년도
         String selectedSemester; // 현재 선택된 학기 ex) 2 학기
         WebElement prevBtn = null; // 이전 학기 버튼
@@ -422,7 +432,7 @@ public class CrawlMemberInfo {
     }
 
     // 웹 드라이버 닫는 함수
-    public void closeDriver() {
+    public void closeDriver() throws GlobalException {
         driver.quit();
     }
 }
