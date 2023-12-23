@@ -34,7 +34,7 @@ dependencies {
 	implementation 'io.github.bonigarcia:webdrivermanager:5.6.2'
 	// Email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'javax.mail:javax.mail-api:1.6.2'
+//	implementation 'javax.mail:javax.mail-api:1.6.2'
 
 //	implementation 'org.springdoc:springdoc-openapi-ui:2.0.0'
 //	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
