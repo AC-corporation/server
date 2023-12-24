@@ -63,7 +63,7 @@ public class CrawlMemberInfo {
         }
     }
 
-    public void loginUsaint(String usaintId, String usaintPassword) throws Exception { // 유세인트 로그인 함수
+    public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
         // 로그인 페이지 주소
@@ -83,6 +83,11 @@ public class CrawlMemberInfo {
         try {
             WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
             loginButton.click();
+
+            /** 주석 바로 아래에 로그인 됐을 때 버튼 클릭하거나 해서
+             * 로그인 성공했는지 체크하는 코드 추가해주세요
+             * 버튼 누르기 실패했으면 예외 발생*/
+
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
@@ -94,7 +99,7 @@ public class CrawlMemberInfo {
         }
     }
 
-    public void crawlMemberComponent() throws Exception { // 사용자 정보 크롤링 함수
+    public void crawlMemberComponent() { // 사용자 정보 크롤링 함수
         WebElement target;
 
         try {
@@ -147,7 +152,7 @@ public class CrawlMemberInfo {
         driver.switchTo().defaultContent();
     }
 
-    public void crawlRequirementComponent() throws Exception { // 졸업요건 조회 크롤링 함수
+    public void crawlRequirementComponent() { // 졸업요건 조회 크롤링 함수
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
@@ -201,7 +206,7 @@ public class CrawlMemberInfo {
     }
 
     // 전체 성적 조회 함수
-    public void crawlEntireGrades() throws Exception {
+    public void crawlEntireGrades() {
 
         // 추출 할 xpath 경로를 가지는 문자열
         String targetPath;
@@ -323,7 +328,7 @@ public class CrawlMemberInfo {
     }
 
     // 학기별 세부 성적 크롤링
-    public void crawlDetailGrades() throws Exception {
+    public void crawlDetailGrades() {
         String selectedYear; // 현재 선택된 학년 ex) 2023학년도
         String selectedSemester; // 현재 선택된 학기 ex) 2 학기
         WebElement prevBtn = null; // 이전 학기 버튼
