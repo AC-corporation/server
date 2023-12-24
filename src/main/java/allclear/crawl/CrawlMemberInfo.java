@@ -34,34 +34,36 @@ public class CrawlMemberInfo {
     WebDriver driver;
     private ParsingRequirement parsingRequirement;
 
-    public CrawlMemberInfo(String usaintId, String usaintPassword) {
+    public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
 
-        // 로그인 실패하면
-        // GlobalErrorCode._USAINT_LOGIN_FAILED 이나
-        // GlobalErrorCode._USAINT_UNAVAILABLE 던저야함
         member = Member.builder().build();
+
+        // 로그인
         try {
             loginUsaint(usaintId, usaintPassword);
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
-        catch (GlobalException e){
-            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
-        }
-        // 크롤링 실패하면 GlobalErrorCode._USAINT_CRAWLING_FAILED 던저야함
+
         try {
+            // 크롤링
             crawlMemberComponent();
             crawlRequirementComponent();
             crawlEntireGrades();
             crawlDetailGrades();
+
+            // 파싱
+            requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
+            grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         }
-        catch (GlobalException e){
+        catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
-        requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
-
     }
 
-    public void loginUsaint(String usaintId, String usaintPassword) throws GlobalException { // 유세인트 로그인 함수
+    public void loginUsaint(String usaintId, String usaintPassword) throws Exception { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
         // 로그인 페이지 주소
@@ -78,8 +80,13 @@ public class CrawlMemberInfo {
         WebElement passwordElement = driver.findElement(By.name("pwd")); // 로그인 시도
         memberNameElement.sendKeys(usaintId);
         passwordElement.sendKeys(usaintPassword);
-        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
-        loginButton.click();
+        try {
+            WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
+            loginButton.click();
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
+        }
+
         try {
             Thread.sleep(1000); // 1초 동안 실행을 멈추기
         } catch (InterruptedException e) {
@@ -87,7 +94,7 @@ public class CrawlMemberInfo {
         }
     }
 
-    public void crawlMemberComponent() throws GlobalException{ // 사용자 정보 크롤링 함수
+    public void crawlMemberComponent() throws Exception { // 사용자 정보 크롤링 함수
         WebElement target;
 
         try {
@@ -140,7 +147,7 @@ public class CrawlMemberInfo {
         driver.switchTo().defaultContent();
     }
 
-    public void crawlRequirementComponent() throws GlobalException{ // 졸업요건 조회 크롤링 함수
+    public void crawlRequirementComponent() throws Exception { // 졸업요건 조회 크롤링 함수
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
@@ -194,7 +201,7 @@ public class CrawlMemberInfo {
     }
 
     // 전체 성적 조회 함수
-    public void crawlEntireGrades() throws GlobalException{
+    public void crawlEntireGrades() throws Exception {
 
         // 추출 할 xpath 경로를 가지는 문자열
         String targetPath;
@@ -316,7 +323,7 @@ public class CrawlMemberInfo {
     }
 
     // 학기별 세부 성적 크롤링
-    public void crawlDetailGrades() throws GlobalException{
+    public void crawlDetailGrades() throws Exception {
         String selectedYear; // 현재 선택된 학년 ex) 2023학년도
         String selectedSemester; // 현재 선택된 학기 ex) 2 학기
         WebElement prevBtn = null; // 이전 학기 버튼
@@ -454,7 +461,7 @@ public class CrawlMemberInfo {
     }
 
     // 웹 드라이버 닫는 함수
-    public void closeDriver() throws GlobalException {
+    public void closeDriver() {
         driver.quit();
     }
 }
