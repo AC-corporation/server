@@ -103,6 +103,13 @@ public class CrawlMemberInfo {
         WebElement target;
 
         try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        WebElement managementButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
+        managementButton.click();
+        try {
             Thread.sleep(2000); // 2초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -202,7 +209,7 @@ public class CrawlMemberInfo {
             i = i + 1;
         }
         // 기본 프레임 이동
-        driver.switchTo().defaultContent();
+        // driver.switchTo().defaultContent();
     }
 
     // 전체 성적 조회 함수
@@ -218,7 +225,11 @@ public class CrawlMemberInfo {
         // 반복문 위한 cnt;
         int cnt = 1;
 
-
+        try {
+            Thread.sleep(5000); // 7초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // 기본 frame으로 frame 재설정
         driver.switchTo().defaultContent();
 
@@ -248,7 +259,6 @@ public class CrawlMemberInfo {
         // 전체 평균 학점
         target = driver.findElement(By.id("WD0151"));
         averageGrade = target.getAttribute("value");
-
 
         // 팝업 창 닫기 클릭
         try{
