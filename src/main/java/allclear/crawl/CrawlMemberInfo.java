@@ -56,12 +56,12 @@ public class CrawlMemberInfo {
             // 크롤링
             crawlMemberComponent();
             crawlRequirementComponent();
-            //crawlEntireGrades();
-            //crawlDetailGrades();
+            crawlEntireGrades();
+            crawlDetailGrades();
 
             // 파싱
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-            //grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
+            grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
@@ -257,12 +257,12 @@ public class CrawlMemberInfo {
         driver.switchTo().frame(iframe2);
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0148"));
+        target = driver.findElement(By.id("WD0129"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD0151"));
+        target = driver.findElement(By.id("WD0136"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭

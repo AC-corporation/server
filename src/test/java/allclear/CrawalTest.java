@@ -25,6 +25,7 @@ public class CrawalTest {
         for (int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
         }
+        /*
         System.out.println("************전체 학기 성적****************");
         crawlMemberInfo.crawlEntireGrades();
         ArrayList<String> entires = crawlMemberInfo.getEntireGrades();
@@ -38,5 +39,7 @@ public class CrawalTest {
         {
             System.out.println(details.get(i));
         }
+
+        */
     }
 }

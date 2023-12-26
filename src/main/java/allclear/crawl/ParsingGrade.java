@@ -17,11 +17,11 @@ public class ParsingGrade {
         String semester; // 학기
         String semesterAverageGrade; // 학기 평균 학점
 
+        String tmpNum = "64"; // 총 이수학점 임시 점수
         semesterAverageGrade = "";
         grade = new Grade();
-        grade.setTotalCredit(Long.parseLong(totalCredit));
+        grade.setTotalCredit(Long.parseLong(tmpNum));
         grade.setAverageGrade(averageGrade);
-
         ArrayList<SemesterSubject> tmpList = new ArrayList<>();
 
         for(int i=0;i<detailGrades.size();i++){
@@ -39,6 +39,7 @@ public class ParsingGrade {
                 tmpList.add(SemesterSubject.createSemesterSubject(detailGrades.get(i+2),detailGrades.get(i+1)));
                 // 과목명과 등급을 통해 SemesterSubject 생성
                 i = i + 6; // 다음 과목으로 이동
+
             }
         }
         if (!tmpList.isEmpty()){ // 마지막 학기 추가
@@ -51,17 +52,22 @@ public class ParsingGrade {
     /*
     평균 성적 추출 함수
      */
-    public static String getSemesterAverageGrade(String year, String semester,ArrayList<String> entireGrades){
-        String tmpYear;
-        String tmpSemester;
-        String semesterAverageGrade;
+    public static String getSemesterAverageGrade(String year, String semester, ArrayList<String> entireGrades){
+        String tmpYear = "";
+        String tmpSemester = "";
+        String semesterAverageGrade = "";
 
-        semesterAverageGrade = "";
         for(int i=0;i<entireGrades.size()-1;i++){
+            if(entireGrades.get(i).isEmpty())
+                continue;
+            if(entireGrades.get(i+1).isEmpty())
+                continue;
+            if(entireGrades.get(i+5).isEmpty())
+                continue;
             tmpYear = entireGrades.get(i);
-            tmpSemester = entireGrades.get(i+1).substring(0,2).strip();
-            if (tmpYear.equals(year) && tmpSemester.equals((semester))){
-                semesterAverageGrade =entireGrades.get(i+5);
+            tmpSemester = entireGrades.get(i + 1).substring(0, 2).strip();
+            if (tmpYear.equals(year) && tmpSemester.equals((semester))) {
+                semesterAverageGrade = entireGrades.get(i + 5);
                 break;
             }
         }

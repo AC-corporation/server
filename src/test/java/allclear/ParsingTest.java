@@ -18,7 +18,7 @@ public class ParsingTest {
         List<RequirementComponent> requirementComponentList = new ArrayList<>();
         crawlMemberInfo = new CrawlMemberInfo("20203058",  "Jjw112233@");
         requirement = crawlMemberInfo.getRequirement();
-        // grade = crawlMemberInfo.getGrade();
+        grade = crawlMemberInfo.getGrade();
 
         requirementComponentList = requirement.getRequirementComponentList();
         for(int i=0;i<requirementComponentList.size();i++){
@@ -30,5 +30,6 @@ public class ParsingTest {
             System.out.println(requirementComponent.getRequirementResult());
             System.out.println("================================");
         }
+
     }
 }
