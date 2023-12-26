@@ -1,4 +1,4 @@
-package allclear;
+package allclear.crawl;
 
 import allclear.crawl.CrawlMemberInfo;
 import allclear.domain.grade.Grade;

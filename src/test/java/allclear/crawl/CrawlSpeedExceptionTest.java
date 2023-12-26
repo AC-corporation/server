@@ -1,4 +1,4 @@
-package all.clear;
+package allclear.crawl;
 
 import all.clear.crawl.CrawlTestInfo;
 import org.junit.Test;

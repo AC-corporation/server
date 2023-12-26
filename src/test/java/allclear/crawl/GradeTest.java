@@ -1,4 +1,4 @@
-package allclear;
+package allclear.crawl;
 
 import jakarta.transaction.Transactional;
 import org.junit.runner.RunWith;
