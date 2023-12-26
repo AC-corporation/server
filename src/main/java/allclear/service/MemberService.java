@@ -84,37 +84,35 @@ public class MemberService {
         String usaintId = request.getUsaintId();
         String usaintPassword = request.getUsaintPassword();
 
-        CrawlMemberInfo crawlMemberInfo;
+        CrawlMemberInfo crawlMemberInfo = null;
 
         //멤버 정보 크롤링
         try {
             crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
-
-            //크롤링 한 데이터 member에 저장
-            Member newMember = crawlMemberInfo.getMember();
-            member.setMemberName(newMember.getMemberName());
-            member.setUniversity(newMember.getUniversity());
-            member.setMajor(newMember.getMajor());
-            member.setClassType(newMember.getClassType());
-            member.setLevel(newMember.getLevel());
-            member.setSemester(newMember.getSemester());
-
-            //졸업요건
-            Requirement newRequirement = crawlMemberInfo.getRequirement();
-            newRequirement.setMember(member);
-            requirementRepository.save(newRequirement);
-
-            //성적
-            Grade newGrade = crawlMemberInfo.getGrade();
-            newGrade.setMember(member);
-            gradeRepository.save(newGrade);
         } catch (GlobalException e) {
-            //로그인 성공 시 멤버 저장
-            if (e.getErrorCode() != GlobalErrorCode._USAINT_LOGIN_FAILED
-            && e.getErrorCode() != GlobalErrorCode._USAINT_UNAVAILABLE)
-                memberRepository.save(member);
-            throw e;
+            //로그인 실패 || 유세인트 이용 불가 시 컨트롤러로 예외 던짐
+            if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
+                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE)
+                throw e;
         }
+        //크롤링 한 데이터 member에 저장
+        Member newMember = crawlMemberInfo.getMember();
+        member.setMemberName(newMember.getMemberName());
+        member.setUniversity(newMember.getUniversity());
+        member.setMajor(newMember.getMajor());
+        member.setClassType(newMember.getClassType());
+        member.setLevel(newMember.getLevel());
+        member.setSemester(newMember.getSemester());
+
+        //졸업요건
+        Requirement newRequirement = crawlMemberInfo.getRequirement();
+        newRequirement.setMember(member);
+
+        //성적
+        Grade newGrade = crawlMemberInfo.getGrade();
+        newGrade.setMember(member);
+
+        memberRepository.save(member);
     }
 
 
