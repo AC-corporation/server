@@ -33,9 +33,25 @@ public class ParsingRequirement {
             else {
                 RequirementComponent requirementComponent = new RequirementComponent();
                 requirementComponent.setRequirementCategory(category); // 이수구분
-                requirementComponent.setRequirementArgument(requirementStringList.get(i)); // 졸업요건
-                requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1))); // 기준값
-                requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2))); // 계산값
+                if (requirementStringList.get(i).isEmpty()){ // 졸업요건, 값이 비어있는 경우
+                    requirementComponent.setRequirementArgument("");
+                }
+                else{
+                    requirementComponent.setRequirementArgument(requirementStringList.get(i));
+                }
+                if(requirementStringList.get(i+1).isEmpty()){ // 기준값, 값이 비어있는 경우
+                    requirementComponent.setRequirementCriteria((double)0);
+                }
+                else{
+                    requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1)));
+
+                }
+                if (requirementStringList.get(i+2).isEmpty()){ // 계산값, 값이 비어있는 경우
+                    requirementComponent.setRequirementComplete((double)0);
+                }
+                else{
+                    requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2)));
+                }
                 requirementComponent.setRequirementResult(requirementStringList.get(i+4)); // 충족여부
                 requirement.addRequirementComponent(requirementComponent); // 졸업요건 행들을 모으기
                 assert requirement != null;

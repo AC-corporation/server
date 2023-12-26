@@ -15,6 +15,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
+
 public class CrawlMemberInfo {
 
     @Getter
@@ -24,15 +25,19 @@ public class CrawlMemberInfo {
     @Getter
     private Grade grade;
 
+    @Getter
     private ArrayList<String> requirementComponentList = new ArrayList<>();
+    @Getter
     private ArrayList<String> entireGrades = new ArrayList<>();  //  전체 성적 리스트
+    @Getter
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
+    @Getter
     private String totalCredit; // 총 이수 학점
+    @Getter
     private String averageGrade; // 평균 학점
     WebDriver driver;
-    private ParsingRequirement parsingRequirement;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
 
@@ -51,12 +56,12 @@ public class CrawlMemberInfo {
             // 크롤링
             crawlMemberComponent();
             crawlRequirementComponent();
-            crawlEntireGrades();
-            crawlDetailGrades();
+            //crawlEntireGrades();
+            //crawlDetailGrades();
 
             // 파싱
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-            grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
+            //grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
