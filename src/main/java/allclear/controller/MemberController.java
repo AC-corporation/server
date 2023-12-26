@@ -99,8 +99,8 @@ public class MemberController {
 
     //회원탈퇴
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
-    @GetMapping("/delete")
-    public ApiResponse delete(Long userId) { //인자 수정 필요
+    @PostMapping("/delete")
+    public ApiResponse delete(Long userId) {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
     }
