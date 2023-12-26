@@ -15,6 +15,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
+
 public class CrawlMemberInfo {
 
     @Getter
@@ -24,15 +25,19 @@ public class CrawlMemberInfo {
     @Getter
     private Grade grade;
 
+    @Getter
     private ArrayList<String> requirementComponentList = new ArrayList<>();
+    @Getter
     private ArrayList<String> entireGrades = new ArrayList<>();  //  전체 성적 리스트
+    @Getter
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
+    @Getter
     private String totalCredit; // 총 이수 학점
+    @Getter
     private String averageGrade; // 평균 학점
     WebDriver driver;
-    private ParsingRequirement parsingRequirement;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
 
@@ -252,12 +257,12 @@ public class CrawlMemberInfo {
         driver.switchTo().frame(iframe2);
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0148"));
+        target = driver.findElement(By.id("WD0129"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD0151"));
+        target = driver.findElement(By.id("WD0136"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭
