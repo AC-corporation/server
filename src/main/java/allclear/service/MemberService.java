@@ -94,6 +94,10 @@ public class MemberService {
             if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
                     || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE)
                 throw e;
+            else { //로그인 성공, 크롤링 실패이므로 member 저장
+                memberRepository.save(member);
+                return;
+            }
         }
         //크롤링 한 데이터 member에 저장
         Member newMember = crawlMemberInfo.getMember();
