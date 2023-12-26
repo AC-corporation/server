@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "Jjw112233@");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("ID", "PWD");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getMemberName());
         System.out.println(member.getUniversity());

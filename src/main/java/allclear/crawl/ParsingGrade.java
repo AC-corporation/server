@@ -27,7 +27,8 @@ public class ParsingGrade {
         for(int i=0;i<detailGrades.size();i++){
             if(detailGrades.get(i).contains("*")){ // 학년 학기 문자열이면 *를 포함하고 있음
                 if (!tmpList.isEmpty()){
-                    SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList);
+                    grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList));
+
                 }
                 tmpList = new ArrayList<>();
                 year = detailGrades.get(i).substring(1, 5); // 해당 성적의 년도 추출
@@ -43,7 +44,7 @@ public class ParsingGrade {
             }
         }
         if (!tmpList.isEmpty()){ // 마지막 학기 추가
-            SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList);
+            grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList));
         }
 
         return grade;
@@ -58,11 +59,11 @@ public class ParsingGrade {
         String semesterAverageGrade = "";
 
         for(int i=0;i<entireGrades.size()-1;i++){
-            if(entireGrades.get(i).isEmpty())
+            if(entireGrades.get(i).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
                 continue;
-            if(entireGrades.get(i+1).isEmpty())
+            if(entireGrades.get(i+1).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
                 continue;
-            if(entireGrades.get(i+5).isEmpty())
+            if(entireGrades.get(i+5).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
                 continue;
             tmpYear = entireGrades.get(i);
             tmpSemester = entireGrades.get(i + 1).substring(0, 2).strip();
