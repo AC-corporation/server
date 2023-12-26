@@ -40,14 +40,14 @@ public class ParsingRequirement {
                     requirementComponent.setRequirementArgument(requirementStringList.get(i));
                 }
                 if(requirementStringList.get(i+1).isEmpty()){ // 기준값, 값이 비어있는 경우
-                    requirementComponent.setRequirementCriteria((double)0);
+                    requirementComponent.setRequirementCriteria((Double)null);
                 }
                 else{
                     requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1)));
 
                 }
                 if (requirementStringList.get(i+2).isEmpty()){ // 계산값, 값이 비어있는 경우
-                    requirementComponent.setRequirementComplete((double)0);
+                    requirementComponent.setRequirementComplete((Double)null);
                 }
                 else{
                     requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2)));
