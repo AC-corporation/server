@@ -85,14 +85,18 @@ public class CrawlMemberInfo {
         WebElement passwordElement = driver.findElement(By.name("pwd")); // 로그인 시도
         memberNameElement.sendKeys(usaintId);
         passwordElement.sendKeys(usaintPassword);
+        WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
+        loginButton.click();
         try {
-            WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
-            loginButton.click();
-
-            /** 주석 바로 아래에 로그인 됐을 때 버튼 클릭하거나 해서
-             * 로그인 성공했는지 체크하는 코드 추가해주세요
-             * 버튼 누르기 실패했으면 예외 발생*/
-
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
+            homeButton.click();
+            // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭
+            // 클릭이 안 될 경우 예외 처리
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
@@ -214,7 +218,12 @@ public class CrawlMemberInfo {
             i = i + 1;
         }
         // 기본 프레임 이동
-        // driver.switchTo().defaultContent();
+        driver.switchTo().defaultContent();
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // 전체 성적 조회 함수
@@ -230,18 +239,12 @@ public class CrawlMemberInfo {
         // 반복문 위한 cnt;
         int cnt = 1;
 
-        try {
-            Thread.sleep(5000); // 7초 동안 실행을 멈추기
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         // 기본 frame으로 frame 재설정
-        driver.switchTo().defaultContent();
+        // driver.switchTo().defaultContent();
 
         // 학기별 성적 조회 클릭
         WebElement gradeCheckBtn = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div[1]/div[2]/ul/li[1]/a"));
         gradeCheckBtn.click();
-
 
         try {
             Thread.sleep(7000); // 7초 동안 실행을 멈추기
@@ -255,6 +258,12 @@ public class CrawlMemberInfo {
 
         WebElement iframe2 = driver.findElement(By.xpath("//*[@id=\"isolatedWorkArea\"]"));
         driver.switchTo().frame(iframe2);
+
+        try {
+            Thread.sleep(5000); // 5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         // 총 신청 학점
         target = driver.findElement(By.id("WD0129"));
