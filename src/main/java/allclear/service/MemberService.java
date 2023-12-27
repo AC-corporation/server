@@ -211,6 +211,7 @@ public class MemberService {
     /**
      * 회원 탈퇴
      */
+    @Transactional
     public void deleteMember(Long id) {
         memberRepository.deleteById(id);
     }
