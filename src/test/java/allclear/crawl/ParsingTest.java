@@ -22,7 +22,7 @@ public class ParsingTest {
         List<SemesterGrade> semesterGradeList = new ArrayList<>();
         List<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
-        crawlMemberInfo = new CrawlMemberInfo("20223168",  "todo!9844");
+        crawlMemberInfo = new CrawlMemberInfo("ID",  "PWD");
         requirement = crawlMemberInfo.getRequirement();
         grade = crawlMemberInfo.getGrade();
 
