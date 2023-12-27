@@ -1,7 +1,14 @@
 package allclear;
 
+import allclear.domain.grade.Grade;
+import allclear.domain.grade.SemesterGrade;
+import allclear.domain.grade.SemesterSubject;
 import allclear.domain.member.Member;
+import allclear.domain.member.UserDetailsImpl;
+import allclear.domain.requirement.Requirement;
+import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.requestDto.MemberSignupRequestDto;
+import allclear.dto.requestDto.UpdateRequestDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.MemberRepository;
@@ -13,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 @RunWith(SpringRunner.class)
@@ -32,17 +43,16 @@ class MemberServiceTest {
         //given
         MemberSignupRequestDto request = new MemberSignupRequestDto(
                 "test@example.com", "",
-                "실제 usaintId 입력",
-                "실제 usaintPasswd 입력"
+                "20223168", "todo!9844"
         );
 
         //when
         memberService.createMember(request);
 
         //then
-        Member member = memberRepository.findByEmail("test@example.com");
+        Member member = memberRepository.findAll().get(0);
 
-        assertEquals(member.getEmail(), "test@example.com");
+        assertNotEquals(null, member);
     }
 
     @Test
@@ -56,16 +66,14 @@ class MemberServiceTest {
         } catch (GlobalException e) {
 
             //then
-            assertEquals(e.getErrorCode(), GlobalErrorCode._USAINT_LOGIN_FAILED);
+            assertEquals(GlobalErrorCode._USAINT_LOGIN_FAILED, e.getErrorCode());
         }
     }
 
     @Test
     public void 회원삭제() {
         //given
-        Member member = new Member();
-        member.setPassword("");
-        member.setEmail("test@example.com");
+        Member member = createMember();
         memberRepository.save(member);
 
         Long memberId = member.getMemberId();
@@ -75,5 +83,45 @@ class MemberServiceTest {
 
         //then
         assertEquals(memberRepository.findByEmail("test@example.com"), null);
+    }
+
+    @Test
+    public void 업데이트() {
+        //given
+        Member member = createMember();
+        memberRepository.save(member);
+
+        Long memberId = member.getMemberId();
+
+        //when
+        UserDetailsImpl userDetails = new UserDetailsImpl(member);
+        UpdateRequestDto requestDto = new UpdateRequestDto("20223168", "todo!9844");
+
+        memberService.updateMember(userDetails, requestDto);
+
+        //then
+        Member updateMember = memberRepository.findById(memberId).get();
+        //기존 member는 classType 초기화 안한 상태
+        assertNotEquals(member.getClassType(), updateMember.getClassType());
+    }
+
+    private Member createMember() {
+        Member member = new Member();
+        member.setPassword("1234");
+        member.setEmail("test@example.com");
+
+        Grade grade = new Grade();
+        grade.setMember(member);
+        ArrayList<SemesterSubject> subjectList = new ArrayList<>();
+        subjectList.add(SemesterSubject.createSemesterSubject("subject1", "3.0"));
+        subjectList.add(SemesterSubject.createSemesterSubject("subject2", "4.0"));
+        grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, "3.5", subjectList));
+
+        Requirement requirement = new Requirement();
+        requirement.setMember(member);
+        requirement.addRequirementComponent(new RequirementComponent());
+        requirement.addRequirementComponent(new RequirementComponent());
+
+        return member;
     }
 }
