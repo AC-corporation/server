@@ -31,7 +31,7 @@ class MemberServiceTest {
     public void 회원가입_성공() {
         //given
         MemberSignupRequestDto request = new MemberSignupRequestDto(
-                "@example.com", "",
+                "test@example.com", "",
                 "실제 usaintId 입력",
                 "실제 usaintPasswd 입력"
         );
@@ -40,10 +40,9 @@ class MemberServiceTest {
         memberService.createMember(request);
 
         //then
-        Member member = memberRepository.findByEmail("testEmail@example.com");
+        Member member = memberRepository.findByEmail("test@example.com");
 
-        System.out.println("=================테스트 결과=================");
-        System.out.println("member_id : "+member.getMemberId());
+        assertEquals(member.getEmail(), "test@example.com");
     }
 
     @Test
@@ -56,11 +55,25 @@ class MemberServiceTest {
             memberService.createMember(request);
         } catch (GlobalException e) {
 
-        //then
-            assertEquals(GlobalErrorCode._USAINT_LOGIN_FAILED, e.getErrorCode());
-            System.out.println(e.getErrorCode());
+            //then
+            assertEquals(e.getErrorCode(), GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
     }
 
+    @Test
+    public void 회원삭제() {
+        //given
+        Member member = new Member();
+        member.setPassword("");
+        member.setEmail("test@example.com");
+        memberRepository.save(member);
 
+        Long memberId = member.getMemberId();
+
+        //when
+        memberService.deleteMember(memberId);
+
+        //then
+        assertEquals(memberRepository.findByEmail("test@example.com"), null);
+    }
 }
