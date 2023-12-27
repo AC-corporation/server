@@ -41,7 +41,7 @@ public class CrawlMemberInfo {
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
 
-        member = Member.builder().build();
+        member = new Member();
 
         // 로그인
         try {

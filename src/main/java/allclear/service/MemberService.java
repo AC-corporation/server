@@ -76,10 +76,9 @@ public class MemberService {
     @Transactional
     public void createMember(MemberSignupRequestDto request) throws GlobalException {
         String password = passwordEncoder.encode(request.getPassword());
-        Member member = Member.builder()
-                .email(request.getEmail())
-                .password(password)
-                .build();
+        Member member = new Member();
+        member.setEmail(request.getEmail());
+        member.setPassword(password);
 
         String usaintId = request.getUsaintId();
         String usaintPassword = request.getUsaintPassword();
