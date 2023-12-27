@@ -31,8 +31,7 @@ class MemberServiceTest {
     public void 회원가입_성공() {
         //given
         MemberSignupRequestDto request = new MemberSignupRequestDto(
-                "testEmail@example.com",
-                "testPasswd",
+                "@example.com", "",
                 "실제 usaintId 입력",
                 "실제 usaintPasswd 입력"
         );
@@ -50,12 +49,7 @@ class MemberServiceTest {
     @Test
     public void 회원가입_로그인실패() {
         //given
-        MemberSignupRequestDto request = new MemberSignupRequestDto(
-                "testEmail@example.com",
-                "testPasswd",
-                "",
-                ""
-        );
+        MemberSignupRequestDto request = new MemberSignupRequestDto("", "", "", "");
 
         //when
         try {
