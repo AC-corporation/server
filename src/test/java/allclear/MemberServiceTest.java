@@ -101,14 +101,15 @@ class MemberServiceTest {
 
         //then
         Member updateMember = memberRepository.findById(memberId).get();
-        //기존 member는 classType 초기화 안한 상태
-        assertNotEquals(member.getClassType(), updateMember.getClassType());
+        //기존 member는 classType = null
+        assertNotEquals(null, updateMember.getClassType());
     }
 
     private Member createMember() {
         Member member = new Member();
         member.setPassword("1234");
         member.setEmail("test@example.com");
+        member.setClassType(null);
 
         Grade grade = new Grade();
         grade.setMember(member);
