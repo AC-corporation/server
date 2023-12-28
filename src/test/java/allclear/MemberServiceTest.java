@@ -43,7 +43,7 @@ class MemberServiceTest {
         //given
         MemberSignupRequestDto request = new MemberSignupRequestDto(
                 "test@example.com", "",
-                "20223168", "todo!9844"
+                "실제 usaintId 입력", "실제 usaintPasswd 입력"
         );
 
         //when
@@ -95,7 +95,7 @@ class MemberServiceTest {
 
         //when
         UserDetailsImpl userDetails = new UserDetailsImpl(member);
-        UpdateRequestDto requestDto = new UpdateRequestDto("20223168", "todo!9844");
+        UpdateRequestDto requestDto = new UpdateRequestDto("실제 usaintId 입력", "실제 usaintPasswd 입력");
 
         memberService.updateMember(userDetails, requestDto);
 
