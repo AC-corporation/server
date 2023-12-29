@@ -5,6 +5,7 @@ import allclear.global.response.ApiResponse;
 import allclear.service.RequirementService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class RequirementController {
 
 
     @Operation(summary = "졸업요건 조회", description = "졸업요건 조회")
-    //@GetMapping("/look") // string 수정 필요
+    @GetMapping("/get")
     public ApiResponse<RequirementResponseDto> get(Long userId){ //인자 수정 필요
         return ApiResponse.onSuccess("졸업요건 조회에 성공했습니다",requirementService.getRequirement(userId));
     }
