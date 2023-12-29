@@ -50,13 +50,8 @@ public class MemberService {
         return memberRepository.findById(id).get();
     }
 
-    //user/test/error controller test용 method
-    public void temp() {
-        throw new GlobalExceptionHandler(GlobalErrorCode._FORBIDDEN);
-    }
-
-    @Transactional
     //로그인
+    @Transactional
     public void login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
@@ -74,7 +69,6 @@ public class MemberService {
          */
 
     }
-
 
     //회원가입
     @Transactional
@@ -122,9 +116,8 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-
-    @Transactional
     //회원가입 - 이메일 인증 코드 보내기
+    @Transactional
     public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto) {
         String email = emailAuthRequestDto.getEmail();
 
@@ -149,9 +142,8 @@ public class MemberService {
         emailService.sendEmail(email, subject, text);
     }
 
-
-    @Transactional
     //회원가입 - 이메일 인증 코드 확인
+    @Transactional
     public boolean isEmailValid(EmailIsValidRequestDto request) {
         String email = request.getEmail();
         String code = request.getCode();
@@ -166,12 +158,7 @@ public class MemberService {
             return false;
     }
 
-
-    /**
-     * 회원 정보 업데이트
-     */
-    // 크롤링 실패했을 때 처리 추가 필요
-    // 유저 정보 없을 때 처리 추가 필요
+    //회원 정보 업데이트
     @Transactional
     public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) throws GlobalException {
         Member member = findOne(userDetails.getUser().getMemberId());
@@ -203,7 +190,7 @@ public class MemberService {
         gradeRepository.save(newGrade);
     }
 
-    public String createCode() {
+    private String createCode() {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
 
@@ -228,17 +215,13 @@ public class MemberService {
         return key.toString();
     }
 
-    /**
-     * 회원 탈퇴
-     */
+    //회원 탈퇴
     @Transactional
     public void deleteMember(Long id) {
         memberRepository.deleteById(id);
     }
 
-    /**
-     * 유저 조회
-     */
+    //유저 조회
     public MemberResponseDto getMember(Long id) {
         return new MemberResponseDto(findOne(id));
     }
