@@ -70,7 +70,7 @@ public class MemberController {
     }
 
 
-    //로그읜
+    //로그인
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
     public ApiResponse login(@RequestBody LoginRequestDto loginRequestDto){
