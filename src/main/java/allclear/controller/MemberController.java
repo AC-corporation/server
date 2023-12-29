@@ -111,8 +111,8 @@ public class MemberController {
 
     //유저조회
     @Operation(summary = "유저 조회", description = "유저 조회")
-    @GetMapping("/get")
-    public ApiResponse<MemberResponseDto> get(Long userId) { //인자 수정 필요
+    @GetMapping("/get/{userId}")
+    public ApiResponse<MemberResponseDto> get(@PathVariable Long userId) { //인자 수정 필요
         return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 }
