@@ -37,7 +37,6 @@ public class MemberController {
 
     @GetMapping("/test/error")
     public ApiResponse test4(){
-        memberService.temp();
         return ApiResponse.onSuccess("exception2", "");
     }
 
