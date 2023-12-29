@@ -24,6 +24,7 @@ public class GradeController {
     }
 
     //학기별 성적 조회
+    @Operation(summary = "학기별 성적 조회", description = "학기별 성적 조회")
     @GetMapping("/getSemesterGrade/{semesterGradeId}")
     public ApiResponse<SemesterGradeResponseDto> getSemesterGrade(@PathVariable Long semesterGradeId){
         return ApiResponse.onSuccess("학기별 성적 조회에 성공했습니다",gradeService.getSemesterGradeResponse(semesterGradeId));
