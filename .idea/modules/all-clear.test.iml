@@ -19,6 +19,8 @@
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-java:4.15.0" level="project" />
     <orderEntry type="library" name="Gradle: io.github.bonigarcia:webdrivermanager:5.6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-mail:3.1.3" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-swagger2:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-swagger-ui:2.9.2" level="project" />
     <orderEntry type="library" name="Gradle: org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.13.1" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework.boot:spring-boot-starter-test:3.1.3" level="project" />
@@ -60,6 +62,17 @@
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-compress:1.24.0" level="project" />
     <orderEntry type="library" name="Gradle: org.springframework:spring-context-support:6.0.11" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.angus:jakarta.mail:1.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-swagger-common:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-spring-web:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-schema:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-spi:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.plugin:spring-plugin-metadata:1.2.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Gradle: io.swagger:swagger-models:1.5.20" level="project" />
+    <orderEntry type="library" name="Gradle: io.swagger:swagger-annotations:1.5.20" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:31.1-jre" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.mapstruct:mapstruct:1.2.0.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.springdoc:springdoc-openapi-starter-webmvc-api:2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.webjars:webjars-locator-core:0.52" level="project" />
     <orderEntry type="library" name="Gradle: org.webjars:swagger-ui:4.15.5" level="project" />
@@ -107,13 +120,11 @@
     <orderEntry type="library" name="Gradle: io.micrometer:micrometer-observation:1.11.3" level="project" />
     <orderEntry type="library" name="Gradle: jakarta.validation:jakarta.validation-api:3.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jboss.logging:jboss-logging:3.5.3.Final" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml:classmate:1.5.1" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-chromium-driver:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-manager:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-json:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: com.google.auto.service:auto-service:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.auto.service:auto-service-annotations:1.1.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:guava:31.1-jre" level="project" />
     <orderEntry type="library" name="Gradle: org.seleniumhq.selenium:selenium-http:4.8.3" level="project" />
     <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.14.6" level="project" />
     <orderEntry type="library" name="Gradle: org.asynchttpclient:async-http-client:2.12.3" level="project" />
@@ -147,6 +158,14 @@
     <orderEntry type="library" name="Gradle: com.github.docker-java:docker-java-core:3.3.4" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:2.0.7" level="project" />
     <orderEntry type="library" name="Gradle: jakarta.activation:jakarta.activation-api:2.1.2" level="project" />
+    <orderEntry type="library" name="Gradle: io.springfox:springfox-core:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.15.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.checkerframework:checker-qual:3.12.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.11.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.springdoc:springdoc-openapi-starter-common:2.0.0" level="project" />
     <orderEntry type="library" name="Gradle: net.minidev:accessors-smart:2.4.11" level="project" />
     <orderEntry type="library" name="Gradle: org.junit.jupiter:junit-jupiter-params:5.9.3" level="project" />
@@ -161,15 +180,8 @@
     <orderEntry type="library" name="Gradle: org.attoparser:attoparser:2.0.7.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: org.unbescape:unbescape:1.1.6.RELEASE" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.15.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.15.2" level="project" />
     <orderEntry type="library" name="Gradle: io.micrometer:micrometer-commons:1.11.3" level="project" />
     <orderEntry type="library" name="Gradle: com.google.auto:auto-common:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.checkerframework:checker-qual:3.12.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.errorprone:error_prone_annotations:2.11.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
     <orderEntry type="library" name="Gradle: dev.failsafe:failsafe:3.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.asynchttpclient:async-http-client-netty-utils:2.12.3" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-handler-proxy:4.1.97.Final" level="project" />

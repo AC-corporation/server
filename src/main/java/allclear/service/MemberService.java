@@ -1,6 +1,7 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.domain.EmailCode;
 import allclear.domain.member.Member;
 import allclear.domain.member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
@@ -10,6 +11,7 @@ import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.exception.GlobalExceptionHandler;
+import allclear.repository.EmailCodeRepository;
 import allclear.repository.GradeRepository;
 import allclear.repository.MemberRepository;
 import allclear.repository.RequirementRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
 import java.util.Random;
 
 
@@ -41,6 +44,7 @@ public class MemberService {
     private final GradeRepository gradeRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final EmailCodeRepository emailCodeRepository;
 
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
@@ -123,10 +127,25 @@ public class MemberService {
     //회원가입 - 이메일 인증 코드 보내기
     public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto) {
         String email = emailAuthRequestDto.getEmail();
+
+        Optional<Member> foundEmail = Optional.ofNullable(memberRepository.findByEmail(email));
+        if(foundEmail.isPresent()){
+            //이메일 중복검사
+            throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+        }
+
         String subject = "AllClear 회원가입 인증 번호\n";
         String authCode = createCode(); //8글자 랜덤
         String text = "인증코드는 " + authCode + " 입니다\n";
-        //저장 기능 구현 필요(이메일, 코드 쌍)
+
+        //email, code 저장
+        EmailCode emailCode = EmailCode.builder()
+                .email(email)
+                .code(authCode)
+                .build();
+        emailCodeRepository.save(emailCode);
+
+        //mail 전송
         emailService.sendEmail(email, subject, text);
     }
 
@@ -136,13 +155,15 @@ public class MemberService {
     public boolean isEmailValid(EmailIsValidRequestDto request) {
         String email = request.getEmail();
         String code = request.getCode();
-        /**
-         * 수정필요
-         * 이메일과 코드 쌍이 일치하면 true 반환
-         * 일치하지 않으면 false 반환
-         * boolean 값에 따라 exception은 contoller에서 발생
-         */
-        return true;
+
+        Optional<EmailCode> targetEmailCode = emailCodeRepository.findByEmailAndCode(email, code);
+        if(targetEmailCode.isPresent()){
+            EmailCode emailCode = targetEmailCode.get();
+            emailCodeRepository.delete(emailCode);
+            return true;
+        }
+        else
+            return false;
     }
 
 
