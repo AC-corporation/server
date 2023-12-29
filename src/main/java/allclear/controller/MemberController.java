@@ -102,8 +102,8 @@ public class MemberController {
 
     //회원탈퇴
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
-    @PostMapping("/delete")
-    public ApiResponse delete(Long userId) {
+    @DeleteMapping("/delete/{userId}")
+    public ApiResponse delete(@PathVariable Long userId) {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
     }

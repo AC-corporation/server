@@ -3,12 +3,9 @@ package allclear.domain.member;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Builder
 @Getter @Setter
 public class Member {
 

@@ -41,14 +41,16 @@ public class CrawlMemberInfo {
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
 
-        member = Member.builder().build();
+        member = new Member();
 
         // 로그인
         try {
             loginUsaint(usaintId, usaintPassword);
         } catch (GlobalException e) {
+            closeDriver();
             throw e;
         } catch (Exception e){
+            closeDriver();
             throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
 
@@ -65,6 +67,8 @@ public class CrawlMemberInfo {
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
+        } finally {
+            closeDriver();
         }
     }
 

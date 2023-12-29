@@ -1,6 +1,5 @@
 spring:
   datasource:
-#   DB ?? ??? ?
     url: jdbc:h2:tcp://localhost/~/allclear
 #    url: jdbc:h2:mem:test
     username: sa
@@ -9,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto:
     properties:
       hibernate:
 #       show_sql: true
