@@ -21,6 +21,7 @@ public enum GlobalErrorCode {
     _INVALID_CODE(HttpStatus.UNAUTHORIZED, "4001", "유효하지 않은 코드입니다."),
     _PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "4002", "비밀번호가 일치하지 않습니다."),
     _ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "4004", "존재하지 않는 계정입니다."),
+    _DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "4005", "이미 등록된 이메일입니다"),
 
     //유세인트
     _USAINT_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "4101", "유세인트 아이디 또는 비밀번호가 잘못되었습니다."),
