@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Subject implements Subject {
+public class Subject {
     @Id
     @Column(name = "subject_id")
     private Long subjectId; //과목 번호
