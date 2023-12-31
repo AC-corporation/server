@@ -16,14 +16,17 @@ import java.util.List;
 @NoArgsConstructor
 public class TimetableSubjectResponseDto {
     private Long timetableSubjectId;
-    private Subject subject;
+    private Long subjectId;
     private String name; //과목 이름
     private String professor;
     private List<String> classInfoList;
 
     public TimetableSubjectResponseDto(TimetableSubject timetableSubject) {
         this.timetableSubjectId = timetableSubject.getTimetableSubjectId();
-        this.subject = timetableSubject.getSubject();
+        if (timetableSubject.getSubject() != null)
+            this.subjectId = timetableSubject.getSubject().getSubjectId();
+        else
+            this.subjectId = null;
         this.name = timetableSubject.getName();
         this.professor = timetableSubject.getProfessor();
         this.classInfoList = new ArrayList<>(timetableSubject.getClassInfoList());
