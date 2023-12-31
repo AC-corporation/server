@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 public class TimetableResponseDto {
     private Long timetableId;
     private String tableName; //시간표 이름
-    private int year; //학년도
-    private int semester; //학기
+    private Integer year; //학년도
+    private Integer semester; //학기
     private List<TimetableSubjectResponseDto> timetableSubjectResponseDtoList;
 
 
     public TimetableResponseDto(Timetable timetable) {
         this.timetableId = timetable.getTimetableId();
         this.tableName = timetable.getTableName();
-        this.year = timetable.getYear();
+        this.year = timetable.getTableYear();
         this.semester = timetable.getSemester();
         List<TimetableSubjectResponseDto> timetableSubjectResponseDtoList = timetable.getTimetableSubjectList()
                 .stream()

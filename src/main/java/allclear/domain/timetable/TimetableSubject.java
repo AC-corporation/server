@@ -17,7 +17,7 @@ public class TimetableSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    private Subject subject = null; //null 인 경우 유저가 정의한 과목
+    private Subject subject; //null 인 경우 유저가 정의한 과목
     private String name; //과목 이름
     private String professor;
     @Column(name = "class_info_list")
@@ -25,7 +25,7 @@ public class TimetableSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_id")
-    private Timetable timeTable;
+    private Timetable timetable;
 
 
     //==생성 메서드==//
@@ -35,7 +35,7 @@ public class TimetableSubject {
      */
     public static TimetableSubject createActualTimeTableSubject(Timetable timetable, Subject subject){
         TimetableSubject timeTableSubject = new TimetableSubject();
-        timeTableSubject.setTimeTable(timetable);
+        timeTableSubject.setTimetable(timetable);
         timeTableSubject.setSubject(subject);
         timeTableSubject.setName(subject.getName());
         timeTableSubject.setProfessor(subject.getProfessor());
@@ -49,7 +49,7 @@ public class TimetableSubject {
     public static TimetableSubject createUserTimeTableSubject(Timetable timetable, String name,
                                                               String professor, List<String> classInfoList){
         TimetableSubject timeTableSubject = new TimetableSubject();
-        timeTableSubject.setTimeTable(timetable);
+        timeTableSubject.setTimetable(timetable);
         timeTableSubject.setSubject(null);
         timeTableSubject.setName(name);
         timeTableSubject.setProfessor(professor);

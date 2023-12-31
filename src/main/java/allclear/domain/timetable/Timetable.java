@@ -18,8 +18,9 @@ public class Timetable {
 
     @Column(name = "table_name")
     private String tableName; //시간표 이름
-    private int year; //학년도
-    private int semester; //학기
+    @Column(name = "table_year")
+    private Integer tableYear; //학년도
+    private Integer semester; //학기
 
     @OneToMany(mappedBy = "timetable", cascade = CascadeType.ALL)
     @Column(name = "timetable_subject_list")
@@ -38,17 +39,17 @@ public class Timetable {
 
     public void addTimetableSubject(TimetableSubject timetableSubject) {
         timetableSubjectList.add(timetableSubject);
-        timetableSubject.setTimeTable(this);
+        timetableSubject.setTimetable(this);
     }
 
 
     //==생성 메서드==//
-    public static Timetable createTimetable(Member member, String tableName, int year, int semester,
+    public static Timetable createTimetable(Member member, String tableName, int tableYear, int semester,
                                             TimetableSubject... timetableSubjects) {
         Timetable timeTable = new Timetable();
         timeTable.setMember(member);
         timeTable.setTableName(tableName);
-        timeTable.setYear(year);
+        timeTable.setTableYear(tableYear);
         timeTable.setSemester(semester);
         for (TimetableSubject timeTableSubject : timetableSubjects) {
             timeTable.addTimetableSubject(timeTableSubject);
