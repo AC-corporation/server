@@ -17,7 +17,7 @@ public class TimetableSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    private Subject subject;
+    private Subject subject = null; //null 인 경우 유저가 정의한 과목
     private String name; //과목 이름
     private String professor;
     @Column(name = "class_info_list")
