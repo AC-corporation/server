@@ -24,14 +24,14 @@ public class Grade {
     private List<SemesterGrade> semesterGradeList = new ArrayList<>();
 
     @Column(name = "total_credit")
-    private Long totalCredit; //총 이수 학점
+    private Integer totalCredit; //총 이수 학점
 
     @Column(name = "average_grade")
     private String averageGrade;
 
 
     //==초기화 메서드==//
-    public void setTotalCredit(Long totalCredit) {
+    public void setTotalCredit(Integer totalCredit) {
         this.totalCredit = totalCredit;
     }
 

@@ -20,7 +20,7 @@ public class ParsingGrade {
         String tmpNum = "64"; // 총 이수학점 임시 점수
         semesterAverageGrade = "";
         grade = new Grade();
-        grade.setTotalCredit(Long.parseLong(tmpNum));
+        grade.setTotalCredit(Integer.parseInt(tmpNum));
         grade.setAverageGrade(averageGrade);
         ArrayList<SemesterSubject> tmpList = new ArrayList<>();
 
