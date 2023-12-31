@@ -2,8 +2,12 @@ package allclear.domain.member;
 
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
+import allclear.domain.timetable.Timetable;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -35,9 +39,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private Grade grade;
 
-//    @OneToMany(mappedBy = "member")
-//    @Column(name = "timetable_list")
-//    private List<TimeTable> timeTableList = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @Column(name = "timetable_list")
+    private List<Timetable> timetableList = new ArrayList<>();
 }
 
 
