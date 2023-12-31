@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class GradeResponseDto {
-    private Long totalCredit; // 전체 이수 학점
+    private Integer totalCredit; // 전체 이수 학점
     private String averageGrade; // 전체 평균 학점
     private List<SemesterGradeResponseDto> semesterGradeDtoList; // 학기별 성적 리스트
     public GradeResponseDto(Grade grade) {
