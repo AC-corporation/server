@@ -1,14 +1,12 @@
 package allclear.dto.responseDto;
 
 import allclear.domain.subject.Subject;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -16,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectDto {
+public class SubjectResponseDto {
     private Long subjectId; //과목 번호
     private String name; //과목 이름
     private String professor;
@@ -31,7 +29,7 @@ public class SubjectDto {
     private Double subjectTime; //과목 시간
     private List<String> subjectTargetList; //수강 대상
 
-    public SubjectDto(Subject subject) {
+    public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
         this.name = subject.getName();
         this.professor = subject.getProfessor();
