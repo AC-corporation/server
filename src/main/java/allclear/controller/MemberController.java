@@ -44,12 +44,13 @@ public class MemberController {
     @Operation(summary = "회원가입", description = "회원가입")
     @PostMapping("/signup")
     public ApiResponse signup(@RequestBody MemberSignupRequestDto userSignupRequestDto){
+        Long memberId;
         try {
-            memberService.createMember(userSignupRequestDto);
+            memberId = memberService.createMember(userSignupRequestDto);
         } catch (GlobalException e) {
             return ApiResponse.onFailure(e.getErrorCode(), "");
         }
-        return ApiResponse.onSuccess("회원가입에 성공했습니다","");
+        return ApiResponse.onSuccess("회원가입에 성공했습니다", memberId);
     }
 
     @Operation(summary = "회원가입 - 이메일 인증")
@@ -74,17 +75,21 @@ public class MemberController {
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
     public ApiResponse login(@RequestBody LoginRequestDto loginRequestDto){
-        memberService.login(loginRequestDto);
-        return ApiResponse.onSuccess("로그인에 성공했습니다","");
+        Long memberId;
+        try {
+            memberId = memberService.login(loginRequestDto);
+        } catch (GlobalException e) {
+            return ApiResponse.onFailure(e.getErrorCode(), "");
+        }
+        return ApiResponse.onSuccess("로그인에 성공했습니다", memberId);
     }
 
     //업데이트
-    @Operation(summary = "정보 업데이트", description = "유세인트 Id, Pwd 필요")
+    @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
     @PostMapping("/update")
-    public ApiResponse update(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                              @RequestBody UpdateRequestDto updateRequestDto){
+    public ApiResponse update(@RequestBody UpdateRequestDto updateRequestDto){
         try {
-            memberService.updateMember(userDetails, updateRequestDto);
+            memberService.updateMember(updateRequestDto);
         } catch (GlobalException e){
             return ApiResponse.onFailure(e.getErrorCode(), "");
         }
@@ -94,9 +99,9 @@ public class MemberController {
 
     //로그아웃
     @Operation(summary = "로그아웃", description = "로그아웃")
-    @GetMapping("/logout")
-    public void logout(){
-
+    @GetMapping("/logout/{userId}")
+    public ApiResponse logout(@PathVariable Long userId){
+        return ApiResponse.onSuccess("로그아웃에 성공했습니다", "");
     }
 
     //회원탈퇴
@@ -111,7 +116,7 @@ public class MemberController {
     //유저조회
     @Operation(summary = "유저 조회", description = "유저 조회")
     @GetMapping("/get/{userId}")
-    public ApiResponse<MemberResponseDto> get(@PathVariable Long userId) { //인자 수정 필요
+    public ApiResponse get(@PathVariable Long userId) { //인자 수정 필요
         return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 }

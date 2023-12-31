@@ -52,27 +52,26 @@ public class MemberService {
 
     //로그인
     @Transactional
-    public void login(LoginRequestDto request) {
+    public Long login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
         Member member = memberRepository.findByEmail(email);
+        //member 조회
+        if (member == null)
+            throw new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new GlobalExceptionHandler(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
-
-        /**
-         * 수정필요
-         */
-
+        return member.getMemberId();
     }
 
     //회원가입
     @Transactional
-    public void createMember(MemberSignupRequestDto request) throws GlobalException {
+    public Long createMember(MemberSignupRequestDto request) throws GlobalException {
         String password = passwordEncoder.encode(request.getPassword());
         Member member = new Member();
         member.setEmail(request.getEmail());
@@ -93,7 +92,7 @@ public class MemberService {
                 throw e;
             else { //로그인 성공, 크롤링 실패이므로 member 저장
                 memberRepository.save(member);
-                return;
+                return null;
             }
         }
         //크롤링 한 데이터 member에 저장
@@ -114,6 +113,8 @@ public class MemberService {
         newGrade.setMember(member);
 
         memberRepository.save(member);
+
+        return member.getMemberId();
     }
 
     //회원가입 - 이메일 인증 코드 보내기
@@ -160,8 +161,8 @@ public class MemberService {
 
     //회원 정보 업데이트
     @Transactional
-    public void updateMember(UserDetailsImpl userDetails, UpdateRequestDto updateRequestDto) throws GlobalException {
-        Member member = findOne(userDetails.getUser().getMemberId());
+    public void updateMember(UpdateRequestDto updateRequestDto) throws GlobalException {
+        Member member = findOne(updateRequestDto.getUserId());
         String usaintId = updateRequestDto.getUsaintId();
         String usaintPassword = updateRequestDto.getUsaintPassword();
 
