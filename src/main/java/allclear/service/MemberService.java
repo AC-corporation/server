@@ -161,8 +161,8 @@ public class MemberService {
 
     //회원 정보 업데이트
     @Transactional
-    public void updateMember(UpdateRequestDto updateRequestDto) throws GlobalException {
-        Member member = findOne(updateRequestDto.getUserId());
+    public void updateMember(Long memberId, UpdateRequestDto updateRequestDto) throws GlobalException {
+        Member member = findOne(memberId);
         String usaintId = updateRequestDto.getUsaintId();
         String usaintPassword = updateRequestDto.getUsaintPassword();
 
@@ -179,16 +179,12 @@ public class MemberService {
         member.setSemester(newMember.getSemester());
 
         //졸업요건 초기화
-        requirementRepository.delete(member.getRequirement());
         Requirement newRequirement = crawlInfo.getRequirement();
         newRequirement.setMember(member);
-        requirementRepository.save(newRequirement);
 
         //성적 초기화
-        gradeRepository.delete(member.getGrade());
         Grade newGrade = crawlInfo.getGrade();
         newGrade.setMember(member);
-        gradeRepository.save(newGrade);
     }
 
     private String createCode() {

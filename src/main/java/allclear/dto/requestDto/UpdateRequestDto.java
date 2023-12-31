@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UpdateRequestDto {
-    @NotBlank(message = "유저 아이디를 입력해주세요")
-    Long userId;
     @NotBlank(message = "유세인트 아이디를 입력해주세요")
     String usaintId;
     @NotBlank(message = "유세인트 비밀번호를 입력해주세요")

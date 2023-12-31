@@ -86,10 +86,10 @@ public class MemberController {
 
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PostMapping("/update")
-    public ApiResponse update(@RequestBody UpdateRequestDto updateRequestDto){
+    @PostMapping("/update/{userId}")
+    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateRequestDto updateRequestDto){
         try {
-            memberService.updateMember(updateRequestDto);
+            memberService.updateMember(userId, updateRequestDto);
         } catch (GlobalException e){
             return ApiResponse.onFailure(e.getErrorCode(), "");
         }
