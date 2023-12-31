@@ -94,10 +94,9 @@ class MemberServiceTest {
         Long memberId = member.getMemberId();
 
         //when
-        UserDetailsImpl userDetails = new UserDetailsImpl(member);
         UpdateRequestDto requestDto = new UpdateRequestDto("실제 usaintId 입력", "실제 usaintPasswd 입력");
 
-        memberService.updateMember(userDetails, requestDto);
+        memberService.updateMember(memberId, requestDto);
 
         //then
         Member updateMember = memberRepository.findById(memberId).get();
