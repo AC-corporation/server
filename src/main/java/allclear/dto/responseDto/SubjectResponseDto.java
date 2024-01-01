@@ -26,6 +26,7 @@ public class SubjectResponseDto {
     private String engineeringCertification; //공학 인증
     private String classType; //분반
     private Integer credit; //학점
+    private Integer design; //설계
     private Double subjectTime; //과목 시간
     private List<String> subjectTargetList; //수강 대상
 
@@ -40,6 +41,7 @@ public class SubjectResponseDto {
         this.engineeringCertification = subject.getEngineeringCertification();
         this.classType = subject.getClassType();
         this.credit = subject.getCredit();
+        this.design = subject.getDesign();
         this.subjectTime = subject.getSubjectTime();
         this.subjectTargetList = new ArrayList<>(subject.getSubjectTargetList());;
     }
