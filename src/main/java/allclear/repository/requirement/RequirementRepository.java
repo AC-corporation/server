@@ -1,4 +1,4 @@
-package allclear.repository;
+package allclear.repository.requirement;
 
 import allclear.domain.requirement.Requirement;
 import org.springframework.data.jpa.repository.JpaRepository;

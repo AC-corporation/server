@@ -1,6 +1,6 @@
-package allclear.repository;
+package allclear.repository.member;
 
-import allclear.domain.EmailCode;
+import allclear.domain.member.EmailCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

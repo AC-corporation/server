@@ -4,14 +4,13 @@ import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;
 import allclear.domain.member.Member;
-import allclear.domain.member.UserDetailsImpl;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.requestDto.MemberSignupRequestDto;
 import allclear.dto.requestDto.UpdateRequestDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
-import allclear.repository.MemberRepository;
+import allclear.repository.member.MemberRepository;
 import allclear.service.MemberService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
