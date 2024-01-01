@@ -32,7 +32,7 @@ public class SubjectResponseDto {
 
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
-        this.name = subject.getName();
+        this.name = subject.getSubjectName();
         this.professor = subject.getProfessor();
         this.classInfoList = new ArrayList<>(subject.getClassInfoList());
         this.department = subject.getDepartment();

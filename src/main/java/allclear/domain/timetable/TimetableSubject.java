@@ -18,7 +18,8 @@ public class TimetableSubject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
     private Subject subject; //null 인 경우 유저가 정의한 과목
-    private String name; //과목 이름
+    @Column(name = "subject_name")
+    private String subjectName; //과목 이름
     private String professor;
     @Column(name = "class_info_list")
     private List<String> classInfoList = new ArrayList<>(); //강의 시간 및 강의실
@@ -33,11 +34,10 @@ public class TimetableSubject {
     /**
      * 실제 과목
      */
-    public static TimetableSubject createActualTimeTableSubject(Timetable timetable, Subject subject){
+    public static TimetableSubject createActualTimeTableSubject(Subject subject){
         TimetableSubject timeTableSubject = new TimetableSubject();
-        timeTableSubject.setTimetable(timetable);
         timeTableSubject.setSubject(subject);
-        timeTableSubject.setName(subject.getName());
+        timeTableSubject.setSubjectName(subject.getSubjectName());
         timeTableSubject.setProfessor(subject.getProfessor());
         timeTableSubject.setClassInfoList(subject.getClassInfoList());
         return timeTableSubject;
@@ -46,12 +46,11 @@ public class TimetableSubject {
     /**
      * 유저가 정의한 과목
      */
-    public static TimetableSubject createUserTimeTableSubject(Timetable timetable, String name,
-                                                              String professor, List<String> classInfoList){
+    public static TimetableSubject createCustomTimeTableSubject(String subjectName, String professor,
+                                                                List<String> classInfoList){
         TimetableSubject timeTableSubject = new TimetableSubject();
-        timeTableSubject.setTimetable(timetable);
         timeTableSubject.setSubject(null);
-        timeTableSubject.setName(name);
+        timeTableSubject.setSubjectName(subjectName);
         timeTableSubject.setProfessor(professor);
         timeTableSubject.setClassInfoList(classInfoList);
         return timeTableSubject;
