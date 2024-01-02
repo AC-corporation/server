@@ -1,4 +1,4 @@
-package allclear.dto.requestDto;
+package allclear.dto.requestDto.timetable;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

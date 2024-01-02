@@ -1,4 +1,4 @@
-package allclear.dto.requestDto;
+package allclear.dto.requestDto.timetable;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class EmailAuthRequestDto {
-    @NotBlank(message = "이메일을 입력해주세요")
-    String email;
+public class AddTimetableSubjectRequestDto {
+    @NotBlank(message = "과목 Id를 입력해주세요")
+    Long subjectId;
 }

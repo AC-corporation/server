@@ -1,17 +1,13 @@
 package allclear.controller;
 
-import allclear.domain.member.UserDetailsImpl;
-import allclear.dto.requestDto.*;
-import allclear.dto.responseDto.MemberResponseDto;
+import allclear.dto.requestDto.member.*;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags="api 정보 제공하는 컨트롤러")
@@ -87,9 +83,9 @@ public class MemberController {
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
     @PostMapping("/update/{userId}")
-    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateRequestDto updateRequestDto){
+    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         try {
-            memberService.updateMember(userId, updateRequestDto);
+            memberService.updateMember(userId, updateMemberRequestDto);
         } catch (GlobalException e){
             return ApiResponse.onFailure(e.getErrorCode(), "");
         }
