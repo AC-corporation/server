@@ -82,7 +82,9 @@ public class CrawlMemberInfo {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
+        options.addArguments("--window-size=1920,1080");
         driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         /*
          *사용자 정보 획득을 위한 로그인
          */
