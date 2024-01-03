@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -16,9 +17,9 @@ import java.util.List;
 public class TimetableSubjectResponseDto {
     private Long timetableSubjectId;
     private Long subjectId;
-    private String name; //과목 이름
+    private String subjectName; //과목 이름
     private String professor;
-    private List<String> classInfoList;
+    private List<ClassInfoDto> classInfoDtoList;
 
     public TimetableSubjectResponseDto(TimetableSubject timetableSubject) {
         this.timetableSubjectId = timetableSubject.getTimetableSubjectId();
@@ -26,8 +27,11 @@ public class TimetableSubjectResponseDto {
             this.subjectId = timetableSubject.getSubject().getSubjectId();
         else
             this.subjectId = null;
-        this.name = timetableSubject.getSubjectName();
-        this.professor = timetableSubject.getProfessor();
-        this.classInfoList = new ArrayList<>(timetableSubject.getClassInfoList());
+        this.subjectName = timetableSubject.getSubjectName();
+        this.classInfoDtoList = new ArrayList<>(timetableSubject.getClassInfoList()
+                .stream()
+                .map(ClassInfoDto::new)
+                .collect(Collectors.toList())
+        );
     }
 }

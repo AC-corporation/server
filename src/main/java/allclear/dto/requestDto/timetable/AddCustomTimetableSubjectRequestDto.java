@@ -1,6 +1,6 @@
 package allclear.dto.requestDto.timetable;
 
-import jakarta.validation.constraints.NotBlank;
+import allclear.dto.responseDto.timetable.ClassInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 public class AddCustomTimetableSubjectRequestDto {
     String subjectName;
-    String professor;
-    List<String> classInfoList; // 수정 필요
+    List<ClassInfoDto> classInfoDtoListList;
 }
