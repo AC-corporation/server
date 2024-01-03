@@ -13,7 +13,8 @@ public class Subject {
     @Id
     @Column(name = "subject_id")
     private Long subjectId; //과목 번호
-    private String name; //과목 이름
+    @Column(name = "subject_name")
+    private String subjectName; //과목 이름
     private String professor;
     @Column(name = "class_info_list")
     private List<String> classInfoList = new ArrayList<>(); //강의 시간 및 강의실

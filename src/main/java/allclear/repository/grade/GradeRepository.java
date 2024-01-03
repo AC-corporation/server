@@ -1,4 +1,4 @@
-package allclear.repository;
+package allclear.repository.grade;
 
 import allclear.domain.grade.Grade;
 import org.springframework.data.jpa.repository.JpaRepository;

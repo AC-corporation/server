@@ -2,8 +2,8 @@ package allclear.service;
 
 import allclear.domain.requirement.Requirement;
 import allclear.dto.responseDto.requirement.RequirementResponseDto;
-import allclear.repository.MemberRepository;
-import allclear.repository.RequirementRepository;
+import allclear.repository.member.MemberRepository;
+import allclear.repository.requirement.RequirementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

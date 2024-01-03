@@ -1,11 +1,10 @@
 package allclear.crawl;
 
-import allclear.crawl.CrawlMemberInfo;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.responseDto.requirement.RequirementResponseDto;
-import allclear.repository.RequirementRepository;
+import allclear.repository.requirement.RequirementRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

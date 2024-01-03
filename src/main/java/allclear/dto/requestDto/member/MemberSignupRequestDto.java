@@ -1,4 +1,4 @@
-package allclear.dto.requestDto;
+package allclear.dto.requestDto.member;
 
 
 import lombok.AllArgsConstructor;

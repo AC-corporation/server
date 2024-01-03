@@ -1,24 +1,23 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
-import allclear.domain.EmailCode;
+import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
-import allclear.domain.member.UserDetailsImpl;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
-import allclear.dto.requestDto.*;
+import allclear.dto.requestDto.member.EmailAuthRequestDto;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.exception.GlobalExceptionHandler;
-import allclear.repository.EmailCodeRepository;
-import allclear.repository.GradeRepository;
-import allclear.repository.MemberRepository;
-import allclear.repository.RequirementRepository;
-import allclear.dto.requestDto.EmailIsValidRequestDto;
-import allclear.dto.requestDto.LoginRequestDto;
-import allclear.dto.requestDto.MemberSignupRequestDto;
-import allclear.dto.requestDto.UpdateRequestDto;
+import allclear.repository.member.EmailCodeRepository;
+import allclear.repository.grade.GradeRepository;
+import allclear.repository.member.MemberRepository;
+import allclear.repository.requirement.RequirementRepository;
+import allclear.dto.requestDto.member.EmailIsValidRequestDto;
+import allclear.dto.requestDto.member.LoginRequestDto;
+import allclear.dto.requestDto.member.MemberSignupRequestDto;
+import allclear.dto.requestDto.member.UpdateMemberRequestDto;
 import allclear.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -161,10 +160,10 @@ public class MemberService {
 
     //회원 정보 업데이트
     @Transactional
-    public void updateMember(Long memberId, UpdateRequestDto updateRequestDto) throws GlobalException {
+    public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto) throws GlobalException {
         Member member = findOne(memberId);
-        String usaintId = updateRequestDto.getUsaintId();
-        String usaintPassword = updateRequestDto.getUsaintPassword();
+        String usaintId = updateMemberRequestDto.getUsaintId();
+        String usaintPassword = updateMemberRequestDto.getUsaintPassword();
 
         CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 

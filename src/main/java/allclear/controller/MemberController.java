@@ -1,17 +1,13 @@
 package allclear.controller;
 
-import allclear.domain.member.UserDetailsImpl;
-import allclear.dto.requestDto.*;
-import allclear.dto.responseDto.MemberResponseDto;
+import allclear.dto.requestDto.member.*;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags="api 정보 제공하는 컨트롤러")
@@ -41,7 +37,7 @@ public class MemberController {
     }
 
     //회원가입
-    @Operation(summary = "회원가입", description = "회원가입")
+    @Operation(summary = "회원가입", description = "회원 생성")
     @PostMapping("/signup")
     public ApiResponse signup(@RequestBody MemberSignupRequestDto userSignupRequestDto){
         Long memberId;
@@ -84,24 +80,30 @@ public class MemberController {
         return ApiResponse.onSuccess("로그인에 성공했습니다", memberId);
     }
 
+    //로그아웃
+    @Operation(summary = "로그아웃", description = "로그아웃")
+    @GetMapping("/logout/{userId}")
+    public ApiResponse logout(@PathVariable Long userId){
+        return ApiResponse.onSuccess("로그아웃에 성공했습니다", "");
+    }
+
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PostMapping("/update/{userId}")
-    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateRequestDto updateRequestDto){
+    @PutMapping("/update/{userId}")
+    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         try {
-            memberService.updateMember(userId, updateRequestDto);
+            memberService.updateMember(userId, updateMemberRequestDto);
         } catch (GlobalException e){
             return ApiResponse.onFailure(e.getErrorCode(), "");
         }
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다","");
     }
 
-
-    //로그아웃
-    @Operation(summary = "로그아웃", description = "로그아웃")
-    @GetMapping("/logout/{userId}")
-    public ApiResponse logout(@PathVariable Long userId){
-        return ApiResponse.onSuccess("로그아웃에 성공했습니다", "");
+    //유저조회
+    @Operation(summary = "유저 조회", description = "유저 조회")
+    @GetMapping("/get/{userId}")
+    public ApiResponse get(@PathVariable Long userId) { //인자 수정 필요
+        return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 
     //회원탈퇴
@@ -110,13 +112,5 @@ public class MemberController {
     public ApiResponse delete(@PathVariable Long userId) {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
-    }
-
-
-    //유저조회
-    @Operation(summary = "유저 조회", description = "유저 조회")
-    @GetMapping("/get/{userId}")
-    public ApiResponse get(@PathVariable Long userId) { //인자 수정 필요
-        return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 }

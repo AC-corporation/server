@@ -1,4 +1,4 @@
-package allclear.domain;
+package allclear.domain.member;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

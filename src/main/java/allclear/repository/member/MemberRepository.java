@@ -1,4 +1,4 @@
-package allclear.repository;
+package allclear.repository.member;
 
 import allclear.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

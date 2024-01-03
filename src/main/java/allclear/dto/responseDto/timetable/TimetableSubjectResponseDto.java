@@ -1,6 +1,5 @@
 package allclear.dto.responseDto.timetable;
 
-import allclear.domain.subject.Subject;
 import allclear.domain.timetable.TimetableSubject;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +26,7 @@ public class TimetableSubjectResponseDto {
             this.subjectId = timetableSubject.getSubject().getSubjectId();
         else
             this.subjectId = null;
-        this.name = timetableSubject.getName();
+        this.name = timetableSubject.getSubjectName();
         this.professor = timetableSubject.getProfessor();
         this.classInfoList = new ArrayList<>(timetableSubject.getClassInfoList());
     }

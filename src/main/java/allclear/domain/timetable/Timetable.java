@@ -45,13 +45,13 @@ public class Timetable {
 
     //==생성 메서드==//
     public static Timetable createTimetable(Member member, String tableName, int tableYear, int semester,
-                                            TimetableSubject... timetableSubjects) {
+                                            List<TimetableSubject> timetableSubjectList) {
         Timetable timeTable = new Timetable();
         timeTable.setMember(member);
         timeTable.setTableName(tableName);
         timeTable.setTableYear(tableYear);
         timeTable.setSemester(semester);
-        for (TimetableSubject timeTableSubject : timetableSubjects) {
+        for (TimetableSubject timeTableSubject : timetableSubjectList) {
             timeTable.addTimetableSubject(timeTableSubject);
         }
         return timeTable;

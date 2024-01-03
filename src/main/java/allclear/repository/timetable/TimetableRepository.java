@@ -1,4 +1,4 @@
-package allclear.repository;
+package allclear.repository.timetable;
 
 import allclear.domain.timetable.Timetable;
 import org.springframework.data.jpa.repository.JpaRepository;
