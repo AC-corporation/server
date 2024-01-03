@@ -1,5 +1,6 @@
 package allclear.domain.timetable;
 
+import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,9 +21,9 @@ public class TimetableSubject {
     private Subject subject; //null 인 경우 유저가 정의한 과목
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
-    private String professor;
+    @OneToMany(mappedBy = "timetableSubject")
     @Column(name = "class_info_list")
-    private List<String> classInfoList = new ArrayList<>(); //강의 시간 및 강의실
+    private List<ClassInfo> classInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_id")
@@ -38,7 +39,6 @@ public class TimetableSubject {
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(subject);
         timeTableSubject.setSubjectName(subject.getSubjectName());
-        timeTableSubject.setProfessor(subject.getProfessor());
         timeTableSubject.setClassInfoList(subject.getClassInfoList());
         return timeTableSubject;
     }
@@ -46,12 +46,10 @@ public class TimetableSubject {
     /**
      * 유저가 정의한 과목
      */
-    public static TimetableSubject createCustomTimeTableSubject(String subjectName, String professor,
-                                                                List<String> classInfoList){
+    public static TimetableSubject createCustomTimeTableSubject(String subjectName, List<ClassInfo> classInfoList){
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(null);
         timeTableSubject.setSubjectName(subjectName);
-        timeTableSubject.setProfessor(professor);
         timeTableSubject.setClassInfoList(classInfoList);
         return timeTableSubject;
     }

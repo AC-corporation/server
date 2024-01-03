@@ -1,6 +1,6 @@
 package allclear.service;
 
-import allclear.repository.SubjectRepository;
+import allclear.repository.subject.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

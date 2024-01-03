@@ -1,5 +1,6 @@
 package allclear.dto.requestDto.timetable;
 
+import allclear.dto.responseDto.timetable.ClassInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +13,5 @@ import java.util.List;
 public class UpdateTimetableSubjectRequestDto {
     String subjectName;
     String professor;
-    List<String> classInfoList; // 수정 필요
+    List<ClassInfoDto> classInfoDtoList;
 }

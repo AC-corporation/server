@@ -1,13 +1,15 @@
 package allclear.service;
 
 import allclear.domain.member.Member;
+import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableSubject;
 import allclear.dto.requestDto.timetable.*;
+import allclear.dto.responseDto.timetable.ClassInfoDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
-import allclear.repository.SubjectRepository;
+import allclear.repository.subject.SubjectRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.timetable.TimetableRepository;
 import allclear.repository.timetable.TimetableSubjectRepository;
@@ -16,7 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,11 +98,22 @@ public class TimetableService {
     public Long addTimetableSubject(Long timetableId, AddCustomTimetableSubjectRequestDto request) {
         Timetable timetable = findOne(timetableId);
 
+        //ClassInfo 리스트 초기화
+        List<ClassInfo> classInfoList = new ArrayList<>();
+        for (ClassInfoDto classInfoDto: request.getClassInfoDtoListList()) {
+            ClassInfo classInfo = ClassInfo.createClassInfo(
+                    classInfoDto.getProfessor(),
+                    classInfoDto.getClassTime(),
+                    classInfoDto.getClassDate(),
+                    classInfoDto.getClassRoom()
+            );
+            classInfoList.add(classInfo);
+        }
+
         //시간표 과목 생성해서 시간표에 추가
         TimetableSubject timetableSubject = TimetableSubject.createCustomTimeTableSubject(
                 request.getSubjectName(),
-                request.getProfessor(),
-                request.getClassInfoList()
+                classInfoList
         );
         timetable.addTimetableSubject(timetableSubject);
 
@@ -112,10 +126,20 @@ public class TimetableService {
         TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
         if (request.getSubjectName() != null)
             timetableSubject.setSubjectName(request.getSubjectName());
-        if (request.getProfessor() != null)
-            timetableSubject.setProfessor(request.getProfessor());
-        if (request.getClassInfoList() != null)
-            timetableSubject.setClassInfoList(request.getClassInfoList());
+        if (request.getClassInfoDtoList() != null){
+            //ClassInfo 리스트 초기화
+            List<ClassInfo> classInfoList = new ArrayList<>();
+            for (ClassInfoDto classInfoDto: request.getClassInfoDtoList()) {
+                ClassInfo classInfo = ClassInfo.createClassInfo(
+                        classInfoDto.getProfessor(),
+                        classInfoDto.getClassTime(),
+                        classInfoDto.getClassDate(),
+                        classInfoDto.getClassRoom()
+                );
+                classInfoList.add(classInfo);
+            }
+            timetableSubject.setClassInfoList(classInfoList);
+        }
     }
 
     //과목 조회
