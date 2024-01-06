@@ -21,7 +21,7 @@ class CrawlSubjectTest {
     @Test
     public static void main(String[] args) {
         ArrayList<Subject> subjectList = new ArrayList<>();
-        CrawlSubjectInfo crawlSubjectInfo = new CrawlSubjectInfo("20203058", "Jjw112233$");
+        CrawlSubjectInfo crawlSubjectInfo = new CrawlSubjectInfo(2024, "1", "20203058", "Jjw112233$");
         subjectList = crawlSubjectInfo.getSubjects();
         for(int i=0;i<subjectList.size();i++){
             Subject subject = subjectList.get(i);

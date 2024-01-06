@@ -44,9 +44,9 @@ public class CrawlSubjectInfo {
     String targetPath; // 크롤링 할 요소가 있는 경로
     String targetText; // 크롤링 할 문자
 
-    public CrawlSubjectInfo(String usaintId, String usaintPassword) throws GlobalException {
+    public CrawlSubjectInfo(Integer year, String semester, String usaintId, String usaintPassword) throws GlobalException {
         loginUsaint(usaintId, usaintPassword); // 로그인
-        setYearSemester(2024, "1"); // 조회 연도 및 학기 설정
+        setYearSemester(year, semester); // 조회 연도 및 학기 설정
         //crawlMajorSubjects(); // 학부 전공 크롤링
         //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
         //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
