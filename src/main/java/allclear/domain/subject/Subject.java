@@ -33,6 +33,6 @@ public class Subject {
     private Integer design; //설계
     @Column(name = "subject_time")
     private Double subjectTime; //과목 시간
-    @Column(name = "subject_target_list")
-    private List<String> subjectTargetList = new ArrayList<>(); //수강 대상
+    @Column(name = "subject_target")
+    private String subjectTarget; //수강 대상
 }

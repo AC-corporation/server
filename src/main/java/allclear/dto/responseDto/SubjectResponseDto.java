@@ -30,7 +30,7 @@ public class SubjectResponseDto {
     private Integer credit; //학점
     private Integer design; //설계
     private Double subjectTime; //과목 시간
-    private List<String> subjectTargetList; //수강 대상
+    private String subjectTarget; //수강 대상
 
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
@@ -48,6 +48,6 @@ public class SubjectResponseDto {
         this.credit = subject.getCredit();
         this.design = subject.getDesign();
         this.subjectTime = subject.getSubjectTime();
-        this.subjectTargetList = new ArrayList<>(subject.getSubjectTargetList());;
+        this.subjectTarget = subject.getSubjectTarget();
     }
 }
