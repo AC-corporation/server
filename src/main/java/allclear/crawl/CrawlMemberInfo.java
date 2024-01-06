@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -75,11 +76,20 @@ public class CrawlMemberInfo {
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
         System.setProperty("ENCODING", "UTF-8");
         WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+
+        // 창 숨기는 옵션 추가
+        options.addArguments("window-size=1920,1000");
+        options.addArguments("headless");
+        options.addArguments("disable-gpu");
+        options.addArguments("ignore-certificate-errors");
+        options.addArguments("lang=ko");
+        options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.20 Safari/537.36");
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
         // 입력 받은 아이디와 비밀번호
 
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         /*
          *사용자 정보 획득을 위한 로그인
