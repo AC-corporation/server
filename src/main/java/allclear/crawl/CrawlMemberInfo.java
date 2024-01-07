@@ -5,6 +5,7 @@ import allclear.domain.requirement.Requirement;
 import allclear.domain.member.Member;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -26,17 +27,12 @@ public class CrawlMemberInfo {
     @Getter
     private Grade grade;
 
-    @Getter
     private ArrayList<String> requirementComponentList = new ArrayList<>();
-    @Getter
     private ArrayList<String> entireGrades = new ArrayList<>();  //  전체 성적 리스트
-    @Getter
     private ArrayList<String> detailGrades = new ArrayList<>(); // 학기별 세부 성적 리스트
     private String firstYear; // 최초 학년
     private String firstSemester; // 최초 학기
-    @Getter
     private String totalCredit; // 총 이수 학점
-    @Getter
     private String averageGrade; // 평균 학점
     WebDriver driver;
 
