@@ -1,20 +1,17 @@
 package allclear.controller;
 
-import allclear.domain.timetable.Timetable;
 import allclear.dto.requestDto.timetable.*;
-import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.global.response.ApiResponse;
 import allclear.service.TimetableService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "api 정보 제공하는 컨트롤러")
+@Api(tags="api 정보 제공하는 컨트롤러")
 @RestController
 @RequiredArgsConstructor
-@Controller("/timetable")
+@RequestMapping("/timetable")
 public class TimetableController {
     private final TimetableService timetableService;
 
