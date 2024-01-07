@@ -28,15 +28,10 @@ import static org.openqa.selenium.Keys.PAGE_DOWN;
 public class CrawlSubjectInfo {
     @Getter
     private ArrayList<Subject> subjects = new ArrayList<>(); // subject 객체들 저장
-    @Getter
     private ArrayList<String> majorSubjects = new ArrayList<>(); // 학부 전공 과목
-    @Getter
     private ArrayList<String> requiredGeneralSubjects = new ArrayList<>(); // 교양 필수 과목
-    @Getter
     private ArrayList<String> optionalGeneralSubjects = new ArrayList<>(); // 교양 선택 과목
-    @Getter
     private ArrayList<String> chapelSubjects = new ArrayList<>(); // 채플 과목
-    @Getter
     private ArrayList<String> teachingSubjects = new ArrayList<>(); // 교직 이수 과목
 
     WebDriver driver; // 웹 드라이버
