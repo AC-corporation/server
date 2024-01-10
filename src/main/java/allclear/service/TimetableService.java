@@ -80,7 +80,7 @@ public class TimetableService {
 
 
 
-    //과목 추가 - 실제 과목
+    //시간표 과목 추가 - 실제 과목
     @Transactional
     public Long addTimetableSubject(Long timetableId, AddTimetableSubjectRequestDto request) {
         Timetable timetable = findOne(timetableId);
@@ -93,20 +93,20 @@ public class TimetableService {
         return timetableSubject.getTimetableSubjectId();
     }
 
-    //과목 추가 - 커스텀 과목
+    //시간표 과목 추가 - 커스텀 과목
     @Transactional
     public Long addTimetableSubject(Long timetableId, AddCustomTimetableSubjectRequestDto request) {
         Timetable timetable = findOne(timetableId);
 
         //ClassInfo 리스트 초기화
         List<ClassInfo> classInfoList = new ArrayList<>();
-        for (ClassInfoRequestDto classInfoResponseDto : request.getClassInfoRequestDtoListList()) {
+        for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
             ClassInfo classInfo = ClassInfo.createClassInfo(
-                    classInfoResponseDto.getProfessor(),
-                    classInfoResponseDto.getClassDay(),
-                    classInfoResponseDto.getStartTime(),
-                    classInfoResponseDto.getEndTime(),
-                    classInfoResponseDto.getClassRoom()
+                    classInfoRequestDto.getProfessor(),
+                    classInfoRequestDto.getClassDay(),
+                    classInfoRequestDto.getStartTime(),
+                    classInfoRequestDto.getEndTime(),
+                    classInfoRequestDto.getClassRoom()
             );
             classInfoList.add(classInfo);
         }
@@ -121,7 +121,7 @@ public class TimetableService {
         return timetableSubject.getTimetableSubjectId();
     }
 
-    //과목 수정
+    //시간표 과목 수정
     @Transactional
     public void updateTimetableSubject(Long timetableSubjectId, UpdateTimetableSubjectRequestDto request) {
         TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
@@ -130,13 +130,13 @@ public class TimetableService {
         if (request.getClassInfoRequestDtoList() != null){
             //ClassInfo 리스트 초기화
             List<ClassInfo> classInfoList = new ArrayList<>();
-            for (ClassInfoRequestDto classInfoResponseDto : request.getClassInfoRequestDtoList()) {
+            for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoList()) {
                 ClassInfo classInfo = ClassInfo.createClassInfo(
-                        classInfoResponseDto.getProfessor(),
-                        classInfoResponseDto.getClassDay(),
-                        classInfoResponseDto.getStartTime(),
-                        classInfoResponseDto.getEndTime(),
-                        classInfoResponseDto.getClassRoom()
+                        classInfoRequestDto.getProfessor(),
+                        classInfoRequestDto.getClassDay(),
+                        classInfoRequestDto.getStartTime(),
+                        classInfoRequestDto.getEndTime(),
+                        classInfoRequestDto.getClassRoom()
                 );
                 classInfoList.add(classInfo);
             }
@@ -144,13 +144,13 @@ public class TimetableService {
         }
     }
 
-    //과목 조회
+    //시간표 과목 조회
     public TimetableSubjectResponseDto getTimetableSubject(Long timetableSubjectId) {
         TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
         return new TimetableSubjectResponseDto(timetableSubject);
     }
 
-    //과목 삭제
+    //시간표 과목 삭제
     @Transactional
     public void deleteTimetableSubject(Long timetableSubjectId) {
         timetableSubjectRepository.deleteById(timetableSubjectId);
