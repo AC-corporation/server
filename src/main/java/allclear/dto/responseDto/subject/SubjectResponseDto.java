@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 public class SubjectResponseDto {
     private Long subjectId; //과목 번호
     private String name; //과목 이름
-    private String professor;
     private List<ClassInfoResponseDto> classInfoResponseDtoList; //강의 시간, 요일, 강의실, 교수명
 
     private String department; //개설 학과
