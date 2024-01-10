@@ -3,13 +3,15 @@ package allclear.service;
 import allclear.crawl.CrawlSubjectInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.SubjectListRequestDto;
+import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.repository.subject.SubjectRepository;
+import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,21 +48,25 @@ public class SubjectService {
     }
 
     //==과목 조회==//
+
     //단건 조회
-    public SubjectResponseDto getSubject(Long id){
-        Subject subject = subjectRepository.findById(id).get();
-        return new SubjectResponseDto(subject);
-    }
+//    public SubjectResponseDto getSubject(Long id){
+//        Subject subject = subjectRepository.findById(id).get();
+//        return new SubjectResponseDto(subject);
+//    }
 
     //다건 조회
-//    public SubjectListResponseDto getSubjectByDepartment(SubjectListRequestDto request) {
-//        List<Subject> subjectList;
-//        return new SubjectListResponseDto(subjectList);
-//    }
+    public SubjectListResponseDto getSubjectList(GetSubjectListRequestDto request) {
+        Specification<Subject> spec = new SubjectSpecification(request);
+        List<Subject> subjectList = subjectRepository.findAll(spec);
+        if (subjectList == null)
+            return null;
+        return new SubjectListResponseDto(subjectList);
+    }
 
 
     //과목 삭제
-    public void deleteSubject(Long id){
-        subjectRepository.deleteById(id);
-    }
+//    public void deleteSubject(Long id){
+//        subjectRepository.deleteById(id);
+//    }
 }
