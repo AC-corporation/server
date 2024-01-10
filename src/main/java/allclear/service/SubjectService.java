@@ -48,11 +48,12 @@ public class SubjectService {
     }
 
     //==과목 조회==//
+
     //단건 조회
-    public SubjectResponseDto getSubject(Long id){
-        Subject subject = subjectRepository.findById(id).get();
-        return new SubjectResponseDto(subject);
-    }
+//    public SubjectResponseDto getSubject(Long id){
+//        Subject subject = subjectRepository.findById(id).get();
+//        return new SubjectResponseDto(subject);
+//    }
 
     //다건 조회
     public SubjectListResponseDto getSubjectList(GetSubjectListRequestDto request) {
@@ -65,7 +66,7 @@ public class SubjectService {
 
 
     //과목 삭제
-    public void deleteSubject(Long id){
-        subjectRepository.deleteById(id);
-    }
+//    public void deleteSubject(Long id){
+//        subjectRepository.deleteById(id);
+//    }
 }
