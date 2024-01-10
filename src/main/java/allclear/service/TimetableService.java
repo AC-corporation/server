@@ -101,7 +101,7 @@ public class TimetableService {
 
         //ClassInfo 리스트 초기화
         List<ClassInfo> classInfoList = new ArrayList<>();
-        for (ClassInfoResponseDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
+        for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
             ClassInfo classInfo = ClassInfo.createClassInfo(
                     classInfoRequestDto.getProfessor(),
                     classInfoRequestDto.getClassDay(),
