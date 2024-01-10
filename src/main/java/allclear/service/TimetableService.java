@@ -6,7 +6,7 @@ import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableSubject;
 import allclear.dto.requestDto.timetable.*;
-import allclear.dto.responseDto.timetable.ClassInfoDto;
+import allclear.dto.responseDto.subject.ClassInfoRequestDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
 import allclear.repository.subject.SubjectRepository;
@@ -100,12 +100,13 @@ public class TimetableService {
 
         //ClassInfo 리스트 초기화
         List<ClassInfo> classInfoList = new ArrayList<>();
-        for (ClassInfoDto classInfoDto: request.getClassInfoDtoListList()) {
+        for (ClassInfoRequestDto classInfoResponseDto : request.getClassInfoRequestDtoListList()) {
             ClassInfo classInfo = ClassInfo.createClassInfo(
-                    classInfoDto.getProfessor(),
-                    classInfoDto.getClassTime(),
-                    classInfoDto.getClassDate(),
-                    classInfoDto.getClassRoom()
+                    classInfoResponseDto.getProfessor(),
+                    classInfoResponseDto.getClassDay(),
+                    classInfoResponseDto.getStartTime(),
+                    classInfoResponseDto.getEndTime(),
+                    classInfoResponseDto.getClassRoom()
             );
             classInfoList.add(classInfo);
         }
@@ -126,15 +127,16 @@ public class TimetableService {
         TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
         if (request.getSubjectName() != null)
             timetableSubject.setSubjectName(request.getSubjectName());
-        if (request.getClassInfoDtoList() != null){
+        if (request.getClassInfoRequestDtoList() != null){
             //ClassInfo 리스트 초기화
             List<ClassInfo> classInfoList = new ArrayList<>();
-            for (ClassInfoDto classInfoDto: request.getClassInfoDtoList()) {
+            for (ClassInfoRequestDto classInfoResponseDto : request.getClassInfoRequestDtoList()) {
                 ClassInfo classInfo = ClassInfo.createClassInfo(
-                        classInfoDto.getProfessor(),
-                        classInfoDto.getClassTime(),
-                        classInfoDto.getClassDate(),
-                        classInfoDto.getClassRoom()
+                        classInfoResponseDto.getProfessor(),
+                        classInfoResponseDto.getClassDay(),
+                        classInfoResponseDto.getStartTime(),
+                        classInfoResponseDto.getEndTime(),
+                        classInfoResponseDto.getClassRoom()
                 );
                 classInfoList.add(classInfo);
             }

@@ -1,7 +1,6 @@
-package allclear.dto.responseDto;
+package allclear.dto.responseDto.subject;
 
 import allclear.domain.subject.Subject;
-import allclear.dto.responseDto.timetable.ClassInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,7 @@ public class SubjectResponseDto {
     private Long subjectId; //과목 번호
     private String name; //과목 이름
     private String professor;
-    private List<ClassInfoDto> classInfoDtoList; //강의 시간, 요일, 강의실, 교수명
+    private List<ClassInfoRequestDto> classInfoResponseDtoList; //강의 시간, 요일, 강의실, 교수명
 
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
@@ -35,9 +34,9 @@ public class SubjectResponseDto {
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
         this.name = subject.getSubjectName();
-        this.classInfoDtoList = new ArrayList<>(subject.getClassInfoList()
+        this.classInfoResponseDtoList = new ArrayList<>(subject.getClassInfoList()
                 .stream()
-                .map(ClassInfoDto::new)
+                .map(ClassInfoRequestDto::new)
                 .collect(Collectors.toList())
         );
         this.department = subject.getDepartment();

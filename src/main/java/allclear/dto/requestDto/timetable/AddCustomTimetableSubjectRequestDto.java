@@ -1,6 +1,6 @@
 package allclear.dto.requestDto.timetable;
 
-import allclear.dto.responseDto.timetable.ClassInfoDto;
+import allclear.dto.responseDto.subject.ClassInfoRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 public class AddCustomTimetableSubjectRequestDto {
     String subjectName;
-    List<ClassInfoDto> classInfoDtoListList;
+    List<ClassInfoRequestDto> classInfoRequestDtoListList;
 }

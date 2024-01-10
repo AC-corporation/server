@@ -1,6 +1,7 @@
 package allclear.dto.responseDto.timetable;
 
 import allclear.domain.timetable.TimetableSubject;
+import allclear.dto.responseDto.subject.ClassInfoRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class TimetableSubjectResponseDto {
     private Long subjectId;
     private String subjectName; //과목 이름
     private String professor;
-    private List<ClassInfoDto> classInfoDtoList;
+    private List<ClassInfoRequestDto> classInfoResponseDtoList;
 
     public TimetableSubjectResponseDto(TimetableSubject timetableSubject) {
         this.timetableSubjectId = timetableSubject.getTimetableSubjectId();
@@ -28,9 +29,9 @@ public class TimetableSubjectResponseDto {
         else
             this.subjectId = null;
         this.subjectName = timetableSubject.getSubjectName();
-        this.classInfoDtoList = new ArrayList<>(timetableSubject.getClassInfoList()
+        this.classInfoResponseDtoList = new ArrayList<>(timetableSubject.getClassInfoList()
                 .stream()
-                .map(ClassInfoDto::new)
+                .map(ClassInfoRequestDto::new)
                 .collect(Collectors.toList())
         );
     }
