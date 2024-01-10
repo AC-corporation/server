@@ -29,7 +29,7 @@ public class Subject {
     private String engineeringCertification; //공학 인증
     @Column(name = "class_type")
     private String classType; //분반
-    private Integer credit; //학점
+    private Double credit; //학점
     private Integer design; //설계
     @Column(name = "subject_time")
     private Double subjectTime; //과목 시간
