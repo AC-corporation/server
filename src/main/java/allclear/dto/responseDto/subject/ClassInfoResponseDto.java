@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassInfoRequestDto {
+public class ClassInfoResponseDto {
     //교수명
     private String professor;
     //강의 요일
@@ -24,7 +24,7 @@ public class ClassInfoRequestDto {
     //강의 장소
     private String classRoom;
 
-    public ClassInfoRequestDto(ClassInfo classInfo){
+    public ClassInfoResponseDto(ClassInfo classInfo){
         this.professor = classInfo.getProfessor();
         this.classDay = classInfo.getClassDay();
         this.startTime = classInfo.getStartTime();

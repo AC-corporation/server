@@ -5,8 +5,9 @@ import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableSubject;
+import allclear.dto.requestDto.subject.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetable.*;
-import allclear.dto.responseDto.subject.ClassInfoRequestDto;
+import allclear.dto.responseDto.subject.ClassInfoResponseDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
 import allclear.repository.subject.SubjectRepository;
@@ -100,7 +101,7 @@ public class TimetableService {
 
         //ClassInfo 리스트 초기화
         List<ClassInfo> classInfoList = new ArrayList<>();
-        for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
+        for (ClassInfoResponseDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
             ClassInfo classInfo = ClassInfo.createClassInfo(
                     classInfoRequestDto.getProfessor(),
                     classInfoRequestDto.getClassDay(),
