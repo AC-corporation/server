@@ -25,7 +25,7 @@ public class SubjectResponseDto {
     private String multiMajorClassification; //이수 구분(다전공)
     private String engineeringCertification; //공학 인증
     private String classType; //분반
-    private Integer credit; //학점
+    private Double credit; //학점
     private Integer design; //설계
     private Double subjectTime; //과목 시간
     private String subjectTarget; //수강 대상
