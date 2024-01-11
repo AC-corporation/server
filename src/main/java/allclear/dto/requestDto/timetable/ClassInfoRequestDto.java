@@ -1,6 +1,5 @@
-package allclear.dto.requestDto.subject;
+package allclear.dto.requestDto.timetable;
 
-import allclear.domain.subject.ClassInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

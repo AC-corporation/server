@@ -29,7 +29,7 @@ public class TimetableSubjectResponseDto {
         else
             this.subjectId = null;
         this.subjectName = timetableSubject.getSubjectName();
-        this.classInfoResponseDtoList = new ArrayList<>(timetableSubject.getClassInfoList()
+        this.classInfoResponseDtoList = new ArrayList<>(timetableSubject.getTimetableClassInfoList()
                 .stream()
                 .map(ClassInfoResponseDto::new)
                 .collect(Collectors.toList())

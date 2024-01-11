@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class TimetableSubject {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "timetable_subject_id")
     private Long timetableSubjectId;
 
@@ -21,9 +23,9 @@ public class TimetableSubject {
     private Subject subject; //null 인 경우 유저가 정의한 과목
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
-    @OneToMany(mappedBy = "timetableSubject")
-    @Column(name = "class_info_list")
-    private List<ClassInfo> classInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
+    @OneToMany(mappedBy = "timetableSubject", cascade = CascadeType.ALL)
+    @Column(name = "timetable_class_info_list")
+    private List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_id")
@@ -35,22 +37,33 @@ public class TimetableSubject {
     /**
      * 실제 과목
      */
-    public static TimetableSubject createActualTimeTableSubject(Subject subject){
+    public static TimetableSubject createActualTimeTableSubject(Subject subject) {
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(subject);
         timeTableSubject.setSubjectName(subject.getSubjectName());
-        timeTableSubject.setClassInfoList(subject.getClassInfoList());
+        for (ClassInfo classInfo : subject.getClassInfoList()) {
+            timeTableSubject.getTimetableClassInfoList().add(
+                    TimetableClassInfo.createClassInfo(
+                            classInfo.getProfessor(),
+                            classInfo.getClassDay(),
+                            classInfo.getStartTime(),
+                            classInfo.getEndTime(),
+                            classInfo.getClassRoom()
+                    )
+            );
+        }
         return timeTableSubject;
     }
 
     /**
      * 유저가 정의한 과목
      */
-    public static TimetableSubject createCustomTimeTableSubject(String subjectName, List<ClassInfo> classInfoList){
+    public static TimetableSubject createCustomTimeTableSubject(String subjectName,
+                                                                List<TimetableClassInfo> timetableClassInfoList) {
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(null);
         timeTableSubject.setSubjectName(subjectName);
-        timeTableSubject.setClassInfoList(classInfoList);
+        timeTableSubject.setTimetableClassInfoList(timetableClassInfoList);
         return timeTableSubject;
     }
 }
