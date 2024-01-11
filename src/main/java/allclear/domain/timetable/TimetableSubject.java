@@ -32,6 +32,12 @@ public class TimetableSubject {
     private Timetable timetable;
 
 
+    //==연관관계 메서드==//
+    public void addTimetableClassInfo(TimetableClassInfo timetableClassInfo) {
+        this.getTimetableClassInfoList().add(timetableClassInfo);
+        timetableClassInfo.setTimetableSubject(this);
+    }
+
     //==생성 메서드==//
 
     /**
@@ -42,7 +48,7 @@ public class TimetableSubject {
         timeTableSubject.setSubject(subject);
         timeTableSubject.setSubjectName(subject.getSubjectName());
         for (ClassInfo classInfo : subject.getClassInfoList()) {
-            timeTableSubject.getTimetableClassInfoList().add(
+            timeTableSubject.addTimetableClassInfo(
                     TimetableClassInfo.createClassInfo(
                             classInfo.getProfessor(),
                             classInfo.getClassDay(),
@@ -63,7 +69,9 @@ public class TimetableSubject {
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(null);
         timeTableSubject.setSubjectName(subjectName);
-        timeTableSubject.setTimetableClassInfoList(timetableClassInfoList);
+        for (TimetableClassInfo timetableClassInfo : timetableClassInfoList) {
+            timeTableSubject.addTimetableClassInfo(timetableClassInfo);
+        }
         return timeTableSubject;
     }
 }
