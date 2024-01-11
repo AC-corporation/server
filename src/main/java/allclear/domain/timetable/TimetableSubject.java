@@ -69,7 +69,9 @@ public class TimetableSubject {
         TimetableSubject timeTableSubject = new TimetableSubject();
         timeTableSubject.setSubject(null);
         timeTableSubject.setSubjectName(subjectName);
-        timeTableSubject.setTimetableClassInfoList(timetableClassInfoList);
+        for (TimetableClassInfo timetableClassInfo : timetableClassInfoList) {
+            timeTableSubject.addTimetableClassInfo(timetableClassInfo);
+        }
         return timeTableSubject;
     }
 }
