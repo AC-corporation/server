@@ -5,6 +5,8 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springdoc/springdoc-openapi-starter-common/2.0.0/fadf2f04bea39df515fba828474b944d925f9f7/springdoc-openapi-starter-common-2.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springdoc/springdoc-openapi-starter-common/2.0.0/ef39cb5e44d197010d61fcb294100f7ce0530cb9/springdoc-openapi-starter-common-2.0.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

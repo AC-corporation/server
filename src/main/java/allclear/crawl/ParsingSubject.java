@@ -53,6 +53,7 @@ public class ParsingSubject {
                         for(int k = 0; k < classInfoString.size(); k++){
                             ClassInfo classInfo;
                             classInfo = makeClassInfo(classInfoString.get(k)); // classInfo 생성 후 반환
+                            classInfo.setSubject(subject);
                             classInfoList.add(classInfo);
                         }
                         subject.setClassInfoList(classInfoList);

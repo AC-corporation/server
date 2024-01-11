@@ -5,6 +5,8 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springdoc/springdoc-openapi-starter-webmvc-ui/2.0.0/8a1c5eec3957c4eb4f18460e3ee52732d7b6f640/springdoc-openapi-starter-webmvc-ui-2.0.0.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springdoc/springdoc-openapi-starter-webmvc-ui/2.0.0/77cc26bbe80311b470ad476ecc726cdfd40fb2d6/springdoc-openapi-starter-webmvc-ui-2.0.0-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
