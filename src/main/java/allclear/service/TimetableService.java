@@ -91,6 +91,9 @@ public class TimetableService {
         TimetableSubject timetableSubject = TimetableSubject.createActualTimeTableSubject(subject);
         timetable.addTimetableSubject(timetableSubject);
 
+        //Id 생성
+        timetableRepository.flush();
+
         return timetableSubject.getTimetableSubjectId();
     }
 
@@ -118,6 +121,9 @@ public class TimetableService {
                 timetableClassInfoList
         );
         timetable.addTimetableSubject(timetableSubject);
+
+        //Id 생성
+        timetableRepository.flush();
 
         return timetableSubject.getTimetableSubjectId();
     }
