@@ -15,7 +15,7 @@ public class Subject {
     private Long subjectId; //과목 번호
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
-    @OneToMany(mappedBy = "subject")
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     @Column(name = "class_info_list")
     private List<ClassInfo> classInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
 

@@ -23,7 +23,7 @@ public class TimetableSubject {
     private Subject subject; //null 인 경우 유저가 정의한 과목
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
-    @OneToMany(mappedBy = "timetableSubject")
+    @OneToMany(mappedBy = "timetableSubject", cascade = CascadeType.ALL)
     @Column(name = "timetable_class_info_list")
     private List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
 
