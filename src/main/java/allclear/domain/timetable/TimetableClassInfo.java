@@ -1,7 +1,7 @@
-package allclear.domain.subject;
+package allclear.domain.timetable;
 
 
-import allclear.domain.timetable.TimetableSubject;
+import allclear.domain.subject.Subject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,9 +10,9 @@ import java.time.LocalTime;
 
 @Entity
 @Getter @Setter
-public class ClassInfo {
+public class TimetableClassInfo {
     @Id @GeneratedValue
-    @Column(name = "class_info_id")
+    @Column(name = "timetable_class_info_id")
     private Long id;
     private String professor; //교수명
     @Column(name = "class_date")
@@ -25,14 +25,14 @@ public class ClassInfo {
     private String classRoom; //강의 장소
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subject_id")
-    private Subject subject;
+    @JoinColumn(name = "timetable_subject_id")
+    private TimetableSubject timetableSubject;
 
 
     //==생성 메서드==//
-    static public ClassInfo createClassInfo(String professor, String classDay,
-                                            LocalTime startTime, LocalTime endTime, String classRoom) {
-        ClassInfo classInfo = new ClassInfo();
+    static public TimetableClassInfo createClassInfo(String professor, String classDay,
+                                                     LocalTime startTime, LocalTime endTime, String classRoom) {
+        TimetableClassInfo classInfo = new TimetableClassInfo();
         classInfo.setProfessor(professor);
         classInfo.setClassDay(classDay);
         classInfo.setStartTime(startTime);

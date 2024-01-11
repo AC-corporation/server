@@ -4,10 +4,10 @@ import allclear.domain.member.Member;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
+import allclear.domain.timetable.TimetableClassInfo;
 import allclear.domain.timetable.TimetableSubject;
-import allclear.dto.requestDto.subject.ClassInfoRequestDto;
+import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetable.*;
-import allclear.dto.responseDto.subject.ClassInfoResponseDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
 import allclear.repository.subject.SubjectRepository;
@@ -100,22 +100,22 @@ public class TimetableService {
         Timetable timetable = findOne(timetableId);
 
         //ClassInfo 리스트 초기화
-        List<ClassInfo> classInfoList = new ArrayList<>();
-        for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoListList()) {
-            ClassInfo classInfo = ClassInfo.createClassInfo(
+        List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
+        for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoList()) {
+            TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
                     classInfoRequestDto.getProfessor(),
                     classInfoRequestDto.getClassDay(),
                     classInfoRequestDto.getStartTime(),
                     classInfoRequestDto.getEndTime(),
                     classInfoRequestDto.getClassRoom()
             );
-            classInfoList.add(classInfo);
+            timetableClassInfoList.add(timetableClassInfo);
         }
 
         //시간표 과목 생성해서 시간표에 추가
         TimetableSubject timetableSubject = TimetableSubject.createCustomTimeTableSubject(
                 request.getSubjectName(),
-                classInfoList
+                timetableClassInfoList
         );
         timetable.addTimetableSubject(timetableSubject);
 
@@ -130,18 +130,18 @@ public class TimetableService {
             timetableSubject.setSubjectName(request.getSubjectName());
         if (request.getClassInfoRequestDtoList() != null){
             //ClassInfo 리스트 초기화
-            List<ClassInfo> classInfoList = new ArrayList<>();
+            List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
             for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoList()) {
-                ClassInfo classInfo = ClassInfo.createClassInfo(
+                TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
                         classInfoRequestDto.getProfessor(),
                         classInfoRequestDto.getClassDay(),
                         classInfoRequestDto.getStartTime(),
                         classInfoRequestDto.getEndTime(),
                         classInfoRequestDto.getClassRoom()
                 );
-                classInfoList.add(classInfo);
+                timetableClassInfoList.add(timetableClassInfo);
             }
-            timetableSubject.setClassInfoList(classInfoList);
+            timetableSubject.setTimetableClassInfoList(timetableClassInfoList);
         }
     }
 
