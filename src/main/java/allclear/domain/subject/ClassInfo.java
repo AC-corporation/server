@@ -29,6 +29,13 @@ public class ClassInfo {
     private Subject subject;
 
 
+    //==연관관계 메서드==//
+    public void setSubject(Subject subject) {
+        subject.getClassInfoList().add(this);
+        this.subject = subject;
+    }
+
+
     //==생성 메서드==//
     static public ClassInfo createClassInfo(String professor, String classDay,
                                             LocalTime startTime, LocalTime endTime, String classRoom) {
