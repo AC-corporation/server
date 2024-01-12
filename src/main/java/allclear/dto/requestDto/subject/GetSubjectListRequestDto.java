@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetSubjectListRequestDto {
     private Long subjectId; //과목 번호
-    private Long subjectName; //과목 이름
+    private String subjectName; //과목 이름
     private String professor; //교수명
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
