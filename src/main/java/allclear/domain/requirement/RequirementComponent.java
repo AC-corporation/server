@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter @Setter
 public class RequirementComponent {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "requirement_component_id")
     private Long requirementComponentId;
 

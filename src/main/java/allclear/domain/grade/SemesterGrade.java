@@ -13,7 +13,7 @@ public class SemesterGrade {
      * 성적 조회, 졸업요건 조회 이후 추후 상의
      **/
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "semester_grade_id")
     private Long semesterGradeId;
 

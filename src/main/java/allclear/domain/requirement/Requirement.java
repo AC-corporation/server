@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 public class Requirement {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "requirement_id")
     private Long requirementId;
     @OneToOne(fetch = FetchType.LAZY)

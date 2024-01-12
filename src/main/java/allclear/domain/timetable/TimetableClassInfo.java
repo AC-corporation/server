@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @Entity
 @Getter @Setter
 public class TimetableClassInfo {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "timetable_class_info_id")
     private Long id;
     private String professor; //교수명
