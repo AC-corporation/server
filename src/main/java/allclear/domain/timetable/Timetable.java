@@ -12,7 +12,7 @@ import java.util.List;
 @Getter @Setter
 public class Timetable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "timetable_id")
     private Long timetableId;
 
