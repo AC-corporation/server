@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 //@Component
 //@Slf4j
 public enum GlobalErrorCode {
-    _NO_CONTENTS(HttpStatus.NO_CONTENT, "COMMON204", "요청한 데이터가 존재하지 않습니다"),
+    _NO_CONTENTS(HttpStatus.NO_CONTENT, "204", "요청한 데이터가 존재하지 않습니다"),
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다"),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다"),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다"),

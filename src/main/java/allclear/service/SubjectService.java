@@ -65,8 +65,7 @@ public class SubjectService {
 
     //다건 조회
     public SubjectListResponseDto getSubjectList(GetSubjectListRequestDto request) {
-        Specification<Subject> spec = new SubjectSpecification(request);
-        List<Subject> subjectList = subjectRepository.findAll(spec);
+        List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
         if (subjectList.isEmpty())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectList);
