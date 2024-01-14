@@ -28,7 +28,7 @@ public class SubjectService {
 
     //과목 추가
     @Transactional
-    public void createSubject(CreateSubjectRequestDto request){
+    public void createSubject(CreateSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
                 request.getYear(),
                 request.getSemester(),
@@ -41,7 +41,7 @@ public class SubjectService {
 
     //과목 수정
     @Transactional
-    public void updateSubject(UpdateSubjectRequestDto request){
+    public void updateSubject(UpdateSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
                 request.getYear(),
                 request.getSemester(),
@@ -55,15 +55,20 @@ public class SubjectService {
     //==과목 조회==//
 
     //단건 조회
-    public SubjectResponseDto getSubject(Long id){
+    public SubjectResponseDto getSubject(Long id) {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (!subject.isPresent())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
         return new SubjectResponseDto(subject.get());
     }
 
-    //다건 조회
-    public SubjectListResponseDto getSubjectList(SubjectListRequestDto request) {
+    //전체 조회
+    public SubjectListResponseDto getSubjectList() {
+        return null;
+    }
+
+    //검색 조회
+    public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request) {
         List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
         if (subjectList.isEmpty())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);

@@ -21,9 +21,15 @@ public class SubjectController {
         return ApiResponse.onSuccess("과목 단건 조회에 성공했습니다", subjectService.getSubject(subjectId));
     }
 
+    @Operation(summary = "과목 전체 조회")
+    @GetMapping("/findAll")
+    public ApiResponse getSubjectList() {
+        return ApiResponse.onSuccess("과목 전체 조회에 성공했습니다", subjectService.getSubjectList());
+    }
+
     @Operation(summary = "과목 조건 검색 조회")
-    @PostMapping("/list")
-    public ApiResponse getSubjectList(@RequestBody SubjectListRequestDto requestDto) {
-        return ApiResponse.onSuccess("과목 조건검색에 성공했습니다", subjectService.getSubjectList(requestDto));
+    @PostMapping("/search")
+    public ApiResponse getSubjectSearch(@RequestBody SubjectListRequestDto requestDto) {
+        return ApiResponse.onSuccess("과목 조건 검색에 성공했습니다", subjectService.getSubjectSearch(requestDto));
     }
 }
