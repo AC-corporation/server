@@ -64,7 +64,8 @@ public class SubjectService {
 
     //전체 조회
     public SubjectListResponseDto getSubjectList() {
-        return null;
+        List<Subject> subjectList = subjectRepository.findAll();
+        return new SubjectListResponseDto(subjectList);
     }
 
     //검색 조회
