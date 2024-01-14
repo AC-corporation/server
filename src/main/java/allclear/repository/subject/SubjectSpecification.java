@@ -1,50 +1,50 @@
 package allclear.repository.subject;
 
+import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubjectSpecification implements Specification<Subject> {
+@AllArgsConstructor
+@Builder
+public class SubjectSpecification {
+    public static Specification<Subject> subjectFilter(GetSubjectListRequestDto requestDto) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            Join<Subject, ClassInfo> classInfoJoin = root.join("classInfoList");
 
-    private final GetSubjectListRequestDto requestDto;
+            if (requestDto.getSearchString() != null && !requestDto.getSearchString().isEmpty()) {
+                String likeSearchString = "%" + requestDto.getSearchString() + "%";
 
-    public SubjectSpecification(GetSubjectListRequestDto requestDto) {
-        this.requestDto = requestDto;
-    }
+                predicates.add(cb.or(
+                        cb.like(root.get("subjectName"), likeSearchString),
+                        cb.like(root.get("department"), likeSearchString),
+                        cb.like(root.get("majorClassification"), likeSearchString),
+                        cb.like(root.get("multiMajorClassification"), likeSearchString),
+                        cb.like(root.get("engineeringCertification"), likeSearchString),
+                        cb.like(root.get("subjectTarget"), likeSearchString),
+                        cb.like(root.get("subjectId").as(String.class), likeSearchString),
+                        cb.like(root.get("credit").as(String.class), likeSearchString),
+                        cb.like(classInfoJoin.get("professor"), likeSearchString),
+                        cb.like(classInfoJoin.get("classDay"), likeSearchString)
+                ));
+            }
 
-    @Override
-    public Predicate toPredicate(Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-        List<Predicate> predicates = new ArrayList<>();
+            if (requestDto.getSubjectTarget() != null && !requestDto.getSubjectTarget().isEmpty()) {
+                predicates.add(cb.like(root.get("subjectTarget"), "%" + requestDto.getSubjectTarget() + "%"));
+            }
 
-        if (requestDto.getSubjectId() != null) {
-            predicates.add(cb.equal(root.get("subjectId"), requestDto.getSubjectId()));
-        }
-        if (requestDto.getSubjectName() != null) {
-            predicates.add(cb.equal(root.get("subjectName"), requestDto.getSubjectName()));
-        }
-        if (requestDto.getProfessor() != null) {
-            predicates.add(cb.equal(root.get("professor"), requestDto.getProfessor()));
-        }
-        if (requestDto.getDepartment() != null) {
-            predicates.add(cb.equal(root.get("department"), requestDto.getDepartment()));
-        }
-        if (requestDto.getMajorClassification() != null) {
-            predicates.add(cb.equal(root.get("majorClassification"), requestDto.getMajorClassification()));
-        }
-        if (requestDto.getCredit() != null) {
-            predicates.add(cb.equal(root.get("credit"), requestDto.getCredit()));
-        }
-        if (requestDto.getSubjectTarget() != null) {
-            predicates.add(cb.equal(root.get("subjectTarget"), requestDto.getSubjectTarget()));
-        }
+            if (requestDto.getYear() != null && !requestDto.getYear().isEmpty()) {
+                predicates.add(cb.like(root.get("year"), "%" + requestDto.getYear() + "%"));
+            }
 
-        return cb.and(predicates.toArray(new Predicate[0]));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }
