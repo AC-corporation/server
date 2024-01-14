@@ -1,7 +1,9 @@
 package allclear.crawl;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.domain.grade.Grade;
 import allclear.domain.member.Member;
+import allclear.domain.requirement.Requirement;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("ID", "PWD");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "Jjw112233$");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getMemberName());
         System.out.println(member.getUniversity());
@@ -18,6 +20,11 @@ public class CrawalTest {
         System.out.println(member.getClassType());
         System.out.println(member.getLevel());
         System.out.println(member.getSemester());
+
+        Requirement requirement = ParsingRequirement.parsingRequirementString(crawlMemberInfo.getRequirementComponentList());
+        Grade grade =  ParsingGrade.parsingGradeString(crawlMemberInfo.getTotalCredit(), crawlMemberInfo.getAverageGrade(),
+                crawlMemberInfo.getEntireGrades(), crawlMemberInfo.getDetailGrades());
+
 
         /*
         ArrayList<String> tmpList = crawlMemberInfo.getRequirementComponentList();

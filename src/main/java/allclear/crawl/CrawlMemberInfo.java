@@ -17,7 +17,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 import java.util.ArrayList;
 
-
+@Getter
 public class CrawlMemberInfo {
 
     @Getter
@@ -44,10 +44,8 @@ public class CrawlMemberInfo {
         try {
             loginUsaint(usaintId, usaintPassword);
         } catch (GlobalException e) {
-            closeDriver();
             throw e;
         } catch (Exception e){
-            closeDriver();
             throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
 
@@ -64,8 +62,6 @@ public class CrawlMemberInfo {
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
-        } finally {
-            closeDriver();
         }
     }
 
@@ -276,12 +272,12 @@ public class CrawlMemberInfo {
         }
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0129"));
+        target = driver.findElement(By.id("WD0144"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD0136"));
+        target = driver.findElement(By.id("WD0151"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭
