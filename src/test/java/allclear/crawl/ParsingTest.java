@@ -1,6 +1,5 @@
 package allclear.crawl;
 
-import allclear.crawl.CrawlMemberInfo;
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;

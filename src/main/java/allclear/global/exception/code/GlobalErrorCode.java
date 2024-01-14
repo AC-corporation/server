@@ -3,9 +3,7 @@ package allclear.global.exception.code;
 import allclear.global.exception.dto.ErrorResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 
 @Getter
 @AllArgsConstructor

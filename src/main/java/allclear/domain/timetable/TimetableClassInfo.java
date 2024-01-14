@@ -1,7 +1,6 @@
 package allclear.domain.timetable;
 
 
-import allclear.domain.subject.Subject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
