@@ -87,7 +87,7 @@ public class MemberService {
                 throw e;
             else { //로그인 성공, 크롤링 실패이므로 member 저장
                 memberRepository.save(member);
-                return null;
+                return member.getMemberId();
             }
         }
         //크롤링 한 데이터 member에 저장
