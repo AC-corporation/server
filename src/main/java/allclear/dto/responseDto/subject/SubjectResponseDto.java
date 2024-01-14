@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 public class SubjectResponseDto {
     private Long subjectId; //과목 번호
     private String subjectName; //과목 이름
-    private List<ClassInfoResponseDto> classInfoResponseDtoList; //강의 시간, 요일, 강의실, 교수명
-
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
     private String multiMajorClassification; //이수 구분(다전공)
@@ -29,6 +27,7 @@ public class SubjectResponseDto {
     private Integer design; //설계
     private Double subjectTime; //과목 시간
     private String subjectTarget; //수강 대상
+    private List<ClassInfoResponseDto> classInfoResponseDtoList; //강의 시간, 요일, 강의실, 교수명
 
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
