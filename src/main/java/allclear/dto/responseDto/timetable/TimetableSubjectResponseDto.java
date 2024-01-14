@@ -19,7 +19,6 @@ public class TimetableSubjectResponseDto {
     private Long timetableSubjectId;
     private Long subjectId;
     private String subjectName; //과목 이름
-    private String professor;
     private List<ClassInfoResponseDto> classInfoResponseDtoList;
 
     public TimetableSubjectResponseDto(TimetableSubject timetableSubject) {

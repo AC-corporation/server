@@ -1,30 +1,26 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.domain.grade.Grade;
 import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
-import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
-import allclear.dto.requestDto.member.EmailAuthRequestDto;
+import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
-import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.exception.GlobalException;
 import allclear.global.exception.GlobalExceptionHandler;
-import allclear.repository.member.EmailCodeRepository;
+import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.grade.GradeRepository;
+import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
-import allclear.dto.requestDto.member.EmailIsValidRequestDto;
-import allclear.dto.requestDto.member.LoginRequestDto;
-import allclear.dto.requestDto.member.MemberSignupRequestDto;
-import allclear.dto.requestDto.member.UpdateMemberRequestDto;
-import allclear.global.exception.GlobalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.Random;
@@ -91,7 +87,7 @@ public class MemberService {
                 throw e;
             else { //로그인 성공, 크롤링 실패이므로 member 저장
                 memberRepository.save(member);
-                return null;
+                return member.getMemberId();
             }
         }
         //크롤링 한 데이터 member에 저장

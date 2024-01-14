@@ -3,7 +3,7 @@ package allclear.service;
 import allclear.crawl.CrawlSubjectInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
+import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
@@ -13,7 +13,6 @@ import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class SubjectService {
 
     //과목 추가
     @Transactional
-    public void createSubject(CreateSubjectRequestDto request){
+    public void createSubject(CreateSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
                 request.getYear(),
                 request.getSemester(),
@@ -42,7 +41,7 @@ public class SubjectService {
 
     //과목 수정
     @Transactional
-    public void updateSubject(UpdateSubjectRequestDto request){
+    public void updateSubject(UpdateSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
                 request.getYear(),
                 request.getSemester(),
@@ -56,15 +55,23 @@ public class SubjectService {
     //==과목 조회==//
 
     //단건 조회
-    public SubjectResponseDto getSubject(Long id){
+    public SubjectResponseDto getSubject(Long id) {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (!subject.isPresent())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
         return new SubjectResponseDto(subject.get());
     }
 
-    //다건 조회
-    public SubjectListResponseDto getSubjectList(GetSubjectListRequestDto request) {
+    //전체 조회
+    public SubjectListResponseDto getSubjectList() {
+        List<Subject> subjectList = subjectRepository.findAll();
+        if (subjectList.isEmpty())
+            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
+        return new SubjectListResponseDto(subjectList);
+    }
+
+    //검색 조회
+    public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request) {
         List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
         if (subjectList.isEmpty())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);

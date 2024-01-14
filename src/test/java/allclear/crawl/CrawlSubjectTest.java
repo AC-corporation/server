@@ -3,6 +3,7 @@ package allclear.crawl;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 

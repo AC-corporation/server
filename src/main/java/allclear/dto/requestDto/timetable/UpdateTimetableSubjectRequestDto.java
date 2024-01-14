@@ -11,6 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 public class UpdateTimetableSubjectRequestDto {
     String subjectName;
-    String professor;
     List<ClassInfoRequestDto> classInfoRequestDtoList;
 }

@@ -1,17 +1,15 @@
 package allclear.service;
 
 import allclear.domain.member.Member;
-import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableClassInfo;
 import allclear.domain.timetable.TimetableSubject;
-import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetable.*;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
-import allclear.repository.subject.SubjectRepository;
 import allclear.repository.member.MemberRepository;
+import allclear.repository.subject.SubjectRepository;
 import allclear.repository.timetable.TimetableRepository;
 import allclear.repository.timetable.TimetableSubjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

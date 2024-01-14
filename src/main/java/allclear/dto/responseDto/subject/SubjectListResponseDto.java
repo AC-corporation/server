@@ -1,8 +1,6 @@
 package allclear.dto.responseDto.subject;
 
 import allclear.domain.subject.Subject;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

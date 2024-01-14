@@ -21,8 +21,8 @@ public class TimetableController {
     @PostMapping("/{userId}")
     public ApiResponse createTimetable(@PathVariable Long userId,
                                        @RequestBody CreateTimetableRequestDto requestDto) {
-        Long memberId = timetableService.createTimetable(userId, requestDto);
-        return ApiResponse.onSuccess("시간표 생성에 성공했습니다", memberId);
+        Long timetableId = timetableService.createTimetable(userId, requestDto);
+        return ApiResponse.onSuccess("시간표 생성에 성공했습니다", timetableId);
     }
 
     @Operation(summary = "시간표 업데이트")

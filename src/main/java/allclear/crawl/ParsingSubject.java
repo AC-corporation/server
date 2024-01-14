@@ -2,6 +2,7 @@ package allclear.crawl;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;

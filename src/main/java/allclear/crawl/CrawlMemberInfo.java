@@ -1,18 +1,18 @@
 package allclear.crawl;
 
 import allclear.domain.grade.Grade;
-import allclear.domain.requirement.Requirement;
 import allclear.domain.member.Member;
+import allclear.domain.requirement.Requirement;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
-import lombok.AccessLevel;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.time.Duration;
 import java.util.ArrayList;

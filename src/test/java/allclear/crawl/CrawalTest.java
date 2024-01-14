@@ -1,12 +1,9 @@
 package allclear.crawl;
 
-import allclear.crawl.CrawlMemberInfo;
 import allclear.domain.grade.Grade;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
 
 public class CrawalTest {
     @Test
