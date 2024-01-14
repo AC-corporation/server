@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class SubjectResponseDto {
     private Long subjectId; //과목 번호
-    private String name; //과목 이름
+    private String subjectName; //과목 이름
     private List<ClassInfoResponseDto> classInfoResponseDtoList; //강의 시간, 요일, 강의실, 교수명
 
     private String department; //개설 학과
@@ -32,7 +32,7 @@ public class SubjectResponseDto {
 
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
-        this.name = subject.getSubjectName();
+        this.subjectName = subject.getSubjectName();
         this.classInfoResponseDtoList = new ArrayList<>(subject.getClassInfoList()
                 .stream()
                 .map(ClassInfoResponseDto::new)
