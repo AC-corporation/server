@@ -49,11 +49,7 @@ public class TimetableService {
                 member,
                 request.getTableName(),
                 request.getTableYear(),
-                request.getSemester(),
-                subjectRepository.findAllById(request.getSubjectIdList())
-                        .stream()
-                        .map(TimetableSubject::createActualTimeTableSubject)
-                        .collect(Collectors.toList())
+                request.getSemester()
         );
         timetableRepository.save(timetable);
         return timetable.getTimetableId();

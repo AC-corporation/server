@@ -17,5 +17,4 @@ public class CreateTimetableRequestDto {
     private Integer tableYear; //학년도
     @NotBlank(message = "학기를 입력해주세요")
     private Integer semester; //학기
-    private List<Long> subjectIdList;
 }
