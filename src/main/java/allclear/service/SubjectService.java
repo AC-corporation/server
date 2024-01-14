@@ -65,6 +65,8 @@ public class SubjectService {
     //전체 조회
     public SubjectListResponseDto getSubjectList() {
         List<Subject> subjectList = subjectRepository.findAll();
+        if (subjectList.isEmpty())
+            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectList);
     }
 
