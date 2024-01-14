@@ -2,7 +2,7 @@ package allclear.repository.subject;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
-import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
+import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import jakarta.persistence.criteria.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class SubjectSpecification {
-    public static Specification<Subject> subjectFilter(GetSubjectListRequestDto requestDto) {
+    public static Specification<Subject> subjectFilter(SubjectListRequestDto requestDto) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             Join<Subject, ClassInfo> classInfoJoin = root.join("classInfoList");

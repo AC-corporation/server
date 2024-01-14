@@ -1,7 +1,7 @@
 package allclear;
 
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
+import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.service.SubjectService;
@@ -30,7 +30,7 @@ public class SubjectServiceTest {
         subjectService.createSubject(requestDto);
 
         //then
-        SubjectListResponseDto responseDto = subjectService.getSubjectList(new GetSubjectListRequestDto());
+        SubjectListResponseDto responseDto = subjectService.getSubjectList(new SubjectListRequestDto());
 
         for (SubjectResponseDto subjectResponseDto : responseDto.getSubjectResponseDtoList()) {
             System.out.println(subjectResponseDto.getSubjectId());

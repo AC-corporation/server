@@ -3,7 +3,7 @@ package allclear.service;
 import allclear.crawl.CrawlSubjectInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
+import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
@@ -13,7 +13,6 @@ import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +63,7 @@ public class SubjectService {
     }
 
     //다건 조회
-    public SubjectListResponseDto getSubjectList(GetSubjectListRequestDto request) {
+    public SubjectListResponseDto getSubjectList(SubjectListRequestDto request) {
         List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
         if (subjectList.isEmpty())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);

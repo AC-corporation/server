@@ -1,6 +1,6 @@
 package allclear.controller;
 
-import allclear.dto.requestDto.subject.GetSubjectListRequestDto;
+import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.global.response.ApiResponse;
 import allclear.service.SubjectService;
 import io.swagger.annotations.Api;
@@ -23,7 +23,7 @@ public class SubjectController {
 
     @Operation(summary = "과목 조건 검색 조회")
     @PostMapping("/list")
-    public ApiResponse getSubjectList(@RequestBody GetSubjectListRequestDto requestDto) {
+    public ApiResponse getSubjectList(@RequestBody SubjectListRequestDto requestDto) {
         return ApiResponse.onSuccess("과목 조건검색에 성공했습니다", subjectService.getSubjectList(requestDto));
     }
 }
