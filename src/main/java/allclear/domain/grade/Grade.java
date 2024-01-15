@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 public class Grade {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "grade_id")
     private Long gradeId;
 

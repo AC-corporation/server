@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class EmailCode {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long emailCodeId;
 
     String email;

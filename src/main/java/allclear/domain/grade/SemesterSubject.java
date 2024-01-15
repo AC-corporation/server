@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class SemesterSubject {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "semester_subject_id")
     private Long semesterSubjectId;
 

@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @Entity
 @Getter @Setter
 public class ClassInfo {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     @Column(name = "class_info_id")
     private Long id;
     private String professor; //교수명
