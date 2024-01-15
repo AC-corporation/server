@@ -81,16 +81,14 @@ public class MemberService {
         try {
             crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
         } catch (GlobalException e) {
-            //로그인 실패 || 유세인트 이용 불가 시 컨트롤러로 예외 던짐
+            // 크롤링 실패 시 컨트롤러로 예외 던짐
             if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
-                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE)
+                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE
+                    || e.getErrorCode() == GlobalErrorCode._USAINT_CRAWLING_FAILED)
                 throw e;
-            else { //로그인 성공, 크롤링 실패이므로 member 저장
-                memberRepository.save(member);
-                return member.getMemberId();
-            }
         }
         //크롤링 한 데이터 member에 저장
+        assert crawlMemberInfo != null;
         Member newMember = crawlMemberInfo.getMember();
         member.setMemberName(newMember.getMemberName());
         member.setUniversity(newMember.getUniversity());
@@ -161,9 +159,19 @@ public class MemberService {
         String usaintId = updateMemberRequestDto.getUsaintId();
         String usaintPassword = updateMemberRequestDto.getUsaintPassword();
 
-        CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+        CrawlMemberInfo crawlInfo = null;
+        try {
+            crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+        } catch (GlobalException e) {
+            // 크롤링 실패 시 컨트롤러로 예외 던짐
+            if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
+                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE
+                    || e.getErrorCode() == GlobalErrorCode._USAINT_CRAWLING_FAILED)
+                throw e;
+        }
 
         //멤버 초기화
+        assert crawlInfo != null;
         Member newMember = crawlInfo.getMember();
         member.setMemberName(newMember.getMemberName());
         member.setUniversity(newMember.getUniversity());
@@ -210,11 +218,23 @@ public class MemberService {
     //회원 탈퇴
     @Transactional
     public void deleteMember(Long id) {
+        Member targetMember = findOne(id); // 조회
+
+        if(targetMember == null){
+            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS); // 요청 데이터가 존재하지 않는 경우
+        }
+
         memberRepository.deleteById(id);
     }
 
     //유저 조회
     public MemberResponseDto getMember(Long id) {
+        Member targetMember = findOne(id); // 조회
+
+        if(targetMember == null){
+            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS); // 요청 데이터가 존재하지 않는 경우
+        }
+
         return new MemberResponseDto(findOne(id));
     }
 }
