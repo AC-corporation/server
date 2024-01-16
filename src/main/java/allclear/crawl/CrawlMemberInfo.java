@@ -4,6 +4,7 @@ import allclear.domain.grade.Grade;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.global.exception.GlobalException;
+import allclear.global.exception.GlobalExceptionHandler;
 import allclear.global.exception.code.GlobalErrorCode;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class CrawlMemberInfo {
     private String averageGrade; // 평균 학점
     WebDriver driver;
 
-    public CrawlMemberInfo(String usaintId, String usaintPassword) throws GlobalException {
+    public CrawlMemberInfo(String usaintId, String usaintPassword){
 
         member = new Member();
 
@@ -46,7 +47,7 @@ public class CrawlMemberInfo {
         } catch (GlobalException e) {
             throw e;
         } catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
 
         try {
@@ -55,13 +56,24 @@ public class CrawlMemberInfo {
             crawlRequirementComponent();
             crawlEntireGrades();
             crawlDetailGrades();
+        }
+        catch (Exception e){
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_CRAWLING_FAILED);
+        }
 
-            // 파싱
+        if(requirementComponentList == null){
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 크롤링 실패
+        }
+        if(totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null){
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 크롤링 실패
+        }
+
+        try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
             grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         }
         catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 파싱 실패
         }
     }
 
@@ -104,7 +116,7 @@ public class CrawlMemberInfo {
             // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭
             // 클릭이 안 될 경우 예외 처리
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
+            throw new GlobalExceptionHandler(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
 
         try {
