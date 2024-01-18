@@ -19,7 +19,7 @@ public class Grade {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "semester_grade_list")
     private List<SemesterGrade> semesterGradeList = new ArrayList<>();
 

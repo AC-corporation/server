@@ -17,7 +17,7 @@ public class Requirement {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "requirement_component_list")
     private List<RequirementComponent> requirementComponentList = new ArrayList<>();
 

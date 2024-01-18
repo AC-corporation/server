@@ -2,9 +2,12 @@ package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
 import allclear.domain.grade.Grade;
+import allclear.domain.grade.SemesterGrade;
+import allclear.domain.grade.SemesterSubject;
 import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
+import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
@@ -22,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -156,6 +160,9 @@ public class MemberService {
     @Transactional
     public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto) throws GlobalException {
         Member member = findOne(memberId);
+        Requirement requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).get();
+        Grade grade = gradeRepository.findById(member.getGrade().getGradeId()).get();
+
         String usaintId = updateMemberRequestDto.getUsaintId();
         String usaintPassword = updateMemberRequestDto.getUsaintPassword();
 
@@ -182,12 +189,36 @@ public class MemberService {
         member.setSemester(newMember.getSemester());
 
         //졸업요건 초기화
+        List<RequirementComponent> removeRequirementComponentList = requirement.getRequirementComponentList();
+        for(int i = 0; i < removeRequirementComponentList.size(); i++){ // 연관관계 삭제
+            removeRequirementComponentList.get(i).setRequirement(null);
+        }
+        removeRequirementComponentList.clear();
+        requirementRepository.deleteById(requirement.getRequirementId()); // DB 삭제
+        requirementRepository.flush(); // DB 반영
         Requirement newRequirement = crawlInfo.getRequirement();
-        newRequirement.setMember(member);
 
         //성적 초기화
+        List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
+        for(int i = 0; i < removeSemesterGradeList.size(); i++){
+            SemesterGrade removeSemesterGrade = removeSemesterGradeList.get(i);
+            List<SemesterSubject> removeSemesterSubjectList = removeSemesterGrade.getSemesterSubjectList();
+            for(int j = 0; j < removeSemesterSubjectList.size(); j++){
+                removeSemesterSubjectList.get(j).setSemesterGrade(null);
+            }
+            removeSemesterSubjectList.clear();
+            removeSemesterGrade.setGrade(null);
+        }
+        grade.getSemesterGradeList().clear();
+        gradeRepository.deleteById(grade.getGradeId()); // DB 삭제
+        gradeRepository.flush(); // DB 반영
+
         Grade newGrade = crawlInfo.getGrade();
+        newRequirement.setMember(member);
         newGrade.setMember(member);
+        requirementRepository.save(newRequirement);
+        gradeRepository.save(newGrade);
+
     }
 
     private String createCode() {

@@ -34,10 +34,10 @@ public class Member {
     private int level; //학년
     private int semester; //학기
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Requirement requirement;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Grade grade;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
