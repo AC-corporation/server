@@ -249,23 +249,15 @@ public class MemberService {
     //회원 탈퇴
     @Transactional
     public void deleteMember(Long id) {
-        Member targetMember = findOne(id); // 조회
-
-        if(targetMember == null){
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS); // 요청 데이터가 존재하지 않는 경우
-        }
-
+        Member targetMember = memberRepository.findById(id)
+                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
         memberRepository.deleteById(id);
     }
 
     //유저 조회
     public MemberResponseDto getMember(Long id) {
-        Member targetMember = findOne(id); // 조회
-
-        if(targetMember == null){
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS); // 요청 데이터가 존재하지 않는 경우
-        }
-
+        Member targetMember = memberRepository.findById(id).
+                orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS)); // 조회
         return new MemberResponseDto(findOne(id));
     }
 }
