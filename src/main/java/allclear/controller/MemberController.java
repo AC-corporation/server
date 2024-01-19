@@ -48,7 +48,7 @@ public class MemberController {
     @PostMapping("/signup/emailAuth")
     public ApiResponse emailAuth(@RequestBody EmailAuthRequestDto emailAuthRequestDto){
         memberService.sendEmailCode(emailAuthRequestDto);
-        return ApiResponse.onSuccess("이메일 인증 코드를 발송했습니다","");
+        return ApiResponse.onSuccess("이메일 인증 코드를 발송했습니다");
     }
 
     @Operation(summary = "회원가입 - 이메일 인증 코드 확인")
@@ -56,9 +56,9 @@ public class MemberController {
     public ApiResponse emailIsValid(@RequestBody EmailIsValidRequestDto emailIsValidRequestDto){
         Boolean isValid = memberService.isEmailValid(emailIsValidRequestDto);
         if(isValid)
-            return ApiResponse.onSuccess("이메일 인증에 성공했습니다","");
+            return ApiResponse.onSuccess("이메일 인증에 성공했습니다");
         else
-            return ApiResponse.onFailure(GlobalErrorCode._INVALID_CODE,"");
+            return ApiResponse.onFailure(GlobalErrorCode._INVALID_CODE);
     }
 
 
@@ -66,12 +66,7 @@ public class MemberController {
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
     public ApiResponse login(@RequestBody LoginRequestDto loginRequestDto){
-        Long memberId;
-        try {
-            memberId = memberService.login(loginRequestDto);
-        } catch (GlobalException e) {
-            return ApiResponse.onFailure(e.getErrorCode(), "");
-        }
+        Long memberId = memberService.login(loginRequestDto);
         return ApiResponse.onSuccess("로그인에 성공했습니다", memberId);
     }
 
@@ -79,19 +74,15 @@ public class MemberController {
     @Operation(summary = "로그아웃", description = "로그아웃")
     @GetMapping("/logout/{userId}")
     public ApiResponse logout(@PathVariable Long userId){
-        return ApiResponse.onSuccess("로그아웃에 성공했습니다", "");
+        return ApiResponse.onSuccess("로그아웃에 성공했습니다");
     }
 
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
     @PutMapping("/update/{userId}")
     public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
-        try {
-            memberService.updateMember(userId, updateMemberRequestDto);
-        } catch (GlobalException e){
-            return ApiResponse.onFailure(e.getErrorCode(), "");
-        }
-        return ApiResponse.onSuccess("정보 업데이트에 성공했습니다","");
+        memberService.updateMember(userId, updateMemberRequestDto);
+        return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
     }
 
     //유저조회
@@ -106,6 +97,6 @@ public class MemberController {
     @DeleteMapping("/delete/{userId}")
     public ApiResponse delete(@PathVariable Long userId) {
         memberService.deleteMember(userId);
-        return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다", "");
+        return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다");
     }
 }
