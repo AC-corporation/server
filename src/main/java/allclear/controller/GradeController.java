@@ -19,7 +19,7 @@ public class GradeController {
 
     @Operation(summary = "전체 성적 조회", description = "전체 성적 조회")
     @GetMapping("/getGrade/{userId}")
-    public ApiResponse<GradeResponseDto> get(@PathVariable Long userId){ //인자 수정 필요
+    public ApiResponse<GradeResponseDto> get(@PathVariable Long userId){
         return ApiResponse.onSuccess("전체 성적 조회에 성공했습니다",gradeService.getGrade(userId));
     }
 

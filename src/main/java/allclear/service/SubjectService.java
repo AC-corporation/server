@@ -7,7 +7,7 @@ import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
-import allclear.global.exception.GlobalExceptionHandler;
+import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
@@ -58,7 +58,7 @@ public class SubjectService {
     public SubjectResponseDto getSubject(Long id) {
         Optional<Subject> subject = subjectRepository.findById(id);
         if (!subject.isPresent())
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectResponseDto(subject.get());
     }
 
@@ -66,7 +66,7 @@ public class SubjectService {
     public SubjectListResponseDto getSubjectList() {
         List<Subject> subjectList = subjectRepository.findAll();
         if (subjectList.isEmpty())
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectList);
     }
 
@@ -74,7 +74,7 @@ public class SubjectService {
     public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request) {
         List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
         if (subjectList.isEmpty())
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectList);
     }
 

@@ -12,7 +12,6 @@ import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
 import allclear.global.exception.GlobalException;
-import allclear.global.exception.GlobalExceptionHandler;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.grade.GradeRepository;
 import allclear.repository.member.EmailCodeRepository;
@@ -58,11 +57,11 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email);
         //member 조회
         if (member == null)
-            throw new GlobalExceptionHandler(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
 
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new GlobalExceptionHandler(GlobalErrorCode._PASSWORD_MISMATCH);
+            throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
         return member.getMemberId();
@@ -70,7 +69,7 @@ public class MemberService {
 
     //회원가입
     @Transactional
-    public Long createMember(MemberSignupRequestDto request) throws GlobalException {
+    public Long createMember(MemberSignupRequestDto request) {
         String password = passwordEncoder.encode(request.getPassword());
         Member member = new Member();
         member.setEmail(request.getEmail());
@@ -82,15 +81,8 @@ public class MemberService {
         CrawlMemberInfo crawlMemberInfo = null;
 
         //멤버 정보 크롤링
-        try {
-            crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
-        } catch (GlobalException e) {
-            // 크롤링 실패 시 컨트롤러로 예외 던짐
-            if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
-                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE
-                    || e.getErrorCode() == GlobalErrorCode._USAINT_CRAWLING_FAILED)
-                throw e;
-        }
+        crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+
         //크롤링 한 데이터 member에 저장
         assert crawlMemberInfo != null;
         Member newMember = crawlMemberInfo.getMember();
@@ -158,7 +150,7 @@ public class MemberService {
 
     //회원 정보 업데이트
     @Transactional
-    public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto) throws GlobalException {
+    public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto){
         Member member = findOne(memberId);
         Requirement requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).get();
         Grade grade = gradeRepository.findById(member.getGrade().getGradeId()).get();
@@ -167,15 +159,7 @@ public class MemberService {
         String usaintPassword = updateMemberRequestDto.getUsaintPassword();
 
         CrawlMemberInfo crawlInfo = null;
-        try {
-            crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
-        } catch (GlobalException e) {
-            // 크롤링 실패 시 컨트롤러로 예외 던짐
-            if (e.getErrorCode() == GlobalErrorCode._USAINT_LOGIN_FAILED
-                    || e.getErrorCode() == GlobalErrorCode._USAINT_UNAVAILABLE
-                    || e.getErrorCode() == GlobalErrorCode._USAINT_CRAWLING_FAILED)
-                throw e;
-        }
+        crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
         //멤버 초기화
         assert crawlInfo != null;
@@ -250,14 +234,14 @@ public class MemberService {
     @Transactional
     public void deleteMember(Long id) {
         Member targetMember = memberRepository.findById(id)
-                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         memberRepository.deleteById(id);
     }
 
     //유저 조회
     public MemberResponseDto getMember(Long id) {
         Member targetMember = memberRepository.findById(id).
-                orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS)); // 조회
+                orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)); // 조회
         return new MemberResponseDto(findOne(id));
     }
 }

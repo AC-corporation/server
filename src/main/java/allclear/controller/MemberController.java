@@ -18,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
     @GetMapping("/test/ok")
     public ApiResponse test(){
-        return ApiResponse.onSuccess("mapping test", "");
+        return ApiResponse.onSuccess("mapping test");
     }
 
     @GetMapping("/test/exception")
@@ -28,24 +28,19 @@ public class MemberController {
 
     @PostMapping("/test/post")
     public ApiResponse test3(@RequestBody String string){
-        return ApiResponse.onSuccess(string, "");
+        return ApiResponse.onSuccess(string);
     }
 
     @GetMapping("/test/error")
     public ApiResponse test4(){
-        return ApiResponse.onSuccess("exception2", "");
+        return ApiResponse.onSuccess("exception2");
     }
 
     //회원가입
     @Operation(summary = "회원가입", description = "회원 생성")
     @PostMapping("/signup")
     public ApiResponse signup(@RequestBody MemberSignupRequestDto userSignupRequestDto){
-        Long memberId;
-        try {
-            memberId = memberService.createMember(userSignupRequestDto);
-        } catch (GlobalException e) {
-            return ApiResponse.onFailure(e.getErrorCode(), "");
-        }
+        Long memberId = memberService.createMember(userSignupRequestDto);
         return ApiResponse.onSuccess("회원가입에 성공했습니다", memberId);
     }
 

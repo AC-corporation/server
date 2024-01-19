@@ -19,8 +19,8 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, SuccessCode._OK.getCode(), message, result);
     }
 
-    public static <T> ApiResponse<T> of(SuccessCode code, T result){
-        return new ApiResponse<>(true, code.getReasonHttpStatus().getCode(), code.getReasonHttpStatus().getMessage(), result);
+    public static ApiResponse onSuccess(String message){
+        return new ApiResponse<>(true, SuccessCode._OK.getCode(), message, "");
     }
 
 
