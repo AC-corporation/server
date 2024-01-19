@@ -21,7 +21,7 @@ public class SemesterGrade {
     @Column(name = "semester_average_grade")
     private String semesterAverageGrade;
 
-    @OneToMany(mappedBy = "semesterGrade", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "semesterGrade", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "semester_subject_list")
     private List<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
