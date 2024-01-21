@@ -283,12 +283,12 @@ public class CrawlMemberInfo {
         }
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0144"));
+        target = driver.findElement(By.id("WD0151"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD0151"));
+        target = driver.findElement(By.id("WD015E"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭

@@ -58,6 +58,8 @@ public class ParsingGrade {
         String semesterAverageGrade = "";
 
         for(int i=0;i<entireGrades.size()-1;i++){
+            if(i+5>=entireGrades.size())
+                break;
             if(entireGrades.get(i).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
                 continue;
             if(entireGrades.get(i+1).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
