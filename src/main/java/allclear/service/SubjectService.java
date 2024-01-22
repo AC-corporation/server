@@ -1,6 +1,7 @@
 package allclear.service;
 
 import allclear.crawl.CrawlSubjectInfo;
+import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
 import allclear.dto.requestDto.subject.SubjectListRequestDto;
@@ -9,13 +10,14 @@ import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
+import allclear.repository.subject.ClassInfoRepository;
 import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +26,8 @@ import java.util.Optional;
 public class SubjectService {
     @Autowired
     private final SubjectRepository subjectRepository;
-
+    @Autowired
+    private final ClassInfoRepository classInfoRepository;
 
     //과목 추가
     @Transactional
@@ -39,7 +42,7 @@ public class SubjectService {
         subjectRepository.saveAll(subjectList);
     }
 
-    //과목 수정
+    //과목 업데이트
     @Transactional
     public void updateSubject(UpdateSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
@@ -48,8 +51,40 @@ public class SubjectService {
                 request.getUsaintId(),
                 request.getUsaintPassword()
         );
-        List<Subject> subjectList = subjectRepository.findAll();
-        subjectList = subjectInfo.getSubjects();
+
+        List<Subject> subjectList = subjectInfo.getSubjects();
+        Subject subject;
+        Subject foundSubject;
+        for(int i = 0;i < subjectList.size();i++){
+            subject = subjectList.get(i);
+            foundSubject = subjectRepository.findById(subject.getSubjectId()).orElse(null);
+            if (foundSubject == null){
+                subjectRepository.save(subject);
+                continue;
+            }
+            else {
+                foundSubject.setSubjectName(subject.getSubjectName());
+                foundSubject.setMajorClassification(subject.getMajorClassification());
+                foundSubject.setMultiMajorClassification(subject.getMultiMajorClassification());
+                foundSubject.setEngineeringCertification(subject.getEngineeringCertification());
+                foundSubject.setClassType(subject.getClassType());
+                foundSubject.setCredit(subject.getCredit());
+                foundSubject.setDesign(subject.getDesign());
+                foundSubject.setSubjectTime(subject.getSubjectTime());
+                foundSubject.setSubjectTarget(subject.getSubjectTarget());
+                // classInfo 연관관계 삭제 및 DB 삭제
+                List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
+                Iterator<ClassInfo> iterator = removeClassInfoList.iterator();
+                while (iterator.hasNext()){ // 연관관계 삭제
+                    ClassInfo classInfo = iterator.next();
+                    iterator.remove();
+                    classInfo.setSubject(null);
+                    classInfoRepository.deleteById(classInfo.getId()); // DB 삭제
+                }
+                foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
+            }
+        }
+
     }
 
     //==과목 조회==//
