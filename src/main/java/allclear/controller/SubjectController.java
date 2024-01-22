@@ -1,7 +1,5 @@
 package allclear.controller;
 
-import allclear.dto.requestDto.member.UpdateMemberRequestDto;
-import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
 import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
 import allclear.global.response.ApiResponse;
