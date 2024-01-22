@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -152,8 +151,11 @@ public class MemberService {
     @Transactional
     public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto){
         Member member = findOne(memberId);
-        Requirement requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).get();
-        Grade grade = gradeRepository.findById(member.getGrade().getGradeId()).get();
+        if (member == null) // 잘못된 id로 조회하는 경우
+            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+
+        Requirement requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).orElse(null);
+        Grade grade = gradeRepository.findById(member.getGrade().getGradeId()).orElse(null);
 
         String usaintId = updateMemberRequestDto.getUsaintId();
         String usaintPassword = updateMemberRequestDto.getUsaintPassword();
@@ -162,7 +164,6 @@ public class MemberService {
         crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
         //멤버 초기화
-        assert crawlInfo != null;
         Member newMember = crawlInfo.getMember();
         member.setMemberName(newMember.getMemberName());
         member.setUniversity(newMember.getUniversity());
@@ -180,7 +181,6 @@ public class MemberService {
         removeRequirementComponentList.clear();
         requirementRepository.deleteById(requirement.getRequirementId()); // DB 삭제
         requirementRepository.flush(); // DB 반영
-        Requirement newRequirement = crawlInfo.getRequirement();
 
         //성적 초기화
         List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
@@ -197,6 +197,7 @@ public class MemberService {
         gradeRepository.deleteById(grade.getGradeId()); // DB 삭제
         gradeRepository.flush(); // DB 반영
 
+        Requirement newRequirement = crawlInfo.getRequirement();
         Grade newGrade = crawlInfo.getGrade();
         newRequirement.setMember(member);
         newGrade.setMember(member);

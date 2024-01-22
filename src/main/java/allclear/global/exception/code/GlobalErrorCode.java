@@ -25,7 +25,8 @@ public enum GlobalErrorCode {
     //유세인트
     _USAINT_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "4101", "유세인트 아이디 또는 비밀번호가 잘못되었습니다"),
     _USAINT_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "4102", "유세인트 서버를 이용할 수 없습니다"),
-    _USAINT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "크롤링에 실패했습니다")
+    _USAINT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "크롤링에 실패했습니다"),
+    _USAINT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4104", "유세인트 데이터 저장에 실패했습니다")
         ;
 
     private final HttpStatus httpStatus;

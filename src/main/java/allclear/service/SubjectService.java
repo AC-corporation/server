@@ -60,7 +60,6 @@ public class SubjectService {
             foundSubject = subjectRepository.findById(subject.getSubjectId()).orElse(null);
             if (foundSubject == null){
                 subjectRepository.save(subject);
-                continue;
             }
             else {
                 foundSubject.setSubjectName(subject.getSubjectName());
@@ -91,10 +90,10 @@ public class SubjectService {
 
     //단건 조회
     public SubjectResponseDto getSubject(Long id) {
-        Optional<Subject> subject = subjectRepository.findById(id);
-        if (!subject.isPresent())
+        Subject subject = subjectRepository.findById(id).orElse(null);
+        if (subject == null)
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new SubjectResponseDto(subject.get());
+        return new SubjectResponseDto(subject);
     }
 
     //전체 조회

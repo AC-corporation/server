@@ -61,10 +61,10 @@ public class CrawlMemberInfo {
         }
 
         if(requirementComponentList == null){
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 크롤링 실패
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
         }
         if(totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null){
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 크롤링 실패
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
         }
 
         try {
@@ -72,7 +72,7 @@ public class CrawlMemberInfo {
             grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         }
         catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED); // 파싱 실패
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
         }
     }
 
