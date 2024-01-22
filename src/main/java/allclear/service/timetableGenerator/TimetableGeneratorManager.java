@@ -1,5 +1,6 @@
 package allclear.service.timetableGenerator;
 
+import allclear.domain.subject.Subject;
 import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
 import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
@@ -7,8 +8,10 @@ import allclear.dto.requestDto.timetable.AddCustomTimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetableGenerator.Step1RequestDto;
 import allclear.dto.requestDto.timetableGenerator.Step2RequestDto;
+import allclear.dto.requestDto.timetableGenerator.Step3RequestDto;
 import allclear.global.exception.GlobalExceptionHandler;
 import allclear.global.exception.code.GlobalErrorCode;
+import allclear.repository.subject.SubjectRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +28,13 @@ import java.util.List;
 public class TimetableGeneratorManager {
     @Autowired
     private final TimetableGeneratorRepository timetableGeneratorRepository;
+    @Autowired
+    private final SubjectRepository subjectRepository;
 
+
+    /**
+     * 시간표 생성기 생성
+     */
     @Transactional
     public void createTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = new TimetableGenerator();
@@ -35,6 +44,9 @@ public class TimetableGeneratorManager {
         timetableGeneratorRepository.save(timetableGenerator);
     }
 
+    /**
+     * 시간표 생성기 과목 추가 - 커스텀 과목
+     */
     @Transactional
     public void addCustomTimetableGeneratorSubjects(Long userId, Step2RequestDto requestDto) {
         TimetableGenerator timetableGenerator = timetableGeneratorRepository.findById(userId)
@@ -60,6 +72,21 @@ public class TimetableGeneratorManager {
                     customSubjectRequestDto.getSubjectName(),
                     timetableGeneratorClassInfoList
             );
+            timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
+        }
+    }
+
+    /**
+     * 시간표 생성기 과목 추가 - 실제 과목
+     */
+    @Transactional
+    public void addActualTimetableGeneratorSubjects(Long userId, Step3RequestDto requestDto) {
+        TimetableGenerator timetableGenerator = timetableGeneratorRepository.findById(userId)
+                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+
+        List<Subject> subjectList = subjectRepository.findAllById(requestDto.getSubjectIdList());
+        for (Subject subject : subjectList) {
+            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject);
             timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
         }
     }
