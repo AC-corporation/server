@@ -20,9 +20,13 @@ public class TimetableGenerator {
     private Integer tableYear; //학년도
     private Integer semester; //학기
 
-    @OneToMany(mappedBy = "timetable", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "timetableGenerator", cascade = CascadeType.ALL)
     @Column(name = "timetable_generator_subject_list")
     private List<TimetableGeneratorSubject> timetableGeneratorSubjects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "timetableGenerator", cascade = CascadeType.ALL)
+    @Column(name = "timetable_generator_timetable_list")
+    private List<TimetableGeneratorTimetable> timetableGeneratorTimetableList = new ArrayList<>();
 
 
     public void addTimetableGeneratorSubject(TimetableGeneratorSubject timetableGeneratorSubject) {
