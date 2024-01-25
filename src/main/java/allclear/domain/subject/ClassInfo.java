@@ -30,8 +30,13 @@ public class ClassInfo {
 
     //==연관관계 메서드==//
     public void setSubject(Subject subject) {
-        subject.getClassInfoList().add(this);
-        this.subject = subject;
+        if (subject == null){
+            this.subject = null;
+        }
+        else {
+            subject.getClassInfoList().add(this);
+            this.subject = subject;
+        }
     }
 
 
