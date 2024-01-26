@@ -1,7 +1,6 @@
 package allclear.service.timetableGenerator;
 
 import allclear.domain.member.Member;
-import allclear.domain.requirement.Requirement;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableClassInfo;
@@ -10,17 +9,13 @@ import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
 import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
 import allclear.domain.timetableGenerator.TimetableGeneratorTimetable;
-import allclear.dto.requestDto.subject.SubjectListRequestDto;
 import allclear.dto.requestDto.timetable.AddCustomTimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetableGenerator.*;
-import allclear.dto.responseDto.timetableGenerator.Step3to7ResponseDto;
 import allclear.global.exception.GlobalExceptionHandler;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.member.MemberRepository;
-import allclear.repository.requirement.RequirementRepository;
 import allclear.repository.subject.SubjectRepository;
-import allclear.repository.subject.SubjectSpecification;
 import allclear.repository.timetable.TimetableRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorSubjectRepository;
@@ -129,7 +124,7 @@ public class TimetableGeneratorManager {
 //     * Step3
 //     * Get
 //     */
-//    public Step3to7ResponseDto suggestMajorSubject(Long userId) {
+//    public Step3to6ResponseDto suggestMajorSubject(Long userId) {
 //        Requirement requirement = memberRepository.findById(userId)
 //                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS))
 //                .getRequirement();
@@ -143,7 +138,7 @@ public class TimetableGeneratorManager {
 //
 //        //빠진 조건 필터링 추가 필요
 //
-//        return new Step3to7ResponseDto(subjectList);
+//        return new Step3to6ResponseDto(subjectList);
 //    }
 
 

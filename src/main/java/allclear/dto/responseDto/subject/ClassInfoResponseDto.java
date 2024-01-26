@@ -2,6 +2,7 @@ package allclear.dto.responseDto.subject;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.timetable.TimetableClassInfo;
+import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,14 @@ public class ClassInfoResponseDto {
     }
 
     public ClassInfoResponseDto(TimetableClassInfo classInfo){
+        this.professor = classInfo.getProfessor();
+        this.classDay = classInfo.getClassDay();
+        this.startTime = classInfo.getStartTime();
+        this.endTime = classInfo.getEndTime();
+        this.classRoom = classInfo.getClassRoom();
+    }
+
+    public ClassInfoResponseDto(TimetableGeneratorClassInfo classInfo){
         this.professor = classInfo.getProfessor();
         this.classDay = classInfo.getClassDay();
         this.startTime = classInfo.getStartTime();
