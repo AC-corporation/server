@@ -72,7 +72,13 @@ public class SubjectService {
 
     //검색 조회
     public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request) {
-        List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
+        List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .subjectTarget(request.getSubjectTarget())
+                        .year(request.getYear())
+                        .searchString(request.getSearchString())
+                        .build()
+        ));
         if (subjectList.isEmpty())
             throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectList);
