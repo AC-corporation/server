@@ -3,6 +3,7 @@ package allclear.repository.subject;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.SubjectListRequestDto;
+import allclear.service.timetableGenerator.SubjectSearchFilter;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AllArgsConstructor;
@@ -47,5 +48,9 @@ public class SubjectSpecification {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    public static Specification<Subject> subjectFilter(SubjectSearchFilter searchFilter) {
+        return null;
     }
 }
