@@ -121,6 +121,8 @@ public class MemberService {
         TimetableGenerator newTimetableGenerator = new TimetableGenerator();
         newTimetableGenerator.setMember(member);
         newTimetableGenerator.setId(member.getMemberId());
+//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
+//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
         timetableGeneratorRepository.save(newTimetableGenerator);
 
         return member.getMemberId();
