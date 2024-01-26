@@ -55,16 +55,14 @@ public class TimetableGeneratorManager {
     }
 
     /**
-     * 시간표 생성기 생성
+     * 시간표 생성기 초기화
      * Step1
      * Post
      */
     public void createTimetableGenerator(Long userId, Step1RequestDto requestDto) {
-        TimetableGenerator timetableGenerator = new TimetableGenerator();
-        timetableGenerator.setId(userId);
+        TimetableGenerator timetableGenerator = findById(userId);
         timetableGenerator.setTableYear(requestDto.getTableYear());
         timetableGenerator.setSemester(requestDto.getSemester());
-        tgRepository.save(timetableGenerator);
     }
 
 
