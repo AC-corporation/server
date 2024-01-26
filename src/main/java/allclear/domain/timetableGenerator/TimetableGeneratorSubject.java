@@ -22,9 +22,12 @@ public class TimetableGeneratorSubject {
     private Subject subject; //null 인 경우 유저가 정의한 과목
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
+
+    @Column(name = "is_selected")
+    private boolean isSelected = false;
     @OneToMany(mappedBy = "timetableGeneratorSubject", cascade = CascadeType.ALL)
     @Column(name = "timetable_generator_class_info_list")
-    private List<TimetableGeneratorClassInfo> classInfoList = new ArrayList<>();
+    private List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_generator_id")
@@ -33,7 +36,7 @@ public class TimetableGeneratorSubject {
 
     //==연관관계 메서드==//
     public void addTimetableGeneratorClassInfo(TimetableGeneratorClassInfo classInfo) {
-        this.classInfoList.add(classInfo);
+        this.timetableGeneratorClassInfoList.add(classInfo);
         classInfo.setTimetableGeneratorSubject(this);
     }
 
