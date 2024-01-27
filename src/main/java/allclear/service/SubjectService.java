@@ -114,7 +114,14 @@ public class SubjectService {
     public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request, int page) {
         Pageable pageable = PageRequest.of(page, 30);
 
-        Page<Subject> subjectPage = subjectRepository.findAll(SubjectSpecification.subjectFilter(request), pageable);
+        Page<Subject> subjectPage = subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .subjectTarget(request.getSubjectTarget())
+                        .year(request.getYear())
+                        .searchString(request.getSearchString())
+                        .build(),
+          pageable
+        ));
         if (subjectPage.getContent().isEmpty())
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectPage);

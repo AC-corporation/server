@@ -1,6 +1,8 @@
 package allclear.dto.responseDto.timetable;
 
 import allclear.domain.timetable.Timetable;
+import allclear.domain.timetableGenerator.TimetableGenerator;
+import allclear.domain.timetableGenerator.TimetableGeneratorTimetable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,5 +33,17 @@ public class TimetableResponseDto {
                 .map(TimetableSubjectResponseDto::new)
                 .collect(Collectors.toList());
         this.timetableSubjectResponseDtoList = timetableSubjectResponseDtoList;
+    }
+
+    public TimetableResponseDto(TimetableGeneratorTimetable timetableGeneratorTimetable) {
+        TimetableGenerator timetableGenerator = timetableGeneratorTimetable.getTimetableGenerator();
+        this.timetableId = timetableGeneratorTimetable.getId();
+        this.tableName = "새 시간표";
+        this.year = timetableGenerator.getTableYear();
+        this.semester = timetableGenerator.getSemester();
+        this.timetableSubjectResponseDtoList = timetableGeneratorTimetable.getTimetableGeneratorSubjectList()
+                .stream()
+                .map(TimetableSubjectResponseDto::new)
+                .collect(Collectors.toList());;
     }
 }

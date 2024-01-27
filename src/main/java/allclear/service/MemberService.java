@@ -8,6 +8,7 @@ import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
+import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.global.email.EmailService;
@@ -17,6 +18,7 @@ import allclear.repository.grade.GradeRepository;
 import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
+import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,12 @@ public class MemberService {
     private final RequirementRepository requirementRepository;
     @Autowired
     private final GradeRepository gradeRepository;
+    @Autowired
+    private final TimetableGeneratorRepository timetableGeneratorRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EmailCodeRepository emailCodeRepository;
+
 
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
@@ -100,7 +105,16 @@ public class MemberService {
         Grade newGrade = crawlMemberInfo.getGrade();
         newGrade.setMember(member);
 
+        //memberId 생성
         memberRepository.save(member);
+
+        //시간표 생성기
+        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
+        newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setId(member.getMemberId());
+//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
+//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
+        timetableGeneratorRepository.save(newTimetableGenerator);
 
         return member.getMemberId();
     }
