@@ -33,6 +33,9 @@ public class TimetableGeneratorSubject {
     @JoinColumn(name = "timetable_generator_id")
     private TimetableGenerator timetableGenerator;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "timetable_generator_timetable_id")
+    private TimetableGeneratorTimetable timetableGeneratorTimetable;
 
     //==연관관계 메서드==//
     public void addTimetableGeneratorClassInfo(TimetableGeneratorClassInfo classInfo) {

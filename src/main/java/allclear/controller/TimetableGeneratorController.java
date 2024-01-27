@@ -90,7 +90,7 @@ public class TimetableGeneratorController {
 
     //==step7==//
     @Operation(summary = "지금까지 선택한 과목 불러오기")
-    @PostMapping("/step7/{userId}")
+    @GetMapping("/step7/{userId}")
     public ApiResponse step7(@PathVariable Long userId) {
         return ApiResponse.onSuccess("step7 성공했습니다", timetableGeneratorManager.getTimetableGeneratorSubjectList(userId));
     }
