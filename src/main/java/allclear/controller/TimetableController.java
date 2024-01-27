@@ -30,7 +30,7 @@ public class TimetableController {
     public ApiResponse updateTimetable(@PathVariable Long timetableId,
                                        @RequestBody UpdateTimetableRequestDto requestDto) {
         timetableService.updateTimetable(timetableId, requestDto);
-        return ApiResponse.onSuccess("시간표 업데이트에 성공했습니다", "");
+        return ApiResponse.onSuccess("시간표 업데이트에 성공했습니다");
     }
 
     @Operation(summary = "시간표 조회")
@@ -43,7 +43,7 @@ public class TimetableController {
     @DeleteMapping("/{timetableId}")
     public ApiResponse deleteTimetable(@PathVariable Long timetableId) {
         timetableService.deleteTimetable(timetableId);
-        return ApiResponse.onSuccess("시간표 삭제에 성공했습니다", "");
+        return ApiResponse.onSuccess("시간표 삭제에 성공했습니다");
     }
 
 
@@ -69,7 +69,7 @@ public class TimetableController {
     public ApiResponse updateTimetableSubject(@PathVariable Long timetableSubjectId,
                                               @RequestBody UpdateTimetableSubjectRequestDto requestDto) {
         timetableService.updateTimetableSubject(timetableSubjectId, requestDto);
-        return ApiResponse.onSuccess("시간표 과목 업데이트에 성공했습니다", "");
+        return ApiResponse.onSuccess("시간표 과목 업데이트에 성공했습니다");
     }
 
     @Operation(summary = "시간표 과목 조회")
@@ -82,6 +82,6 @@ public class TimetableController {
     @DeleteMapping("/subject/{timetableSubjectId}")
     public ApiResponse deleteTimetableSubject(@PathVariable Long timetableSubjectId) {
         timetableService.deleteTimetableSubject(timetableSubjectId);
-        return ApiResponse.onSuccess("시간표 과목 삭제에 성공했습니다", "");
+        return ApiResponse.onSuccess("시간표 과목 삭제에 성공했습니다");
     }
 }

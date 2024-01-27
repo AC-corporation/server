@@ -29,20 +29,44 @@ public class CrawlSubjectInfo {
     String targetPath; // 크롤링 할 요소가 있는 경로
     String targetText; // 크롤링 할 문자
 
-    public CrawlSubjectInfo(Integer year, String semester, String usaintId, String usaintPassword) throws GlobalException {
-        loginUsaint(usaintId, usaintPassword); // 로그인
-        setYearSemester(year, semester); // 조회 연도 및 학기 설정
-        //crawlMajorSubjects(); // 학부 전공 크롤링
-        //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
-        //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
-        //crawlChapelSubjects(); // 채플 크롤링
-        crawlTeachingSubjects(); // 교직 크롤링
-
-        //subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
-        //subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
-        //subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
-        //subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
-        subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
+    public CrawlSubjectInfo(Integer year, String semester, String usaintId, String usaintPassword) {
+        // 로그인
+        try {
+            loginUsaint(usaintId, usaintPassword);
+        } catch (GlobalException e) {
+            throw e;
+        } catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
+        }
+        // 조회 연도 및 학기 설정
+        try {
+            setYearSemester(year, semester);
+        } catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+            // 잘못된 연도와 학기로 조회 검사
+        }
+        // 크롤링
+        try {
+            //crawlMajorSubjects(); // 학부 전공 크롤링
+            //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
+            //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
+            //crawlChapelSubjects(); // 채플 크롤링
+            crawlTeachingSubjects(); // 교직 크롤링
+        }
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
+        }
+        // 파싱
+        try {
+            //subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
+            //subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
+            //subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
+            //subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
+        }
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
+        }
 
     }
 

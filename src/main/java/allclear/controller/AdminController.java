@@ -20,22 +20,14 @@ public class AdminController {
     @Operation(summary = "유세인트 전체 과목 생성(초기화)")
     @PostMapping("/subject/initAll")
     public ApiResponse createSubject(@RequestBody CreateSubjectRequestDto requestDto) {
-        try {
-            subjectService.createSubject(requestDto);
-        } catch (GlobalException e) {
-            return ApiResponse.onFailure(e.getErrorCode(), "");
-        }
-        return ApiResponse.onSuccess("유세인트 과목 생성(초기화)에 성공했습니다", "");
+        subjectService.createSubject(requestDto);
+        return ApiResponse.onSuccess("유세인트 과목 생성(초기화)에 성공했습니다");
     }
 
     @Operation(summary = "유세인트 전체 과목 업데이트")
     @PutMapping("/subject/updateAll")
     public ApiResponse createSubject(@RequestBody UpdateSubjectRequestDto requestDto) {
-        try {
-            subjectService.updateSubject(requestDto);
-        } catch (GlobalException e) {
-            return ApiResponse.onFailure(e.getErrorCode(), "");
-        }
-        return ApiResponse.onSuccess("유세인트 과목 업데이트에 성공했습니다", "");
+        subjectService.updateSubject(requestDto);
+        return ApiResponse.onSuccess("유세인트 과목 업데이트에 성공했습니다");
     }
 }

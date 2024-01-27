@@ -2,6 +2,8 @@ package allclear.crawl;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
+import allclear.global.exception.GlobalException;
+import allclear.global.exception.code.GlobalErrorCode;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ public class ParsingSubject {
     static ArrayList<Subject> subjects = new ArrayList<>();
 
     public static ArrayList<Subject> parsingSubjectString(ArrayList<String> subjectString){ //학부전공 과목 파싱 함수
+        if (subjectString.isEmpty())
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         Subject subject;
         for(int i = 0; i < subjectString.size(); ){
             subject = new Subject(); // subject 객체 생성
