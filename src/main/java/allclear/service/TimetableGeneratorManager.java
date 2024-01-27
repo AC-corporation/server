@@ -1,4 +1,4 @@
-package allclear.service.timetableGenerator;
+package allclear.service;
 
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
@@ -55,8 +55,9 @@ public class TimetableGeneratorManager {
 
     //시간표 생성기 조회
     private TimetableGenerator findById(Long userId) {
-        return tgRepository.findById(userId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        return memberRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS))
+                .getTimetableGenerator();
     }
 
     //==Step1==//

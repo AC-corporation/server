@@ -21,19 +21,10 @@ public class MemberController {
         return ApiResponse.onSuccess("mapping test");
     }
 
-    @GetMapping("/test/exception")
-    public ApiResponse test2(){
-        return ApiResponse.onFailure(GlobalErrorCode._BAD_REQUEST, "");
-    }
-
-    @PostMapping("/test/post")
-    public ApiResponse test3(@RequestBody String string){
-        return ApiResponse.onSuccess(string);
-    }
-
-    @GetMapping("/test/error")
-    public ApiResponse test4(){
-        return ApiResponse.onSuccess("exception2");
+    @Operation(summary = "test 유저 생성", description = "회원가입 서비스 작동하지 않을 때 test 유저 생성")
+    @PostMapping("/test/createUser")
+    public ApiResponse createTestMember() {
+        return ApiResponse.onSuccess("테스트 유저 생성에 성공했습니다", memberService.createTestMember());
     }
 
     //회원가입

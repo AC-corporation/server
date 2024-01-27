@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TimetableGenerator {
-    @Id
+    @Id @GeneratedValue
     @Column(name = "timetable_generator_id")
     private Long id;
 
