@@ -108,16 +108,16 @@ public class MemberService {
         Grade newGrade = crawlMemberInfo.getGrade();
         newGrade.setMember(member);
 
+        //시간표 생성기
+        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
+        newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setTableYear(member.getLevel());
+        newTimetableGenerator.setSemester(member.getSemester());
+//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
+//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
+
         //memberId 생성
         memberRepository.save(member);
-
-//        //시간표 생성기
-//        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
-//        newTimetableGenerator.setMember(member);
-//        newTimetableGenerator.setId(member.getMemberId());
-////        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
-////        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
-//        timetableGeneratorRepository.save(newTimetableGenerator);
 
         return member.getMemberId();
     }
@@ -267,7 +267,7 @@ public class MemberService {
     public Long createTestMember() {
         Member member = new Member();
         member.setEmail("test@email.com");
-        member.setPassword("testPassword");
+        member.setPassword(passwordEncoder.encode(""));
         member.setMemberName("testUser");
         member.setLevel(3);
         member.setClassType("가");
@@ -312,6 +312,8 @@ public class MemberService {
 
         TimetableGenerator newTimetableGenerator = new TimetableGenerator();
         newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setTableYear(2024);
+        newTimetableGenerator.setSemester(1);
 //        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
 //        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
 
