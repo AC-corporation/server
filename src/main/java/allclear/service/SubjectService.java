@@ -15,8 +15,12 @@ import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -96,19 +100,24 @@ public class SubjectService {
     }
 
     //전체 조회
-    public SubjectListResponseDto getSubjectList() {
-        List<Subject> subjectList = subjectRepository.findAll();
-        if (subjectList.isEmpty())
+    public SubjectListResponseDto getSubjectList(int page) {
+        Pageable pageable = PageRequest.of(page, 30);
+
+        Page<Subject> subjectPage = subjectRepository.findAll(pageable);
+        if (subjectPage.getContent().isEmpty())
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new SubjectListResponseDto(subjectList);
+
+        return new SubjectListResponseDto(subjectPage);
     }
 
     //검색 조회
-    public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request) {
-        List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(request));
-        if (subjectList.isEmpty())
+    public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request, int page) {
+        Pageable pageable = PageRequest.of(page, 30);
+
+        Page<Subject> subjectPage = subjectRepository.findAll(SubjectSpecification.subjectFilter(request), pageable);
+        if (subjectPage.getContent().isEmpty())
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new SubjectListResponseDto(subjectList);
+        return new SubjectListResponseDto(subjectPage);
     }
 
 

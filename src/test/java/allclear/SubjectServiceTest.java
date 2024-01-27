@@ -30,7 +30,7 @@ public class SubjectServiceTest {
         subjectService.createSubject(requestDto);
 
         //then
-        SubjectListResponseDto responseDto = subjectService.getSubjectSearch(new SubjectListRequestDto());
+        SubjectListResponseDto responseDto = subjectService.getSubjectSearch(new SubjectListRequestDto(), 0);
 
         for (SubjectResponseDto subjectResponseDto : responseDto.getSubjectResponseDtoList()) {
             System.out.println(subjectResponseDto.getSubjectId());
