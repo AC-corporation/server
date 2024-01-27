@@ -1,6 +1,7 @@
 package allclear.dto.responseDto.timetable;
 
 import allclear.domain.timetable.TimetableSubject;
+import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
 import allclear.dto.responseDto.subject.ClassInfoResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,20 @@ public class TimetableSubjectResponseDto {
             this.subjectId = null;
         this.subjectName = timetableSubject.getSubjectName();
         this.classInfoResponseDtoList = new ArrayList<>(timetableSubject.getTimetableClassInfoList()
+                .stream()
+                .map(ClassInfoResponseDto::new)
+                .collect(Collectors.toList())
+        );
+    }
+
+    public TimetableSubjectResponseDto(TimetableGeneratorSubject timetableGeneratorSubject) {
+        this.timetableSubjectId = timetableGeneratorSubject.getId();
+        if (timetableGeneratorSubject.getSubject() != null)
+            this.subjectId = timetableGeneratorSubject.getSubject().getSubjectId();
+        else
+            this.subjectId = null;
+        this.subjectName = timetableGeneratorSubject.getSubjectName();
+        this.classInfoResponseDtoList = new ArrayList<>(timetableGeneratorSubject.getTimetableGeneratorClassInfoList()
                 .stream()
                 .map(ClassInfoResponseDto::new)
                 .collect(Collectors.toList())

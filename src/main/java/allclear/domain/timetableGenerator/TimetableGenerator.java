@@ -1,7 +1,6 @@
 package allclear.domain.timetableGenerator;
 
 import allclear.domain.member.Member;
-import allclear.domain.timetable.Timetable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +26,7 @@ public class TimetableGenerator {
 
     @OneToMany(mappedBy = "timetableGenerator", cascade = CascadeType.ALL)
     @Column(name = "timetable_generator_subject_list")
-    private List<TimetableGeneratorSubject> timetableGeneratorSubjects = new ArrayList<>();
+    private List<TimetableGeneratorSubject> timetableGeneratorSubjectList = new ArrayList<>();
 
     @OneToMany(mappedBy = "timetableGenerator", cascade = CascadeType.ALL)
     @Column(name = "timetable_generator_timetable_list")
@@ -44,7 +43,7 @@ public class TimetableGenerator {
     }
 
     public void addTimetableGeneratorSubject(TimetableGeneratorSubject timetableGeneratorSubject) {
-        timetableGeneratorSubjects.add(timetableGeneratorSubject);
+        timetableGeneratorSubjectList.add(timetableGeneratorSubject);
         timetableGeneratorSubject.setTimetableGenerator(this);
     }
 }

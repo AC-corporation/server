@@ -16,7 +16,7 @@ public class TimetableGeneratorTimetable {
 
     @OneToMany(mappedBy = "timetableGeneratorTimetable", fetch = FetchType.LAZY)
     @Column(name = "timetable_generator_subject_list")
-    private List<TimetableGeneratorSubject> timetableGeneratorSubjects = new ArrayList<>();
+    private List<TimetableGeneratorSubject> timetableGeneratorSubjectList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "timetable_generator_id")
