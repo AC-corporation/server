@@ -16,7 +16,7 @@ import allclear.dto.requestDto.timetableGenerator.*;
 import allclear.dto.responseDto.timetableGenerator.Step3to6ResponseDto;
 import allclear.dto.responseDto.timetableGenerator.Step7ResponseDto;
 import allclear.dto.responseDto.timetableGenerator.Step8ResponseDto;
-import allclear.global.exception.GlobalExceptionHandler;
+import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.subject.SubjectRepository;
@@ -56,7 +56,7 @@ public class TimetableGeneratorManager {
     //시간표 생성기 조회
     private TimetableGenerator findById(Long userId) {
         return tgRepository.findById(userId)
-                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
     }
 
     //==Step1==//
@@ -116,7 +116,7 @@ public class TimetableGeneratorManager {
      */
     public Step3to6ResponseDto suggestMajorSubject(Long userId) {
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         Requirement requirement = member.getRequirement();
 
         //검색 조건 추가 필요
@@ -166,7 +166,7 @@ public class TimetableGeneratorManager {
         List<TimetableGeneratorSubject> timetableGeneratorSubjectList = findById(userId)
                 .getTimetableGeneratorSubjectList();
         if (timetableGeneratorSubjectList.isEmpty())
-            throw new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS);
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new Step7ResponseDto(timetableGeneratorSubjectList);
     }
 
@@ -211,9 +211,9 @@ public class TimetableGeneratorManager {
     public void saveTimetable(Long userId, Step8RequestDto requestDto) {
         //생성할 시간표를 시간표 생성기에서 찾아오기
         TimetableGeneratorTimetable generatorTimetable = tgTimetableRepository.findById(requestDto.getTimetableGeneratorTimetableId())
-                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new GlobalExceptionHandler(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         TimetableGenerator timetableGenerator = findById(userId);
 
         //시간표 객체 생성

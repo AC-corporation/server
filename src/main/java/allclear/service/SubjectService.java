@@ -58,13 +58,12 @@ public class SubjectService {
         List<Subject> subjectList = subjectInfo.getSubjects();
         Subject subject;
         Subject foundSubject;
-        for(int i = 0;i < subjectList.size();i++){
+        for (int i = 0; i < subjectList.size(); i++) {
             subject = subjectList.get(i);
             foundSubject = subjectRepository.findById(subject.getSubjectId()).orElse(null);
-            if (foundSubject == null){
+            if (foundSubject == null) {
                 subjectRepository.save(subject);
-            }
-            else {
+            } else {
                 foundSubject.setSubjectName(subject.getSubjectName());
                 foundSubject.setMajorClassification(subject.getMajorClassification());
                 foundSubject.setMultiMajorClassification(subject.getMultiMajorClassification());
@@ -77,7 +76,7 @@ public class SubjectService {
                 // classInfo 연관관계 삭제 및 DB 삭제
                 List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
                 Iterator<ClassInfo> iterator = removeClassInfoList.iterator();
-                while (iterator.hasNext()){ // 연관관계 삭제
+                while (iterator.hasNext()) { // 연관관계 삭제
                     ClassInfo classInfo = iterator.next();
                     iterator.remove();
                     classInfo.setSubject(null);
@@ -115,13 +114,12 @@ public class SubjectService {
         Pageable pageable = PageRequest.of(page, 30);
 
         Page<Subject> subjectPage = subjectRepository.findAll(SubjectSpecification.subjectFilter(
-                SubjectSpecification.builder()
-                        .subjectTarget(request.getSubjectTarget())
-                        .year(request.getYear())
-                        .searchString(request.getSearchString())
-                        .build(),
-          pageable
-        ));
+                        SubjectSpecification.builder()
+                                .subjectTarget(request.getSubjectTarget())
+                                .year(request.getYear())
+                                .searchString(request.getSearchString())
+                                .build()), pageable
+        );
         if (subjectPage.getContent().isEmpty())
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectListResponseDto(subjectPage);
