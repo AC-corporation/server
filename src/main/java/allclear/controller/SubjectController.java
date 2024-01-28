@@ -36,11 +36,4 @@ public class SubjectController {
         return ApiResponse.onSuccess("과목 조건 검색에 성공했습니다", subjectService.getSubjectSearch(requestDto, page));
     }
 
-    // 과목 정보 업데이트
-    @Operation(summary = "유세인트 과목 업데이트", description = "학년도, 학기, 유세인트 Id, Pwd 필요")
-    @PutMapping("/update")
-    public ApiResponse update(@RequestBody UpdateSubjectRequestDto updateSubjectRequestDto){
-        subjectService.updateSubject(updateSubjectRequestDto);
-        return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
-    }
 }
