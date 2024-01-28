@@ -67,8 +67,10 @@ public class TimetableGeneratorManager {
      * Step1
      * Post
      */
-    public void createTimetableGenerator(Long userId, Step1RequestDto requestDto) {
+    public void initTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
+        timetableGenerator.getTimetableGeneratorTimetableList().clear();
+        timetableGenerator.getTimetableGeneratorSubjectList().clear();
         timetableGenerator.setTableYear(requestDto.getTableYear());
         timetableGenerator.setSemester(requestDto.getSemester());
     }

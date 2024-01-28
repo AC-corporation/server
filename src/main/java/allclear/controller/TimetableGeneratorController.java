@@ -16,10 +16,10 @@ public class TimetableGeneratorController {
     private final TimetableGeneratorManager timetableGeneratorManager;
 
     //==step1==//
-    @Operation(summary = "학년도 선택")
+    @Operation(summary = "시간표 생성기 초기화/학년도 선택")
     @PostMapping("/step1/{userId}")
     public ApiResponse step1(@PathVariable Long userId, @RequestBody Step1RequestDto requestDto) {
-        timetableGeneratorManager.createTimetableGenerator(userId, requestDto);
+        timetableGeneratorManager.initTimetableGenerator(userId, requestDto);
         return ApiResponse.onSuccess("step1 성공했습니다", "");
     }
 
