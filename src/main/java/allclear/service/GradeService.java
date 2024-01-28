@@ -31,23 +31,20 @@ public class GradeService {
         return targetMember.getGrade();
     }
 
-    /**
-     * 전체 성적 조회
-     */
+     //전체 성적 조회
     public GradeResponseDto getGrade(Long memberId){
         Grade grade = findByMemberId(memberId);
         if (grade == null)
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new GradeResponseDto(grade);
+        return GradeResponseDto.from(grade);
     }
 
-    /**
-     * 학기별 성적 조회
-     */
-    public SemesterGradeResponseDto getSemesterGradeResponse(Long semesterGradeId){
+
+    //학기별 성적 조회
+    public SemesterGradeResponseDto getSemesterGrade(Long semesterGradeId){
         SemesterGrade semesterGrade = semesterGradeRepository.findById(semesterGradeId).orElse(null);
         if (semesterGrade == null)
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new SemesterGradeResponseDto(semesterGrade);
+        return SemesterGradeResponseDto.from(semesterGrade);
     }
 }

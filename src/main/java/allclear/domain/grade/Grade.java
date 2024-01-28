@@ -2,11 +2,13 @@ package allclear.domain.grade;
 
 import allclear.domain.member.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Getter
 public class Grade {
