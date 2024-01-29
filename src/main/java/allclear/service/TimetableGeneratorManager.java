@@ -122,6 +122,9 @@ public class TimetableGeneratorManager {
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         Requirement requirement = member.getRequirement();
 
+        //수강한 과목 제외
+        //입학년도 별 교과과정 조회
+
         //검색 조건 추가 필요
         List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
@@ -153,9 +156,36 @@ public class TimetableGeneratorManager {
 
     //==Step4==//
 
+    /**
+     * 교양 필수 추천 (미완성)
+     * Step4
+     * Get
+     */
+    public Step3to6ResponseDto suggestLiberalArtsSubject(Long userId) {
+        return new Step3to6ResponseDto(null);
+    }
+
     //==Step5==//
 
+    /**
+     * 전공 선택 추천 (미완성)
+     * Step5
+     * Get
+     */
+    public Step3to6ResponseDto suggestMajorElectiveSubject(Long userId) {
+        return new Step3to6ResponseDto(null);
+    }
+
     //==Step6==//
+
+    /**
+     * 전공 선택 추천 (미완성)
+     * Step6
+     * Get
+     */
+    public Step3to6ResponseDto suggestLiberalArtsElectiveSubject(Long userId) {
+        return new Step3to6ResponseDto(null);
+    }
 
 
     //==Step7==//

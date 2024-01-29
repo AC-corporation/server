@@ -24,7 +24,7 @@ public class TimetableGeneratorController {
     }
 
     //==step2==//
-    @Operation(summary = "직접 추가")
+    @Operation(summary = "직접 추가", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step2/{userId}")
     public ApiResponse step2(@PathVariable Long userId, @RequestBody Step2RequestDto requestDto) {
         timetableGeneratorManager.addCustomTimetableGeneratorSubjects(userId, requestDto);
@@ -35,10 +35,10 @@ public class TimetableGeneratorController {
     @Operation(summary = "전공 기초/필수 과목 추천")
     @GetMapping("/step3/{userId}")
     public ApiResponse step3(@PathVariable Long userId) {
-        return ApiResponse.onSuccess("step3 성공했습니다");
+        return ApiResponse.onSuccess("step3 성공했습니다", timetableGeneratorManager.suggestMajorSubject(userId));
     }
 
-    @Operation(summary = "전공 기초/필수")
+    @Operation(summary = "전공 기초/필수", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step3/{userId}")
     public ApiResponse step3(@PathVariable Long userId, @RequestBody Step3RequestDto requestDto) {
         timetableGeneratorManager.addActualTimetableGeneratorSubjects(userId, requestDto);
@@ -46,14 +46,13 @@ public class TimetableGeneratorController {
     }
 
     //==step4==//
-    @Operation(summary = "전공 기초/필수 과목 추천")
+    @Operation(summary = "교양 필수 과목 추천")
     @GetMapping("/step4/{userId}")
     public ApiResponse step4(@PathVariable Long userId) {
-//        return ApiResponse.onSuccess("step4 성공했습니다", timetableGeneratorManager.suggestMajorSubject(userId));
-        return null;
+        return ApiResponse.onSuccess("step4 성공했습니다", timetableGeneratorManager.suggestLiberalArtsSubject(userId));
     }
 
-    @Operation(summary = "교양 필수")
+    @Operation(summary = "교양 필수", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step4/{userId}")
     public ApiResponse step4(@PathVariable Long userId, @RequestBody Step4RequestDto requestDto) {
         timetableGeneratorManager.addActualTimetableGeneratorSubjects(userId, requestDto);
@@ -61,13 +60,13 @@ public class TimetableGeneratorController {
     }
 
     //==step5==//
-    @Operation(summary = "전공 기초/필수 과목 추천")
+    @Operation(summary = "전공 선택 과목 추천")
     @GetMapping("/step5/{userId}")
     public ApiResponse step5(@PathVariable Long userId) {
-        return ApiResponse.onSuccess("step5 성공했습니다");
+        return ApiResponse.onSuccess("step5 성공했습니다", timetableGeneratorManager.suggestMajorElectiveSubject(userId));
     }
 
-    @Operation(summary = "전공 선택")
+    @Operation(summary = "전공 선택", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step5/{userId}")
     public ApiResponse step6(@PathVariable Long userId, @RequestBody Step5RequestDto requestDto) {
         timetableGeneratorManager.addActualTimetableGeneratorSubjects(userId, requestDto);
@@ -75,13 +74,13 @@ public class TimetableGeneratorController {
     }
 
     //==step6==//
-    @Operation(summary = "전공 기초/필수 과목 추천")
+    @Operation(summary = "교양 선택 과목 추천")
     @GetMapping("/step6/{userId}")
     public ApiResponse step6(@PathVariable Long userId) {
-        return ApiResponse.onSuccess("step6 과목 추천 성공했습니다");
+        return ApiResponse.onSuccess("step6 과목 추천 성공했습니다", timetableGeneratorManager.suggestLiberalArtsElectiveSubject(userId));
     }
 
-    @Operation(summary = "교양 선택")
+    @Operation(summary = "교양 선택", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step6/{userId}")
     public ApiResponse step6(@PathVariable Long userId, @RequestBody Step6RequestDto requestDto) {
         timetableGeneratorManager.addActualTimetableGeneratorSubjects(userId, requestDto);
@@ -95,7 +94,7 @@ public class TimetableGeneratorController {
         return ApiResponse.onSuccess("step7 성공했습니다", timetableGeneratorManager.getTimetableGeneratorSubjectList(userId));
     }
 
-    @Operation(summary = "필수 수강 과목 선택/시간표 생성")
+    @Operation(summary = "필수 수강 과목 선택 및 시간표 생성")
     @PostMapping("/step7/{userId}")
     public ApiResponse step7(@PathVariable Long userId, @RequestBody Step7RequestDto requestDto) {
         timetableGeneratorManager.checkSelectedTimetableSubject(requestDto);
