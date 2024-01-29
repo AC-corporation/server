@@ -5,12 +5,14 @@ import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParsingGrade {
     /*
     성적 문자열 파싱함수
     */
     static Grade grade;
+    static List<Long> prevSubjectIdList = new ArrayList<>(); // 수강한 과목 Id 리스트
 
     public static Grade parsingGradeString(String totalCredit, String averageGrade,ArrayList<String> entireGrades, ArrayList<String> detailGrades){
         String year; // 학년
@@ -38,7 +40,8 @@ public class ParsingGrade {
             else{
                 tmpList.add(SemesterSubject.createSemesterSubject(detailGrades.get(i+2),detailGrades.get(i+1)));
                 // 과목명과 등급을 통해 SemesterSubject 생성
-                i = i + 6; // 다음 과목으로 이동
+                prevSubjectIdList.add(Long.parseLong(detailGrades.get(i + 5))); // 과목 ID 추출
+                i = i + 5; // 다음 과목으로 이동
 
             }
         }
