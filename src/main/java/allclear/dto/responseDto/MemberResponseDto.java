@@ -19,8 +19,8 @@ public class MemberResponseDto {
     private String university;
     private String major;
     private String classType; //분반
-    private int level; //학년
-    private int semester; //학기
+    private Integer level; //학년
+    private Integer semester; //학기
 
     public MemberResponseDto(Member member){
         this.memberId = member.getMemberId();

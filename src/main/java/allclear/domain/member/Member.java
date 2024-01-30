@@ -3,6 +3,7 @@ package allclear.domain.member;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
+import allclear.domain.timetableGenerator.TimetableGenerator;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,6 +46,9 @@ public class Member implements UserDetails{
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Grade grade;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TimetableGenerator timetableGenerator;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Column(name = "timetable_list")

@@ -24,9 +24,9 @@ public class AdminController {
         return ApiResponse.onSuccess("유세인트 과목 생성(초기화)에 성공했습니다");
     }
 
-    @Operation(summary = "유세인트 전체 과목 업데이트")
+    @Operation(summary = "유세인트 과목 업데이트", description = "학년도, 학기, 유세인트 Id, Pwd 필요")
     @PutMapping("/subject/updateAll")
-    public ApiResponse createSubject(@RequestBody UpdateSubjectRequestDto requestDto) {
+    public ApiResponse updateSubject(@RequestBody UpdateSubjectRequestDto requestDto) {
         subjectService.updateSubject(requestDto);
         return ApiResponse.onSuccess("유세인트 과목 업데이트에 성공했습니다");
     }

@@ -17,7 +17,6 @@ public class ApiResponse<T> {
     private final Boolean isSuccess;
     private final String code;
     private final String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private final T data;
 
 
@@ -27,7 +26,7 @@ public class ApiResponse<T> {
     }
 
     public static ApiResponse onSuccess(String message){
-        return new ApiResponse<>(true, SuccessCode._OK.getCode(), message, "");
+        return new ApiResponse<>(true, SuccessCode._OK.getCode(), message, null);
     }
 
 
@@ -37,7 +36,7 @@ public class ApiResponse<T> {
     }
 
     public static ApiResponse onFailure(GlobalErrorCode code){
-        return new ApiResponse<>(false, code.getCode(), code.getMessage() , "");
+        return new ApiResponse<>(false, code.getCode(), code.getMessage() , null);
     }
 
 }

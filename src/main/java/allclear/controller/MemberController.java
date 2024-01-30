@@ -26,19 +26,10 @@ public class MemberController {
         return ApiResponse.onSuccess("mapping test");
     }
 
-    @GetMapping("/test/exception")
-    public ApiResponse test2(){
-        return ApiResponse.onFailure(GlobalErrorCode._BAD_REQUEST, "");
-    }
-
-    @PostMapping("/test/post")
-    public ApiResponse test3(@RequestBody String string){
-        return ApiResponse.onSuccess(string);
-    }
-
-    @GetMapping("/test/error")
-    public ApiResponse test4(){
-        return ApiResponse.onSuccess("exception2");
+    @Operation(summary = "test 유저 생성", description = "회원가입 서비스 작동하지 않을 때 test 유저 생성")
+    @PostMapping("/test/createUser")
+    public ApiResponse createTestMember() {
+        return ApiResponse.onSuccess("테스트 유저 생성에 성공했습니다", memberService.createTestMember());
     }
 
     //회원가입
@@ -84,7 +75,7 @@ public class MemberController {
 
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PutMapping("/update/{userId}")
+    @PutMapping("/{userId}")
     public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         memberService.updateMember(userId, updateMemberRequestDto);
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
@@ -92,14 +83,14 @@ public class MemberController {
 
     //유저조회
     @Operation(summary = "유저 조회", description = "유저 조회")
-    @GetMapping("/get/{userId}")
+    @GetMapping("/{userId}")
     public ApiResponse get(@PathVariable Long userId) { //인자 수정 필요
         return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 
     //회원탈퇴
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public ApiResponse delete(@PathVariable Long userId) {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다");

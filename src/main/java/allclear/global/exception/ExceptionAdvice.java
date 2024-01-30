@@ -14,7 +14,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { GlobalException.class })
     protected ApiResponse<String> handleCustomException(GlobalException e) {
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
-        return ApiResponse.onFailure(e.getErrorCode(), "");
+        return ApiResponse.onFailure(e.getErrorCode());
     }
 
 }

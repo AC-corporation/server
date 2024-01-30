@@ -9,6 +9,7 @@ import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
+import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
 import allclear.dto.responseDto.jwt.JwtToken;
@@ -22,6 +23,8 @@ import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
+import com.beust.ah.A;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -51,11 +53,13 @@ public class MemberService {
     private final GradeRepository gradeRepository;
     @Autowired
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TimetableGeneratorRepository timetableGeneratorRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EmailCodeRepository emailCodeRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+
 
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
@@ -127,6 +131,15 @@ public class MemberService {
         Grade newGrade = crawlMemberInfo.getGrade();
         newGrade.setMember(member);
 
+        //시간표 생성기
+        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
+        newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setTableYear(member.getLevel());
+        newTimetableGenerator.setSemester(member.getSemester());
+//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
+//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
+
+        //memberId 생성
         memberRepository.save(member);
 
         return member.getMemberId();
@@ -137,8 +150,11 @@ public class MemberService {
     public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto) {
         String email = emailAuthRequestDto.getEmail();
 
+
         Optional<Member> foundEmail = memberRepository.findByEmail(email);
         if(foundEmail.isPresent()){
+        Optional<Member> foundEmail = Optional.ofNullable(memberRepository.findByEmail(email));
+        if (foundEmail.isPresent()) {
             //이메일 중복검사
             throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
         }
@@ -165,18 +181,17 @@ public class MemberService {
         String code = request.getCode();
 
         Optional<EmailCode> targetEmailCode = emailCodeRepository.findByEmailAndCode(email, code);
-        if(targetEmailCode.isPresent()){
+        if (targetEmailCode.isPresent()) {
             EmailCode emailCode = targetEmailCode.get();
             emailCodeRepository.delete(emailCode);
             return true;
-        }
-        else
+        } else
             return false;
     }
 
     //회원 정보 업데이트
     @Transactional
-    public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto){
+    public void updateMember(Long memberId, UpdateMemberRequestDto updateMemberRequestDto) {
         Member member = findOne(memberId);
         if (member == null) // 잘못된 id로 조회하는 경우
             throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
@@ -202,7 +217,7 @@ public class MemberService {
 
         //졸업요건 초기화
         List<RequirementComponent> removeRequirementComponentList = requirement.getRequirementComponentList();
-        for(int i = 0; i < removeRequirementComponentList.size(); i++){ // 연관관계 삭제
+        for (int i = 0; i < removeRequirementComponentList.size(); i++) { // 연관관계 삭제
             removeRequirementComponentList.get(i).setRequirement(null);
         }
         removeRequirementComponentList.clear();
@@ -211,10 +226,10 @@ public class MemberService {
 
         //성적 초기화
         List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
-        for(int i = 0; i < removeSemesterGradeList.size(); i++){
+        for (int i = 0; i < removeSemesterGradeList.size(); i++) {
             SemesterGrade removeSemesterGrade = removeSemesterGradeList.get(i);
             List<SemesterSubject> removeSemesterSubjectList = removeSemesterGrade.getSemesterSubjectList();
-            for(int j = 0; j < removeSemesterSubjectList.size(); j++){
+            for (int j = 0; j < removeSemesterSubjectList.size(); j++) {
                 removeSemesterSubjectList.get(j).setSemesterGrade(null);
             }
             removeSemesterSubjectList.clear();
@@ -271,5 +286,65 @@ public class MemberService {
         Member targetMember = memberRepository.findById(id).
                 orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)); // 조회
         return new MemberResponseDto(findOne(id));
+    }
+
+    //test 유저 생성
+    @Transactional
+    public Long createTestMember() {
+        Member member = new Member();
+        member.setEmail("test@email.com");
+        member.setPassword(passwordEncoder.encode(""));
+        member.setMemberName("testUser");
+        member.setLevel(3);
+        member.setClassType("가");
+        member.setMajor("소프트");
+        member.setSemester(1);
+        member.setUniversity("숭실대학교");
+
+        Requirement requirement = new Requirement();
+        requirement.setMember(member);
+        RequirementComponent requirementComponent1 = new RequirementComponent();
+        requirementComponent1.setRequirement(requirement);
+        requirementComponent1.setRequirementArgument("testArgument1");
+        requirementComponent1.setRequirementCategory("testCategory1");
+        requirementComponent1.setRequirementCriteria(3.0);
+        requirementComponent1.setRequirementComplete(1.0);
+        requirementComponent1.setRequirementResult("부족");
+        requirement.addRequirementComponent(requirementComponent1);
+        RequirementComponent requirementComponent2 = new RequirementComponent();
+        requirementComponent2.setRequirement(requirement);
+        requirementComponent2.setRequirementArgument("testArgument2");
+        requirementComponent2.setRequirementCategory("testCategory2");
+        requirementComponent2.setRequirementCriteria(3.0);
+        requirementComponent2.setRequirementComplete(3.0);
+        requirementComponent2.setRequirementResult("충족");
+        requirement.addRequirementComponent(requirementComponent2);
+
+        Grade grade = new Grade();
+        grade.setMember(member);
+        grade.setAverageGrade("4.5");
+        grade.setTotalCredit(110.5);
+        ArrayList<SemesterSubject> semesterSubjectList1 = new ArrayList<>();
+        semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject1", "4.5"));
+        semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject2", "4.5"));
+        SemesterGrade semesterGrade1 = SemesterGrade.createSemesterGrade(grade, "4.5", semesterSubjectList1);
+        grade.addSemesterGrade(semesterGrade1);
+        ArrayList<SemesterSubject> semesterSubjectList2 = new ArrayList<>();
+        semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject4", "4.0"));
+        semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject5", "3.0"));
+        SemesterGrade semesterGrade2 = SemesterGrade.createSemesterGrade(grade, "3.5", semesterSubjectList2);
+        grade.addSemesterGrade(semesterGrade2);
+
+
+        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
+        newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setTableYear(2024);
+        newTimetableGenerator.setSemester(1);
+//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
+//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
+
+        memberRepository.save(member);
+
+        return member.getMemberId();
     }
 }
