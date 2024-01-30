@@ -5,6 +5,8 @@ import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
@@ -17,10 +19,16 @@ public class CrawalTest {
         System.out.println(member.getClassType());
         System.out.println(member.getLevel());
         System.out.println(member.getSemester());
+        System.out.println(crawlMemberInfo.getEnterYear());
+        System.out.println(crawlMemberInfo.getDetailMajor());
 
-        Requirement requirement = ParsingRequirement.parsingRequirementString(crawlMemberInfo.getRequirementComponentList());
-        Grade grade =  ParsingGrade.parsingGradeString(crawlMemberInfo.getTotalCredit(), crawlMemberInfo.getAverageGrade(),
-                crawlMemberInfo.getEntireGrades(), crawlMemberInfo.getDetailGrades());
+
+        List<Long> tmpList = crawlMemberInfo.getPrevSubjectIdList();
+        for(int i=0;i<tmpList.size();i++){
+            System.out.println(tmpList.get(i));
+        }
+
+
 
 
         /*
