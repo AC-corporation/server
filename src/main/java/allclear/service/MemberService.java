@@ -1,6 +1,7 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.domain.auth.RefreshToken;
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;
@@ -10,19 +11,28 @@ import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
+import allclear.dto.responseDto.jwt.JwtToken;
 import allclear.global.email.EmailService;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.jwt.JwtTokenProvider;
+import allclear.repository.auth.RefreshTokenRepository;
 import allclear.repository.grade.GradeRepository;
 import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -39,9 +49,13 @@ public class MemberService {
     private final RequirementRepository requirementRepository;
     @Autowired
     private final GradeRepository gradeRepository;
+    @Autowired
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EmailCodeRepository emailCodeRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public Member findOne(Long id) {
         return memberRepository.findById(id).get();
@@ -49,21 +63,34 @@ public class MemberService {
 
     //로그인
     @Transactional
-    public Long login(LoginRequestDto request) {
+    public JwtToken login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        Member member = memberRepository.findByEmail(email);
-        //member 조회
-        if (member == null)
-            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()->new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
 
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
-        return member.getMemberId();
+        // 1. email + password 를 기반으로 Authentication 객체 생성
+        // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        refreshTokenRepository.save(RefreshToken.builder()
+                .accessToken(jwtToken.getAccessToken())
+                .refreshToken(jwtToken.getRefreshToken())
+                .build());
+
+        return jwtToken;
     }
 
     //회원가입
@@ -85,7 +112,7 @@ public class MemberService {
         //크롤링 한 데이터 member에 저장
         assert crawlMemberInfo != null;
         Member newMember = crawlMemberInfo.getMember();
-        member.setMemberName(newMember.getMemberName());
+        member.setUsername(newMember.getUsername());
         member.setUniversity(newMember.getUniversity());
         member.setMajor(newMember.getMajor());
         member.setClassType(newMember.getClassType());
@@ -110,7 +137,7 @@ public class MemberService {
     public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto) {
         String email = emailAuthRequestDto.getEmail();
 
-        Optional<Member> foundEmail = Optional.ofNullable(memberRepository.findByEmail(email));
+        Optional<Member> foundEmail = memberRepository.findByEmail(email);
         if(foundEmail.isPresent()){
             //이메일 중복검사
             throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
@@ -165,7 +192,7 @@ public class MemberService {
 
         //멤버 초기화
         Member newMember = crawlInfo.getMember();
-        member.setMemberName(newMember.getMemberName());
+        member.setUsername(newMember.getUsername());
         member.setUniversity(newMember.getUniversity());
         member.setMajor(newMember.getMajor());
         // member.setEmail(newMember.getEmail());

@@ -155,7 +155,7 @@ public class CrawlMemberInfo {
 
         // user_name 크롤링
         target = driver.findElement(By.id("WDC9"));
-        member.setMemberName(target.getAttribute("value"));
+        member.setUsername(target.getAttribute("value"));
 
         // university 크롤링
         target = driver.findElement(By.id("WDBB"));

@@ -4,15 +4,21 @@ import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter @Setter
-public class Member {
+public class Member implements UserDetails{
 
     @Id @GeneratedValue
     @Column(name = "member_id")
@@ -25,7 +31,7 @@ public class Member {
     private String password;
 
     @Column(name = "member_name")
-    private String memberName;
+    private String username;
     private String university;
     private String major;
 
@@ -43,6 +49,37 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Column(name = "timetable_list")
     private List<Timetable> timetableList = new ArrayList<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
 
 
