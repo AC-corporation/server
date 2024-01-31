@@ -10,7 +10,6 @@ import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
 import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
 import allclear.domain.timetableGenerator.TimetableGeneratorTimetable;
-import allclear.dto.requestDto.timetable.AddCustomTimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetableGenerator.*;
 import allclear.dto.responseDto.timetableGenerator.Step3to6ResponseDto;
@@ -69,10 +68,14 @@ public class TimetableGeneratorManager {
      */
     public void initTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
-        timetableGenerator.getTimetableGeneratorTimetableList().clear();
-        timetableGenerator.getTimetableGeneratorSubjectList().clear();
         timetableGenerator.setTableYear(requestDto.getTableYear());
         timetableGenerator.setSemester(requestDto.getSemester());
+
+        tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
+        timetableGenerator.getTimetableGeneratorTimetableList().clear();
+        tgSubjectRepository.deleteAll(timetableGenerator.getTimetableGeneratorSubjectList());
+        timetableGenerator.getTimetableGeneratorSubjectList().clear();
+        tgRepository.save(timetableGenerator);
     }
 
 
@@ -83,30 +86,29 @@ public class TimetableGeneratorManager {
      * Step2
      * Post
      */
-    public void addCustomTimetableGeneratorSubjects(Long userId, Step2RequestDto requestDto) {
+    public Long addCustomTimetableGeneratorSubject(Long userId, Step2RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
-        for (AddCustomTimetableSubjectRequestDto customSubjectRequestDto : requestDto.getCustomTimetableSubjectRequestDtoList()) {
+        ArrayList<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
 
-            //ClassInfo 리스트 초기화
-            List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
-            for (ClassInfoRequestDto classInfoRequestDto : customSubjectRequestDto.getClassInfoRequestDtoList()) {
-                TimetableGeneratorClassInfo timetableGeneratorClassInfo = TimetableGeneratorClassInfo.createClassInfo(
-                        classInfoRequestDto.getProfessor(),
-                        classInfoRequestDto.getClassDay(),
-                        classInfoRequestDto.getStartTime(),
-                        classInfoRequestDto.getEndTime(),
-                        classInfoRequestDto.getClassRoom()
-                );
-                timetableGeneratorClassInfoList.add(timetableGeneratorClassInfo);
-            }
-
-            //시간표 생성기 과목 생성해서 시간표 생성기에 추가
-            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createCustomTimetableGeneratorSubject(
-                    customSubjectRequestDto.getSubjectName(),
-                    timetableGeneratorClassInfoList
-            );
-            timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
+        for (ClassInfoRequestDto classInfoRequestDto : requestDto.getClassInfoRequestDtoList()) {
+            timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo.createClassInfo(
+                    classInfoRequestDto.getProfessor(),
+                    classInfoRequestDto.getClassDay(),
+                    classInfoRequestDto.getStartTime(),
+                    classInfoRequestDto.getEndTime(),
+                    classInfoRequestDto.getClassRoom()
+            ));
         }
+
+        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createCustomTimetableGeneratorSubject(
+                requestDto.getSubjectName(),
+                timetableGeneratorClassInfoList
+        );
+
+        timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
+
+        tgRepository.flush();
+        return timetableGeneratorSubject.getId();
     }
 
 
@@ -288,4 +290,13 @@ public class TimetableGeneratorManager {
         timetableRepository.save(timetable);
     }
 
+
+    //==기타 메서드==//
+
+    /**
+     * 시간표 생성기 과목 삭제
+     */
+    public void deleteTimetableGeneratorSubject(Long timetableGeneratorSubjectId) {
+        tgSubjectRepository.deleteById(timetableGeneratorSubjectId);
+    }
 }
