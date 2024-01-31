@@ -122,6 +122,7 @@ public class MemberService {
         member.setClassType(newMember.getClassType());
         member.setLevel(newMember.getLevel());
         member.setSemester(newMember.getSemester());
+        member.getRoles().add(request.getRole());
 
         //졸업요건
         Requirement newRequirement = crawlMemberInfo.getRequirement();
@@ -152,31 +153,30 @@ public class MemberService {
 
 
         Optional<Member> foundEmail = memberRepository.findByEmail(email);
-        if(foundEmail.isPresent()){
-        Optional<Member> foundEmail = Optional.ofNullable(memberRepository.findByEmail(email));
-        if (foundEmail.isPresent()) {
-            //이메일 중복검사
-            throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+            if (foundEmail.isPresent()) {
+                //이메일 중복검사
+                throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+            }
+
+            String subject = "AllClear 회원가입 인증 번호\n";
+            String authCode = createCode(); //8글자 랜덤
+            String text = "인증코드는 " + authCode + " 입니다\n";
+
+            //email, code 저장
+            EmailCode emailCode = EmailCode.builder()
+                    .email(email)
+                    .code(authCode)
+                    .build();
+            emailCodeRepository.save(emailCode);
+
+            //mail 전송
+            emailService.sendEmail(email, subject, text);
         }
 
-        String subject = "AllClear 회원가입 인증 번호\n";
-        String authCode = createCode(); //8글자 랜덤
-        String text = "인증코드는 " + authCode + " 입니다\n";
 
-        //email, code 저장
-        EmailCode emailCode = EmailCode.builder()
-                .email(email)
-                .code(authCode)
-                .build();
-        emailCodeRepository.save(emailCode);
-
-        //mail 전송
-        emailService.sendEmail(email, subject, text);
-    }
-
-    //회원가입 - 이메일 인증 코드 확인
+    // 회원가입 - 이메일 인증 코드 확인
     @Transactional
-    public boolean isEmailValid(EmailIsValidRequestDto request) {
+    public boolean isEmailValid (EmailIsValidRequestDto request){
         String email = request.getEmail();
         String code = request.getCode();
 
@@ -294,12 +294,13 @@ public class MemberService {
         Member member = new Member();
         member.setEmail("test@email.com");
         member.setPassword(passwordEncoder.encode(""));
-        member.setMemberName("testUser");
+        member.setUsername("testUser");
         member.setLevel(3);
         member.setClassType("가");
         member.setMajor("소프트");
         member.setSemester(1);
         member.setUniversity("숭실대학교");
+        member.getRoles().add("USER");
 
         Requirement requirement = new Requirement();
         requirement.setMember(member);

@@ -26,6 +26,8 @@ public class ParsingGrade {
         ArrayList<SemesterSubject> tmpList = new ArrayList<>();
 
         for(int i=0;i<detailGrades.size();i++){
+            if(i+5>=detailGrades.size())
+                break;
             if(detailGrades.get(i).contains("*")){ // 학년 학기 문자열이면 *를 포함하고 있음
                 if (!tmpList.isEmpty()){
                     grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList));
@@ -59,6 +61,7 @@ public class ParsingGrade {
         String tmpYear = "";
         String tmpSemester = "";
         String semesterAverageGrade = "";
+
 
         for(int i=0;i<entireGrades.size()-1;i++){
             if(i+5>=entireGrades.size())
