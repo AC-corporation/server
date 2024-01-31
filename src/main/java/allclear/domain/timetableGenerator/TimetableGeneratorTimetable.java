@@ -1,14 +1,16 @@
 package allclear.domain.timetableGenerator;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimetableGeneratorTimetable {
     @Id @GeneratedValue
     @Column(name = "timetable_generator_timetable")

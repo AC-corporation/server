@@ -5,10 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 @Entity
 @Builder
@@ -27,5 +23,10 @@ public class RefreshToken {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    // 업데이트 함수
+    public void updateRefreshToken(String accessToken, String refreshToken){
+        this.accessToken=accessToken;
+        this.refreshToken=refreshToken;
+    }
 
 }

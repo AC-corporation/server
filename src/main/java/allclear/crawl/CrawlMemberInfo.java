@@ -48,7 +48,6 @@ public class CrawlMemberInfo {
 
     public CrawlMemberInfo(String usaintId, String usaintPassword){
 
-        member = new Member();
 
         // 로그인
         try {
@@ -168,33 +167,40 @@ public class CrawlMemberInfo {
 
         // user_name 크롤링
         target = driver.findElement(By.id("WDC9"));
-        member.setUsername(target.getAttribute("value"));
+        String user_name = target.getAttribute("value");
+//        member.setUsername(target.getAttribute("value"));
 
         // university 크롤링
         target = driver.findElement(By.id("WDBB"));
-        member.setUniversity(target.getAttribute("value"));
-        university = member.getUniversity();
+        university = target.getAttribute("value");
+//        member.setUniversity(target.getAttribute("value"));
+//        university = member.getUniversity();
 
         // major 크롤링
         target = driver.findElement(By.id("WDC4"));
-        member.setMajor(target.getAttribute("value"));
-        major = member.getMajor();
+        major = target.getAttribute("value");
+//        member.setMajor(target.getAttribute("value"));
+//        major = member.getMajor();
 
         // mail 크롤링
         target = driver.findElement(By.id("WDF6"));
-        member.setEmail(target.getAttribute("value"));
+        String mail = target.getAttribute("value");
+//        member.setEmail(target.getAttribute("value"));
 
         // classType 크롤링
         target = driver.findElement(By.id("WDD6"));
-        member.setClassType(target.getAttribute("value"));
+        String classType = target.getAttribute("value");
+//        member.setClassType(target.getAttribute("value"));
 
         // year 크롤링
         target = driver.findElement(By.id("WDE1"));
-        member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
+        int year = Integer.parseInt(target.getAttribute("value").strip());
+//        member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
 
         // semester 크롤링
         target = driver.findElement(By.id("WDE5"));
-        member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
+        int semester = Integer.parseInt(target.getAttribute("value").strip());
+//        member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
 
         // 입학 연도 크롤링
         target = driver.findElement(By.id("WDB7"));
@@ -205,6 +211,16 @@ public class CrawlMemberInfo {
             detailMajor = null;
         else
             detailMajor = target.getAttribute("value").strip();
+
+        member = Member.builder()
+                .username(user_name)
+                        .university(university)
+                                .major(major)
+                                        .email(mail)
+                                                .classType(classType)
+                                                        .level(year)
+                                                                .semester(semester)
+                                                                        .build();
 
         // 기본 프레임으로 돌아가기
         driver.switchTo().defaultContent();

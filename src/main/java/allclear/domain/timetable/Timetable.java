@@ -2,14 +2,16 @@ package allclear.domain.timetable;
 
 import allclear.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Timetable {
     @Id
     @GeneratedValue
@@ -44,12 +46,18 @@ public class Timetable {
 
 
     //==생성 메서드==//
-    public static Timetable createTimetable(Member member, String tableName, int tableYear, int semester) {
-        Timetable timeTable = new Timetable();
-        timeTable.setMember(member);
-        timeTable.setTableName(tableName);
-        timeTable.setTableYear(tableYear);
-        timeTable.setSemester(semester);
-        return timeTable;
+//    public static Timetable createTimetable(Member member, String tableName, int tableYear, int semester) {
+//        Timetable timeTable = new Timetable();
+//        timeTable.setMember(member);
+//        timeTable.setTableName(tableName);
+//        timeTable.setTableYear(tableYear);
+//        timeTable.setSemester(semester);
+//        return timeTable;
+//    }
+
+    public void updateTimetable(String tableName, int tableYear, int semester ){
+        this.tableName = tableName;
+        this.tableYear = tableYear;
+        this.semester = semester;
     }
 }

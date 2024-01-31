@@ -27,7 +27,6 @@ import allclear.repository.timetableGenerator.TimetableGeneratorSubjectRepositor
 import allclear.repository.timetableGenerator.TimetableGeneratorTimetableRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,17 +38,11 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class TimetableGeneratorManager {
-    @Autowired
     private final TimetableGeneratorRepository tgRepository;
-    @Autowired
     private final SubjectRepository subjectRepository;
-    @Autowired
     private final TimetableRepository timetableRepository;
-    @Autowired
     private final TimetableGeneratorTimetableRepository tgTimetableRepository;
-    @Autowired
     private final MemberRepository memberRepository;
-    @Autowired
     private final TimetableGeneratorSubjectRepository tgSubjectRepository;
 
 
@@ -71,8 +64,9 @@ public class TimetableGeneratorManager {
         TimetableGenerator timetableGenerator = findById(userId);
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
         timetableGenerator.getTimetableGeneratorSubjectList().clear();
-        timetableGenerator.setTableYear(requestDto.getTableYear());
-        timetableGenerator.setSemester(requestDto.getSemester());
+//        timetableGenerator.setTableYear(requestDto.getTableYear());
+//        timetableGenerator.setSemester(requestDto.getSemester());
+        timetableGenerator.initGenerator(requestDto.getTableYear(),requestDto.getSemester());
     }
 
 
@@ -90,13 +84,19 @@ public class TimetableGeneratorManager {
             //ClassInfo 리스트 초기화
             List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
             for (ClassInfoRequestDto classInfoRequestDto : customSubjectRequestDto.getClassInfoRequestDtoList()) {
-                TimetableGeneratorClassInfo timetableGeneratorClassInfo = TimetableGeneratorClassInfo.createClassInfo(
-                        classInfoRequestDto.getProfessor(),
-                        classInfoRequestDto.getClassDay(),
-                        classInfoRequestDto.getStartTime(),
-                        classInfoRequestDto.getEndTime(),
-                        classInfoRequestDto.getClassRoom()
-                );
+//                TimetableGeneratorClassInfo timetableGeneratorClassInfo = TimetableGeneratorClassInfo.createClassInfo(
+//                        classInfoRequestDto.getProfessor(),
+//                        classInfoRequestDto.getClassDay(),
+//                        classInfoRequestDto.getStartTime(),
+//                        classInfoRequestDto.getEndTime(),
+//                        classInfoRequestDto.getClassRoom()
+//                );
+                TimetableGeneratorClassInfo timetableGeneratorClassInfo = TimetableGeneratorClassInfo.builder()
+                        .professor(classInfoRequestDto.getProfessor())
+                        .classDay(classInfoRequestDto.getClassDay())
+                        .startTime(classInfoRequestDto.getStartTime())
+                        .endTime(classInfoRequestDto.getEndTime())
+                        .classRoom(classInfoRequestDto.getClassRoom()).build();
                 timetableGeneratorClassInfoList.add(timetableGeneratorClassInfo);
             }
 
@@ -250,12 +250,17 @@ public class TimetableGeneratorManager {
         TimetableGenerator timetableGenerator = findById(userId);
 
         //시간표 객체 생성
-        Timetable timetable = Timetable.createTimetable(
-                member,
-                "새 시간표",
-                timetableGenerator.getTableYear(),
-                timetableGenerator.getSemester()
-        );
+//        Timetable timetable = Timetable.createTimetable(
+//                member,
+//                "새 시간표",
+//                timetableGenerator.getTableYear(),
+//                timetableGenerator.getSemester()
+//        );
+
+        Timetable timetable = Timetable.builder().member(member)
+                .tableName("새 시간표")
+                .tableYear(timetableGenerator.getTableYear())
+                .semester(timetableGenerator.getSemester()).build();
 
         //시간표에 과목 추가
         for (TimetableGeneratorSubject generatorSubject : generatorTimetable.getTimetableGeneratorSubjectList()) {
@@ -265,13 +270,20 @@ public class TimetableGeneratorManager {
                 //커스텀 과목 생성
                 List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
                 for (TimetableGeneratorClassInfo generatorClassInfo : generatorSubject.getTimetableGeneratorClassInfoList()) {
-                    timetableClassInfoList.add(TimetableClassInfo.createClassInfo(
-                            generatorClassInfo.getProfessor(),
-                            generatorClassInfo.getClassDay(),
-                            generatorClassInfo.getStartTime(),
-                            generatorClassInfo.getEndTime(),
-                            generatorClassInfo.getClassRoom()
-                    ));
+                    timetableClassInfoList.add(
+//                            TimetableClassInfo.createClassInfo(
+//                            generatorClassInfo.getProfessor(),
+//                            generatorClassInfo.getClassDay(),
+//                            generatorClassInfo.getStartTime(),
+//                            generatorClassInfo.getEndTime(),
+//                            generatorClassInfo.getClassRoom()
+//                    )
+                            TimetableClassInfo.builder().professor(generatorClassInfo.getProfessor())
+                                    .classDay(generatorClassInfo.getClassDay())
+                                    .startTime(generatorClassInfo.getStartTime())
+                                    .endTime(generatorClassInfo.getEndTime())
+                                    .classRoom(generatorClassInfo.getClassRoom()).build()
+                    );
                 }
                 timetableSubject = TimetableSubject.createCustomTimeTableSubject(
                         generatorSubject.getSubjectName(),

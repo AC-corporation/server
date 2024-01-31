@@ -1,13 +1,15 @@
 package allclear.domain.timetableGenerator;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimetableGeneratorClassInfo {
     @Id
     @GeneratedValue
@@ -29,14 +31,19 @@ public class TimetableGeneratorClassInfo {
 
 
     //==생성 메서드==//
-    static public TimetableGeneratorClassInfo createClassInfo(String professor, String classDay,
-                                                     LocalTime startTime, LocalTime endTime, String classRoom) {
-        TimetableGeneratorClassInfo classInfo = new TimetableGeneratorClassInfo();
-        classInfo.setProfessor(professor);
-        classInfo.setClassDay(classDay);
-        classInfo.setStartTime(startTime);
-        classInfo.setEndTime(endTime);
-        classInfo.setClassRoom(classRoom);
-        return classInfo;
+//    static public TimetableGeneratorClassInfo createClassInfo(String professor, String classDay,
+//                                                     LocalTime startTime, LocalTime endTime, String classRoom) {
+//        TimetableGeneratorClassInfo classInfo = new TimetableGeneratorClassInfo();
+//        classInfo.setProfessor(professor);
+//        classInfo.setClassDay(classDay);
+//        classInfo.setStartTime(startTime);
+//        classInfo.setEndTime(endTime);
+//        classInfo.setClassRoom(classRoom);
+//        return classInfo;
+//    }
+
+    public void setTimetableGeneratorSubject(TimetableGeneratorSubject timetableGeneratorSubject){
+        this.timetableGeneratorSubject = timetableGeneratorSubject;
     }
+
 }

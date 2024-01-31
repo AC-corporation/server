@@ -54,27 +54,45 @@ public class ParsingRequirement {
                     continue;
                 default:
             }
-            RequirementComponent requirementComponent = new RequirementComponent();
-            requirementComponent.setRequirementCategory(category); // 이수구분
+//            RequirementComponent requirementComponent = new RequirementComponent();
+//            requirementComponent.setRequirementCategory(category); // 이수구분
+            String requirementArgument;
+            Double requirementCriteria;
+            Double requirementComplete;
+            String requirementResult;
             if (requirementStringList.get(i).isEmpty()){ // 졸업요건, 값이 비어있는 경우
-                requirementComponent.setRequirementArgument("");
+//                requirementArgument = requirementComponent.setRequirementArgument("");
+                requirementArgument = "";
             }
             else{
-                requirementComponent.setRequirementArgument(requirementStringList.get(i));
+//                requirementArgument = requirementComponent.setRequirementArgument(requirementStringList.get(i));
+                requirementArgument = requirementStringList.get(i);
             }
             if(requirementStringList.get(i+1).isEmpty()){ // 기준값, 값이 비어있는 경우
-                requirementComponent.setRequirementCriteria((Double)null);
+//               requirementCriteria = requirementComponent.setRequirementCriteria((Double)null);
+                requirementCriteria = (Double)null;
             }
             else{
-                requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1)));
+//                requirementCriteria = requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1)));
+                requirementCriteria = Double.parseDouble(requirementStringList.get(i+1));
             }
             if (requirementStringList.get(i+2).isEmpty()){ // 계산값, 값이 비어있는 경우
-                requirementComponent.setRequirementComplete((Double)null);
+//                requirementComplete = requirementComponent.setRequirementComplete((Double)null);
+                requirementComplete = (Double)null;
             }
             else{
-                requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2)));
+//               requirementComplete = requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2)));
+                requirementComplete = Double.parseDouble(requirementStringList.get(i+2));
             }
-            requirementComponent.setRequirementResult(requirementStringList.get(i+4)); // 충족여부
+//            requirementResult = requirementComponent.setRequirementResult(requirementStringList.get(i+4)); // 충족여부
+            requirementResult = requirementStringList.get(i+4); // 충족여부
+
+            RequirementComponent requirementComponent = RequirementComponent.builder()
+                            .requirementCategory(category)
+                                    .requirementArgument(requirementArgument)
+                                            .requirementCriteria(requirementCriteria)
+                                                    .requirementComplete(requirementComplete)
+                                                            .requirementResult(requirementResult).build();
             requirement.addRequirementComponent(requirementComponent); // 졸업요건 행들을 모으기
             assert requirement != null;
             i = i +4;

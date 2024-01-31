@@ -2,15 +2,16 @@ package allclear.domain.timetableGenerator;
 
 import allclear.domain.member.Member;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class TimetableGenerator {
     @Id @GeneratedValue
     @Column(name = "timetable_generator_id")
@@ -46,4 +47,19 @@ public class TimetableGenerator {
         timetableGeneratorSubjectList.add(timetableGeneratorSubject);
         timetableGeneratorSubject.setTimetableGenerator(this);
     }
+
+    public void initGenerator(int tableYear,int semester){
+        this.tableYear = tableYear;
+        this.semester = semester;
+    }
+
+//    public void setPrevSubjectIdList(List<Long> prevSubjectIdList)
+//    {
+//        this.prevSubjectIdList = prevSubjectIdList;
+//    }
+//
+//    public void setCurriculumSubjectIdList(List<Long> curriculumSubjectIdList){
+//        this.curriculumSubjectIdList = curriculumSubjectIdList;
+//    }
+
 }

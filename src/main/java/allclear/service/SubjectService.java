@@ -14,7 +14,6 @@ import allclear.repository.subject.ClassInfoRepository;
 import allclear.repository.subject.SubjectRepository;
 import allclear.repository.subject.SubjectSpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SubjectService {
-    @Autowired
     private final SubjectRepository subjectRepository;
-    @Autowired
     private final ClassInfoRepository classInfoRepository;
 
     //과목 추가
@@ -64,15 +61,18 @@ public class SubjectService {
             if (foundSubject == null) {
                 subjectRepository.save(subject);
             } else {
-                foundSubject.setSubjectName(subject.getSubjectName());
-                foundSubject.setMajorClassification(subject.getMajorClassification());
-                foundSubject.setMultiMajorClassification(subject.getMultiMajorClassification());
-                foundSubject.setEngineeringCertification(subject.getEngineeringCertification());
-                foundSubject.setClassType(subject.getClassType());
-                foundSubject.setCredit(subject.getCredit());
-                foundSubject.setDesign(subject.getDesign());
-                foundSubject.setSubjectTime(subject.getSubjectTime());
-                foundSubject.setSubjectTarget(subject.getSubjectTarget());
+//                foundSubject.setSubjectName(subject.getSubjectName());
+//                foundSubject.setMajorClassification(subject.getMajorClassification());
+//                foundSubject.setMultiMajorClassification(subject.getMultiMajorClassification());
+//                foundSubject.setEngineeringCertification(subject.getEngineeringCertification());
+//                foundSubject.setClassType(subject.getClassType());
+//                foundSubject.setCredit(subject.getCredit());
+//                foundSubject.setDesign(subject.getDesign());
+//                foundSubject.setSubjectTime(subject.getSubjectTime());
+//                foundSubject.setSubjectTarget(subject.getSubjectTarget());
+                foundSubject.updateSubject(subject.getSubjectName(), subject.getMajorClassification(), subject.getMultiMajorClassification(), subject.getEngineeringCertification(),
+                         subject.getClassType(),subject.getCredit(),subject.getDesign()
+                ,subject.getSubjectTime(),subject.getSubjectTarget());
                 // classInfo 연관관계 삭제 및 DB 삭제
                 List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
                 Iterator<ClassInfo> iterator = removeClassInfoList.iterator();
@@ -83,6 +83,7 @@ public class SubjectService {
                     classInfoRepository.deleteById(classInfo.getId()); // DB 삭제
                 }
                 foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
+
             }
         }
 

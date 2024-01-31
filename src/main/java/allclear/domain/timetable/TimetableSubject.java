@@ -3,15 +3,16 @@ package allclear.domain.timetable;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TimetableSubject {
     @Id
     @GeneratedValue
@@ -49,18 +50,33 @@ public class TimetableSubject {
         timeTableSubject.setSubjectName(subject.getSubjectName());
         for (ClassInfo classInfo : subject.getClassInfoList()) {
             timeTableSubject.addTimetableClassInfo(
-                    TimetableClassInfo.createClassInfo(
-                            classInfo.getProfessor(),
-                            classInfo.getClassDay(),
-                            classInfo.getStartTime(),
-                            classInfo.getEndTime(),
-                            classInfo.getClassRoom()
-                    )
+//                    TimetableClassInfo.createClassInfo(
+//                            classInfo.getProfessor(),
+//                            classInfo.getClassDay(),
+//                            classInfo.getStartTime(),
+//                            classInfo.getEndTime(),
+//                            classInfo.getClassRoom()
+//                    )
+                    TimetableClassInfo.builder().professor(classInfo.getProfessor())
+                            .classDay(classInfo.getClassDay()).startTime(classInfo.getStartTime())
+                            .endTime(classInfo.getEndTime()).classRoom(classInfo.getClassRoom()).build()
             );
         }
         return timeTableSubject;
     }
 
+    public void setSubject(Subject subject)
+    {
+        this.subject = subject;
+    }
+
+    public void setSubjectName(String subjectName){
+        this.subjectName = subjectName;
+    }
+
+    public void setTimetableClassInfoList(List<TimetableClassInfo> timetableClassInfoList){
+        this.timetableClassInfoList = timetableClassInfoList;
+    }
     /**
      * 유저가 정의한 과목
      */
@@ -73,5 +89,10 @@ public class TimetableSubject {
             timeTableSubject.addTimetableClassInfo(timetableClassInfo);
         }
         return timeTableSubject;
+    }
+
+    public void setTimetable(Timetable timetable)
+    {
+        this.timetable = timetable;
     }
 }

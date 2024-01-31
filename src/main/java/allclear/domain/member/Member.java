@@ -5,9 +5,7 @@ import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetableGenerator.TimetableGenerator;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +16,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member implements UserDetails{
 
     @Id @GeneratedValue
@@ -82,6 +83,30 @@ public class Member implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void setRequirement(Requirement requirement)
+    {
+        this.requirement = requirement;
+    }
+
+    public void setGrade(Grade grade){
+        this.grade = grade;
+    }
+
+    public void setTimetableGenerator(TimetableGenerator timetableGenerator)
+    {
+        this.timetableGenerator = timetableGenerator;
+    }
+
+    public void updateMember(String username, String university, String major,String classType,String email,int level,int semester){
+        this.username = username;
+        this.university = university;
+        this.email = email;
+        this.major = major;
+        this.classType = classType;
+        this.level = level;
+        this.semester = semester;
     }
 
 }

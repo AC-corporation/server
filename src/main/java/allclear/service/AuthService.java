@@ -32,12 +32,7 @@ public class AuthService{
         if(alreadyToken != null) {
             Authentication authentication = jwtTokenProvider.getAuthentication(alreadyToken.getAccessToken());
             JwtToken newJwtToken = jwtTokenProvider.generateToken(authentication);
-            refreshTokenRepository.save(
-                    RefreshToken.builder()
-                            .accessToken(alreadyToken.getAccessToken())
-                            .refreshToken(newJwtToken.getRefreshToken())
-                            .build()
-            );
+            alreadyToken.updateRefreshToken(newJwtToken.getAccessToken(), newJwtToken.getRefreshToken());
             return newJwtToken;
         }
         else{

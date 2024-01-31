@@ -2,7 +2,6 @@ package allclear.controller;
 
 import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
 import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
-import allclear.global.exception.GlobalException;
 import allclear.global.response.ApiResponse;
 import allclear.service.SubjectService;
 import io.swagger.annotations.Api;
