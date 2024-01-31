@@ -27,8 +27,7 @@ public class TimetableGeneratorController {
     @Operation(summary = "직접 추가", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step2/{userId}")
     public ApiResponse step2(@PathVariable Long userId, @RequestBody Step2RequestDto requestDto) {
-        timetableGeneratorManager.addCustomTimetableGeneratorSubjects(userId, requestDto);
-        return ApiResponse.onSuccess("step2 성공했습니다");
+        return ApiResponse.onSuccess("step2 성공했습니다", timetableGeneratorManager.addCustomTimetableGeneratorSubject(userId, requestDto));
     }
 
     //==step3==//
@@ -116,4 +115,11 @@ public class TimetableGeneratorController {
         return ApiResponse.onSuccess("step8 성공했습니다");
     }
 
+
+    @Operation(summary = "시간표 생성기 과목 삭제")
+    @DeleteMapping("/{timetableGeneratorSubjectId}")
+    public ApiResponse deleteTimetableGeneratorSubjectId(@PathVariable Long timetableGeneratorSubjectId) {
+        timetableGeneratorManager.deleteTimetableGeneratorSubject(timetableGeneratorSubjectId);
+        return ApiResponse.onSuccess("시간표 생성기 과목 삭제에 성공했습니다");
+    }
 }
