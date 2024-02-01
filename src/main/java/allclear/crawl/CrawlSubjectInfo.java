@@ -47,22 +47,22 @@ public class CrawlSubjectInfo {
         }
         // 크롤링
         try {
-            //crawlMajorSubjects(); // 학부 전공 크롤링
+            crawlMajorSubjects(); // 학부 전공 크롤링
             //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
             //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
             //crawlChapelSubjects(); // 채플 크롤링
-            crawlTeachingSubjects(); // 교직 크롤링
+            //crawlTeachingSubjects(); // 교직 크롤링
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         // 파싱
         try {
-            //subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
             //subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
             //subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
             //subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
-            subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
+            //subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
@@ -86,7 +86,7 @@ public class CrawlSubjectInfo {
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
 
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
         /*
          *사용자 정보 획득을 위한 로그인
@@ -432,14 +432,22 @@ public class CrawlSubjectInfo {
                         continue;
                     else if(td == 6){ // 과목번호 크롤링
                         targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[5]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/div/div/span/span/table/tbody/tr[2]/td/div/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[" +
-                                tr + "]/td[" + td + "]/a/span[1]";
+                                tr + "]/td[" + td + "]/a/span";
                     }
                     else{ // 그 외 요소 크롤링
                         targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[5]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/div/div/span/span/table/tbody/tr[2]/td/div/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[" +
-                                tr + "]/td[" + td +"]/span/span[1]";
+                                tr + "]/td[" + td +"]/span/span";
                     }
-                    target = driver.findElement(By.xpath(targetPath));
-                    targetText = target.getText();
+                    try {
+                        target = driver.findElement(By.xpath(targetPath));
+                        targetText = target.getText();
+                    }
+                    catch (Exception e) {
+                        if (td == 2) // 2열에서 오류가 발생한 경우는 마지막 행으로 인한 오류
+                            throw new Exception();
+                        else // 그 외는 null 값을 가진 열
+                            targetText = "";
+                    }
                     switch (subjectFlag){ // 플래그 값에 따른 리스트 추가
                         case 1 : majorSubjects.add(targetText);break; // 학부 전공
                         case 2 : requiredGeneralSubjects.add(targetText);break; // 교양 필수
@@ -447,7 +455,6 @@ public class CrawlSubjectInfo {
                         case 4 : chapelSubjects.add(targetText);break; // 채플
                         case 5: teachingSubjects.add(targetText);break; // 교직
                     }
-
                 }
                 tr++;
             }

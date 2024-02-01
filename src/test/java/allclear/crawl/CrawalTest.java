@@ -12,7 +12,7 @@ public class CrawalTest {
     public static void main(String[] args) {
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "Jjw112233$");
         Member member = crawlMemberInfo.getMember();
-        System.out.println(member.getMemberName());
+        System.out.println(member.getUsername());
         System.out.println(member.getUniversity());
         System.out.println(member.getMajor());
         System.out.println(member.getEmail());
