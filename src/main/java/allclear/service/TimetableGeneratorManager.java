@@ -30,7 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -48,7 +50,7 @@ public class TimetableGeneratorManager {
     //시간표 생성기 조회
     private TimetableGenerator findById(Long userId) {
         return memberRepository.findById(userId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS))
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND))
                 .getTimetableGenerator();
     }
 
@@ -61,12 +63,9 @@ public class TimetableGeneratorManager {
      */
     public void initTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
+        timetableGenerator.initGenerator(requestDto.getTableYear(), requestDto.getSemester());
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
         timetableGenerator.getTimetableGeneratorSubjectList().clear();
-//        timetableGenerator.setTableYear(requestDto.getTableYear());
-//        timetableGenerator.setSemester(requestDto.getSemester());
-        timetableGenerator.initGenerator(requestDto.getTableYear(),requestDto.getSemester());
-
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         tgSubjectRepository.deleteAll(timetableGenerator.getTimetableGeneratorSubjectList());
         tgRepository.save(timetableGenerator);
@@ -116,20 +115,31 @@ public class TimetableGeneratorManager {
     public Step3to6ResponseDto suggestMajorSubject(Long userId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
-        Requirement requirement = member.getRequirement();
+        TimetableGenerator timetableGenerator = member.getTimetableGenerator();
 
-        //수강한 과목 제외
-        //입학년도 별 교과과정 조회
+        List<Subject> subjectList = new ArrayList<>();
 
-        //검색 조건 추가 필요
-        List<Subject> subjectList = subjectRepository.findAll(SubjectSpecification.subjectFilter(
+        //학과 전공 기초/필수 조회
+        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
-//                        .majorClassification(member.getMajor()) 소프트웨어 -> 소프트 이런식으로 바꿔야 함
+                        .category("전기")
+                        .majorClassification("소프트")
                         .year(String.valueOf(member.getLevel()))
                         .build()
-        ));
+        )));
+        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .category("전필")
+                        .majorClassification("소프트")
+                        .year(String.valueOf(member.getLevel()))
+                        .build()
+        )));
 
-        //빠진 조건 필터링 추가 필요
+        //입학년도 별 교과과정 조회
+        subjectList.addAll(subjectRepository.findAllById(timetableGenerator.getCurriculumSubjectIdList()));
+
+        //수강한 과목 제외
+        subjectList.removeIf(subject -> timetableGenerator.getPrevSubjectIdList().contains(subject.getSubjectId()));
 
         return new Step3to6ResponseDto(subjectList);
     }

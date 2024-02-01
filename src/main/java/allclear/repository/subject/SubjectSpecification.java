@@ -18,6 +18,7 @@ import java.util.List;
 public class SubjectSpecification {
     private String searchString; //검색할 문자열
     private String subjectName; //과목 이름
+    private String category; //전필, 교선 등 구분
     private String professor; //교수명
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
@@ -63,6 +64,9 @@ public class SubjectSpecification {
             }
             if (specification.getDepartment() != null && !specification.getDepartment().isEmpty()) {
                 predicates.add(cb.like(root.get("department"), "%" + specification.getDepartment() + "%"));
+            }
+            if (specification.getCategory() != null && !specification.getCategory().isEmpty()) {
+                predicates.add(cb.like(root.get("majorClassification"), "%" + specification.getCategory() + "%"));
             }
             if (specification.getMajorClassification() != null && !specification.getMajorClassification().isEmpty()) {
                 predicates.add(cb.like(root.get("majorClassification"), "%" + specification.getMajorClassification() + "%"));
