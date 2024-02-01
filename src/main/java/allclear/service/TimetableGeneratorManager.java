@@ -83,7 +83,7 @@ public class TimetableGeneratorManager {
     public Long addCustomTimetableGeneratorSubject(Long userId, Step2RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
         ArrayList<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
-        
+
         for (ClassInfoRequestDto classInfoRequestDto : requestDto.getClassInfoRequestDtoList()) {
             timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo.builder()
                     .professor(classInfoRequestDto.getProfessor())
