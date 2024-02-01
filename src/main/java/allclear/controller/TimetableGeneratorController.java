@@ -3,12 +3,10 @@ package allclear.controller;
 import allclear.dto.requestDto.timetableGenerator.*;
 import allclear.global.response.ApiResponse;
 import allclear.service.TimetableGeneratorManager;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "api 정보 제공하는 컨트롤러")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/timetableGenerator")
