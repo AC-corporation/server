@@ -136,13 +136,12 @@ public class MemberService {
         //시간표 생성기
         TimetableGenerator newTimetableGenerator;
         newTimetableGenerator = TimetableGenerator.builder()
-                .member(member)
                 .tableYear(member.getLevel())
                 .semester(member.getSemester())
                 .prevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList())
                 .curriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList())
                 .build();
-//        newTimetableGenerator.setMember(member);
+        newTimetableGenerator.setMember(member);
 //        newTimetableGenerator.setTableYear(member.getLevel());
 //        newTimetableGenerator.setSemester(member.getSemester());
 //        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
@@ -377,9 +376,10 @@ public class MemberService {
 
 
         TimetableGenerator newTimetableGenerator;
-        newTimetableGenerator = TimetableGenerator.builder().member(member)
+        newTimetableGenerator = TimetableGenerator.builder()
                 .tableYear(2024)
                 .semester(1).build();
+        newTimetableGenerator.setMember(member);
 //        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
 //        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
 
