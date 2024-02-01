@@ -46,10 +46,14 @@ public class ParsingSubject {
                     case 6 : // 개설 학과
                         subject.setDepartment(str);break;
                     case 7 : // 시간/학점(설계)
-                        subject.setSubjectTime(Double.parseDouble(str.substring(0,4))); // 시간
-                        subject.setCredit(Double.parseDouble(str.substring(6,9))); // 학점
-                        if (str.length() > 10) // 설계가 존재할 경우
-                            subject.setDesign(Integer.parseInt(str.substring(11, 12))); // 설계
+                        int slashIndex = str.indexOf("/"); // "/" 문자 위치
+                        int bracesIndex = 0; // "(" 문자 위치
+                        subject.setSubjectTime(Double.parseDouble(str.substring(0, slashIndex - 1))); // 시간
+                        subject.setCredit(Double.parseDouble(str.substring(slashIndex + 1, slashIndex + 4))); // 학점
+                        if (str.length() > 10) {// 설계가 존재할 경우
+                            bracesIndex = str.indexOf("(");
+                            subject.setDesign(Integer.parseInt(str.substring(bracesIndex + 1, bracesIndex + 2))); // 설계
+                        }
                         break;
                     case 8 : // 강의 시간 및 강의실
                         List<ClassInfo> classInfoList = new ArrayList<>();
