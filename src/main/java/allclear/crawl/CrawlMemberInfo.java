@@ -324,12 +324,12 @@ public class CrawlMemberInfo {
         }
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0144"));
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[7]/td/table/tbody/tr/td/table/tbody/tr[1]/td[2]/span/input"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD0151"));
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[7]/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]/span/input"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭
@@ -455,7 +455,6 @@ public class CrawlMemberInfo {
             selectedSemester = targetText;
 
             detailGrades.add("*"+selectedYear+ " "+selectedSemester); //구분해주는용
-
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
                 yearFlag = 1;
@@ -471,11 +470,16 @@ public class CrawlMemberInfo {
                         targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[12]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[" + cnt + "]/td[" + i + "]/span/span";
                         target = driver.findElement(By.xpath(targetPath));
                         targetText = target.getText().strip();
-                        detailGrades.add(targetText);
                     } catch (Exception e) {
-                        inEndFlag = true;
-                        break;
+                        if (i == 2){
+                            inEndFlag = true;
+                            break;
+                        }
+                        else { // 중간 빈 열로 발생하는 오류
+                            targetText = "";
+                        }
                     }
+                    detailGrades.add(targetText);
                 }
                 if (inEndFlag) {
                     break;
@@ -639,7 +643,6 @@ public class CrawlMemberInfo {
             try {
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]/tr[" + tr + "]/td[4]/div/a/span"));
                 targetText = target.getText();
-                System.out.println(targetText);
                 curriculumSubjectIdList.add(Long.parseLong(targetText));
             } catch (Exception e) {
                 if (exitFlag)

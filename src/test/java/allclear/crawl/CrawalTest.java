@@ -10,7 +10,7 @@ import java.util.List;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "Jjw112233$");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20223058", "비밀번호");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getUsername());
         System.out.println(member.getUniversity());
@@ -24,6 +24,12 @@ public class CrawalTest {
 
 
         List<Long> tmpList = crawlMemberInfo.getPrevSubjectIdList();
+        for(int i=0;i<tmpList.size();i++){
+            System.out.println(tmpList.get(i));
+        }
+
+        System.out.println("++++++++++++");
+        tmpList = crawlMemberInfo.getCurriculumSubjectIdList();
         for(int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
         }
