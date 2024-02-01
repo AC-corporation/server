@@ -86,7 +86,7 @@ public class CrawlSubjectInfo {
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
 
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         /*
          *사용자 정보 획득을 위한 로그인
