@@ -113,13 +113,16 @@ public class MemberService {
 //        member.setLevel(newMember.getLevel());
 //        member.setSemester(newMember.getSemester());
 
-        member = Member.builder().email(request.getEmail()).password(password)
+        member = Member.builder()
+                .email(request.getEmail())
+                .password(password)
                 .username(newMember.getUsername())
                 .university(newMember.getUniversity())
                 .major(newMember.getMajor())
                 .classType(newMember.getClassType())
                 .level(newMember.getLevel())
-                .semester(newMember.getSemester()).build();
+                .semester(newMember.getSemester())
+                .build();
         member.getRoles().add(request.getRole());
 
         //졸업요건
@@ -132,8 +135,13 @@ public class MemberService {
 
         //시간표 생성기
         TimetableGenerator newTimetableGenerator;
-        newTimetableGenerator = TimetableGenerator.builder().member(member)
-                .tableYear(member.getLevel()).semester(member.getSemester()).build();
+        newTimetableGenerator = TimetableGenerator.builder()
+                .member(member)
+                .tableYear(member.getLevel())
+                .semester(member.getSemester())
+                .prevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList())
+                .curriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList())
+                .build();
 //        newTimetableGenerator.setMember(member);
 //        newTimetableGenerator.setTableYear(member.getLevel());
 //        newTimetableGenerator.setSemester(member.getSemester());
@@ -300,7 +308,7 @@ public class MemberService {
     @Transactional
     public Long createTestMember() {
         Member member;
-        member = Member.builder().email("test@email.com").password(passwordEncoder.encode(""))
+        member = Member.builder().email("test@email.com").password(passwordEncoder.encode("testPassword"))
                 .username("testUser").level(3).classType("가").major("소프트").semester(1).university("숭실대학교").build();
 //        member.setEmail("test@email.com");
 //        member.setPassword(passwordEncoder.encode(""));
