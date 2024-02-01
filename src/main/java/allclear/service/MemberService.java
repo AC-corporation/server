@@ -1,6 +1,7 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.domain.auth.RefreshToken;
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;
@@ -11,22 +12,24 @@ import allclear.domain.requirement.RequirementComponent;
 import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
+import allclear.dto.responseDto.jwt.JwtToken;
 import allclear.global.email.EmailService;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.jwt.JwtTokenProvider;
+import allclear.repository.auth.RefreshTokenRepository;
 import allclear.repository.grade.GradeRepository;
 import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
-import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
-import com.beust.ah.A;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,67 +41,86 @@ import java.util.Random;
 @RequiredArgsConstructor
 //@Transactional
 public class MemberService {
-    @Autowired
     private final MemberRepository memberRepository;
-    @Autowired
     private final RequirementRepository requirementRepository;
-    @Autowired
     private final GradeRepository gradeRepository;
-    @Autowired
-    private final TimetableGeneratorRepository timetableGeneratorRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final EmailCodeRepository emailCodeRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     public Member findOne(Long id) {
-        return memberRepository.findById(id).get();
+        return memberRepository.findById(id).orElse(null);
     }
 
     //로그인
     @Transactional
-    public Long login(LoginRequestDto request) {
+    public JwtToken login(LoginRequestDto request) {
         String email = request.getEmail();
         String password = request.getPassword();
 
-        Member member = memberRepository.findByEmail(email);
-        //member 조회
-        if (member == null)
-            throw new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()->new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
 
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
         }
 
-        return member.getMemberId();
+        // 1. email + password 를 기반으로 Authentication 객체 생성
+        // 이때 authentication 은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+
+        // 2. 실제 검증. authenticate() 메서드를 통해 요청된 Member 에 대한 검증 진행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+
+        refreshTokenRepository.save(RefreshToken.builder()
+                .accessToken(jwtToken.getAccessToken())
+                .refreshToken(jwtToken.getRefreshToken())
+                .build());
+
+        return jwtToken;
     }
 
     //회원가입
     @Transactional
     public Long createMember(MemberSignupRequestDto request) {
         String password = passwordEncoder.encode(request.getPassword());
-        Member member = new Member();
-        member.setEmail(request.getEmail());
-        member.setPassword(password);
+//        Member member = new Member();
+        Member member;
+//        member.setEmail(request.getEmail());
+//        member.setPassword(password);
 
         String usaintId = request.getUsaintId();
         String usaintPassword = request.getUsaintPassword();
 
-        CrawlMemberInfo crawlMemberInfo = null;
 
         //멤버 정보 크롤링
-        crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
         //크롤링 한 데이터 member에 저장
-        assert crawlMemberInfo != null;
         Member newMember = crawlMemberInfo.getMember();
-        member.setMemberName(newMember.getMemberName());
-        member.setUniversity(newMember.getUniversity());
-        member.setMajor(newMember.getMajor());
-        member.setClassType(newMember.getClassType());
-        member.setLevel(newMember.getLevel());
-        member.setSemester(newMember.getSemester());
+//        member.setUsername(newMember.getUsername());
+//        member.setUniversity(newMember.getUniversity());
+//        member.setMajor(newMember.getMajor());
+//        member.setClassType(newMember.getClassType());
+//        member.setLevel(newMember.getLevel());
+//        member.setSemester(newMember.getSemester());
+
+        member = Member.builder().email(request.getEmail()).password(password)
+                .username(newMember.getUsername())
+                .university(newMember.getUniversity())
+                .major(newMember.getMajor())
+                .classType(newMember.getClassType())
+                .level(newMember.getLevel())
+                .semester(newMember.getSemester()).build();
+        member.getRoles().add(request.getRole());
 
         //졸업요건
         Requirement newRequirement = crawlMemberInfo.getRequirement();
@@ -109,10 +131,12 @@ public class MemberService {
         newGrade.setMember(member);
 
         //시간표 생성기
-        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
-        newTimetableGenerator.setMember(member);
-        newTimetableGenerator.setTableYear(member.getLevel());
-        newTimetableGenerator.setSemester(member.getSemester());
+        TimetableGenerator newTimetableGenerator;
+        newTimetableGenerator = TimetableGenerator.builder().member(member)
+                .tableYear(member.getLevel()).semester(member.getSemester()).build();
+//        newTimetableGenerator.setMember(member);
+//        newTimetableGenerator.setTableYear(member.getLevel());
+//        newTimetableGenerator.setSemester(member.getSemester());
 //        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
 //        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
 
@@ -127,30 +151,32 @@ public class MemberService {
     public void sendEmailCode(EmailAuthRequestDto emailAuthRequestDto) {
         String email = emailAuthRequestDto.getEmail();
 
-        Optional<Member> foundEmail = Optional.ofNullable(memberRepository.findByEmail(email));
-        if (foundEmail.isPresent()) {
-            //이메일 중복검사
-            throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+
+        Optional<Member> foundEmail = memberRepository.findByEmail(email);
+            if (foundEmail.isPresent()) {
+                //이메일 중복검사
+                throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+            }
+
+            String subject = "AllClear 회원가입 인증 번호\n";
+            String authCode = createCode(); //8글자 랜덤
+            String text = "인증코드는 " + authCode + " 입니다\n";
+
+            //email, code 저장
+            EmailCode emailCode = EmailCode.builder()
+                    .email(email)
+                    .code(authCode)
+                    .build();
+            emailCodeRepository.save(emailCode);
+
+            //mail 전송
+            emailService.sendEmail(email, subject, text);
         }
 
-        String subject = "AllClear 회원가입 인증 번호\n";
-        String authCode = createCode(); //8글자 랜덤
-        String text = "인증코드는 " + authCode + " 입니다\n";
 
-        //email, code 저장
-        EmailCode emailCode = EmailCode.builder()
-                .email(email)
-                .code(authCode)
-                .build();
-        emailCodeRepository.save(emailCode);
-
-        //mail 전송
-        emailService.sendEmail(email, subject, text);
-    }
-
-    //회원가입 - 이메일 인증 코드 확인
+    // 회원가입 - 이메일 인증 코드 확인
     @Transactional
-    public boolean isEmailValid(EmailIsValidRequestDto request) {
+    public boolean isEmailValid (EmailIsValidRequestDto request){
         String email = request.getEmail();
         String code = request.getCode();
 
@@ -176,35 +202,38 @@ public class MemberService {
         String usaintId = updateMemberRequestDto.getUsaintId();
         String usaintPassword = updateMemberRequestDto.getUsaintPassword();
 
-        CrawlMemberInfo crawlInfo = null;
-        crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+
+        CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
         //멤버 초기화
         Member newMember = crawlInfo.getMember();
-        member.setMemberName(newMember.getMemberName());
-        member.setUniversity(newMember.getUniversity());
-        member.setMajor(newMember.getMajor());
+//        member.setUsername(newMember.getUsername());
+//        member.setUniversity(newMember.getUniversity());
+//        member.setMajor(newMember.getMajor());
         // member.setEmail(newMember.getEmail());
-        member.setClassType(newMember.getClassType());
-        member.setLevel(newMember.getLevel());
-        member.setSemester(newMember.getSemester());
+//        member.setClassType(newMember.getClassType());
+//        member.setLevel(newMember.getLevel());
+//        member.setSemester(newMember.getSemester());
+        member.updateMember(newMember.getUsername(), newMember.getUniversity(), newMember.getMajor(), newMember.getClassType()
+                ,newMember.getEmail(),newMember.getLevel(), newMember.getSemester());
 
+        assert requirement != null;
         //졸업요건 초기화
         List<RequirementComponent> removeRequirementComponentList = requirement.getRequirementComponentList();
-        for (int i = 0; i < removeRequirementComponentList.size(); i++) { // 연관관계 삭제
-            removeRequirementComponentList.get(i).setRequirement(null);
+        for (RequirementComponent component : removeRequirementComponentList) { // 연관관계 삭제
+            component.setRequirement(null);
         }
         removeRequirementComponentList.clear();
         requirementRepository.deleteById(requirement.getRequirementId()); // DB 삭제
         requirementRepository.flush(); // DB 반영
 
+        assert grade!=null;
         //성적 초기화
         List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
-        for (int i = 0; i < removeSemesterGradeList.size(); i++) {
-            SemesterGrade removeSemesterGrade = removeSemesterGradeList.get(i);
+        for (SemesterGrade removeSemesterGrade : removeSemesterGradeList) {
             List<SemesterSubject> removeSemesterSubjectList = removeSemesterGrade.getSemesterSubjectList();
-            for (int j = 0; j < removeSemesterSubjectList.size(); j++) {
-                removeSemesterSubjectList.get(j).setSemesterGrade(null);
+            for (SemesterSubject semesterSubject : removeSemesterSubjectList) {
+                semesterSubject.setSemesterGrade(null);
             }
             removeSemesterSubjectList.clear();
             removeSemesterGrade.setGrade(null);
@@ -224,25 +253,31 @@ public class MemberService {
 
     private String createCode() {
         Random random = new Random();
-        StringBuffer key = new StringBuffer();
-
+//        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             int idx = random.nextInt(3);
 
+//            switch (idx) {
+//                case 0:
+//                    // a(97) ~ z(122)
+//                    key.append((char) ((int) random.nextInt(26) + 97));
+//                    break;
+//                case 1:
+//                    // A(65) ~ Z(90)
+//                    key.append((char) ((int) random.nextInt(26) + 65));
+//                    break;
+//                case 2:
+//                    // 0 ~ 9
+//                    key.append(random.nextInt(9));
+//                    break;
+//            }
             switch (idx) {
-                case 0:
-                    // a(97) ~ z(122)
-                    key.append((char) ((int) random.nextInt(26) + 97));
-                    break;
-                case 1:
-                    // A(65) ~ Z(90)
-                    key.append((char) ((int) random.nextInt(26) + 65));
-                    break;
-                case 2:
-                    // 0 ~ 9
-                    key.append(random.nextInt(9));
-                    break;
+                case 0 -> key.append((char) ( random.nextInt(26) + 97));
+                case 1 -> key.append((char) ( random.nextInt(26) + 65));
+                case 2 -> key.append(random.nextInt(9));
             }
+
         }
         return key.toString();
     }
@@ -250,48 +285,71 @@ public class MemberService {
     //회원 탈퇴
     @Transactional
     public void deleteMember(Long id) {
-        Member targetMember = memberRepository.findById(id)
+        memberRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         memberRepository.deleteById(id);
     }
 
     //유저 조회
     public MemberResponseDto getMember(Long id) {
-        Member targetMember = memberRepository.findById(id).
-                orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)); // 조회
-        return new MemberResponseDto(findOne(id));
+        return new MemberResponseDto(memberRepository.findById(id).
+                orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)));
     }
 
     //test 유저 생성
     @Transactional
     public Long createTestMember() {
-        Member member = new Member();
-        member.setEmail("test@email.com");
-        member.setPassword(passwordEncoder.encode(""));
-        member.setMemberName("testUser");
-        member.setLevel(3);
-        member.setClassType("가");
-        member.setMajor("소프트");
-        member.setSemester(1);
-        member.setUniversity("숭실대학교");
+        Member member;
+        member = Member.builder().email("test@email.com").password(passwordEncoder.encode(""))
+                .username("testUser").level(3).classType("가").major("소프트").semester(1).university("숭실대학교").build();
+//        member.setEmail("test@email.com");
+//        member.setPassword(passwordEncoder.encode(""));
+//        member.setUsername("testUser");
+//        member.setLevel(3);
+//        member.setClassType("가");
+//        member.setMajor("소프트");
+//        member.setSemester(1);
+//        member.setUniversity("숭실대학교");
+
+        member.getRoles().add("USER");
 
         Requirement requirement = new Requirement();
         requirement.setMember(member);
-        RequirementComponent requirementComponent1 = new RequirementComponent();
-        requirementComponent1.setRequirement(requirement);
-        requirementComponent1.setRequirementArgument("testArgument1");
-        requirementComponent1.setRequirementCategory("testCategory1");
-        requirementComponent1.setRequirementCriteria(3.0);
-        requirementComponent1.setRequirementComplete(1.0);
-        requirementComponent1.setRequirementResult("부족");
+
+        RequirementComponent requirementComponent1;
+        requirementComponent1 = RequirementComponent.builder().requirement(requirement)
+                .requirementArgument("testArgument1")
+                .requirementCategory("testCategory1")
+                .requirementCriteria(3.0)
+                .requirementComplete(1.0)
+                .requirementResult("부족").build();
+
+//        requirementComponent1.setRequirement(requirement);
+//        requirementComponent1.setRequirementArgument("testArgument1");
+//        requirementComponent1.setRequirementCategory("testCategory1");
+//        requirementComponent1.setRequirementCriteria(3.0);
+//        requirementComponent1.setRequirementComplete(1.0);
+//        requirementComponent1.setRequirementResult("부족");
+
+
         requirement.addRequirementComponent(requirementComponent1);
-        RequirementComponent requirementComponent2 = new RequirementComponent();
-        requirementComponent2.setRequirement(requirement);
-        requirementComponent2.setRequirementArgument("testArgument2");
-        requirementComponent2.setRequirementCategory("testCategory2");
-        requirementComponent2.setRequirementCriteria(3.0);
-        requirementComponent2.setRequirementComplete(3.0);
-        requirementComponent2.setRequirementResult("충족");
+
+
+        RequirementComponent requirementComponent2;
+        requirementComponent2 = RequirementComponent.builder().requirement(requirement)
+                .requirementArgument("testArgument2")
+                .requirementCategory("testCategory2")
+                .requirementCriteria(3.0)
+                .requirementComplete(3.0)
+                .requirementResult("충족").build();
+
+//        requirementComponent2.setRequirement(requirement);
+//        requirementComponent2.setRequirementArgument("testArgument2");
+//        requirementComponent2.setRequirementCategory("testCategory2");
+//        requirementComponent2.setRequirementCriteria(3.0);
+//        requirementComponent2.setRequirementComplete(3.0);
+//        requirementComponent2.setRequirementResult("충족");
+
         requirement.addRequirementComponent(requirementComponent2);
 
         Grade grade = new Grade();
@@ -310,10 +368,10 @@ public class MemberService {
         grade.addSemesterGrade(semesterGrade2);
 
 
-        TimetableGenerator newTimetableGenerator = new TimetableGenerator();
-        newTimetableGenerator.setMember(member);
-        newTimetableGenerator.setTableYear(2024);
-        newTimetableGenerator.setSemester(1);
+        TimetableGenerator newTimetableGenerator;
+        newTimetableGenerator = TimetableGenerator.builder().member(member)
+                .tableYear(2024)
+                .semester(1).build();
 //        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
 //        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
 

@@ -3,14 +3,16 @@ package allclear.domain.timetableGenerator;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimetableGeneratorSubject {
     @Id
     @GeneratedValue
@@ -43,24 +45,36 @@ public class TimetableGeneratorSubject {
         classInfo.setTimetableGeneratorSubject(this);
     }
 
+    public void setTimetableGenerator(TimetableGenerator timetableGenerator){
+        this.timetableGenerator = timetableGenerator;
+    }
+
     //==생성 메서드==//
 
     /**
      * 실제 과목
      */
     public static TimetableGeneratorSubject createActualTimetableGeneratorSubject(Subject subject) {
-        TimetableGeneratorSubject timetableGeneratorSubject = new TimetableGeneratorSubject();
-        timetableGeneratorSubject.setSubject(subject);
-        timetableGeneratorSubject.setSubjectName(subject.getSubjectName());
+//        TimetableGeneratorSubject timetableGeneratorSubject = new TimetableGeneratorSubject();
+//        timetableGeneratorSubject.setSubject(subject);
+//        timetableGeneratorSubject.setSubjectName(subject.getSubjectName());
+
+        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.builder().subject(subject)
+                .subjectName(subject.getSubjectName()).build();
         for (ClassInfo classInfo : subject.getClassInfoList()) {
             timetableGeneratorSubject.addTimetableGeneratorClassInfo(
-                    TimetableGeneratorClassInfo.createClassInfo(
-                            classInfo.getProfessor(),
-                            classInfo.getClassDay(),
-                            classInfo.getStartTime(),
-                            classInfo.getEndTime(),
-                            classInfo.getClassRoom()
-                    )
+//                    TimetableGeneratorClassInfo.createClassInfo(
+//                            classInfo.getProfessor(),
+//                            classInfo.getClassDay(),
+//                            classInfo.getStartTime(),
+//                            classInfo.getEndTime(),
+//                            classInfo.getClassRoom()
+//                    )
+                    TimetableGeneratorClassInfo.builder().professor(classInfo.getProfessor())
+                            .classDay(classInfo.getClassDay())
+                            .startTime(classInfo.getStartTime())
+                            .endTime(classInfo.getEndTime())
+                            .classRoom(classInfo.getClassRoom()).build()
             );
         }
         return timetableGeneratorSubject;
@@ -71,12 +85,19 @@ public class TimetableGeneratorSubject {
      */
     public static TimetableGeneratorSubject createCustomTimetableGeneratorSubject(String subjectName,
                                                                 List<TimetableGeneratorClassInfo> classInfoList) {
-        TimetableGeneratorSubject timetableGeneratorSubject = new TimetableGeneratorSubject();
-        timetableGeneratorSubject.setSubject(null);
-        timetableGeneratorSubject.setSubjectName(subjectName);
+//        TimetableGeneratorSubject timetableGeneratorSubject = new TimetableGeneratorSubject();
+//        timetableGeneratorSubject.setSubject(null);
+//        timetableGeneratorSubject.setSubjectName(subjectName);
+
+        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.builder().subject(null)
+                .subjectName(subjectName).build();
         for (TimetableGeneratorClassInfo classInfo : classInfoList) {
             timetableGeneratorSubject.addTimetableGeneratorClassInfo(classInfo);
         }
         return timetableGeneratorSubject;
+    }
+
+    public void setSelected(Boolean selected){
+        this.isSelected = selected;
     }
 }

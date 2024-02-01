@@ -1,14 +1,17 @@
 package allclear.domain.subject;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Subject {
     @Id
     @Column(name = "subject_id")
@@ -35,4 +38,23 @@ public class Subject {
     private Double subjectTime; //과목 시간
     @Column(name = "subject_target")
     private String subjectTarget; //수강 대상
+
+
+    public void updateSubject(String subjectName,String majorClassification, String multiMajorClassification, String engineeringCertification,
+                              String classType, double credit, int design , double subjectTime, String subjectTarget)
+    {
+        this.subjectName = subjectName;
+        this.majorClassification = majorClassification;
+        this.multiMajorClassification = multiMajorClassification;
+        this.engineeringCertification = engineeringCertification;
+        this.classType = classType;
+        this.credit = credit;
+        this.design = design;
+        this.subjectTime = subjectTime;
+        this.subjectTarget=subjectTarget;
+    }
+
+    public void setClassInfoList(List<ClassInfo> classInfoList){
+        this.classInfoList=classInfoList;
+    }
 }

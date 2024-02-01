@@ -1,14 +1,19 @@
 package allclear.controller;
 
 import allclear.dto.requestDto.member.*;
+import allclear.dto.responseDto.jwt.JwtToken;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+
+
 
 @Api(tags="api 정보 제공하는 컨트롤러")
 @RestController
@@ -57,8 +62,8 @@ public class MemberController {
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
     public ApiResponse login(@RequestBody LoginRequestDto loginRequestDto){
-        Long memberId = memberService.login(loginRequestDto);
-        return ApiResponse.onSuccess("로그인에 성공했습니다", memberId);
+        JwtToken jwtToken = memberService.login(loginRequestDto);
+        return ApiResponse.onSuccess("로그인에 성공했습니다", jwtToken);
     }
 
     //로그아웃
