@@ -10,7 +10,7 @@ import java.util.List;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20223058", "비밀번호");
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "비밀번호");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getUsername());
         System.out.println(member.getUniversity());

@@ -25,7 +25,6 @@ public class Requirement {
     private Member member;
 
     @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @Column(name = "requirement_component_list")
     private List<RequirementComponent> requirementComponentList;
 
 
@@ -37,7 +36,14 @@ public class Requirement {
 
     public void addRequirementComponent(RequirementComponent requirementComponent){
         requirementComponent.setRequirement(this);
-        this.requirementComponentList.add(requirementComponent);
+
+        if (requirementComponentList == null) {
+            requirementComponentList = new ArrayList<>();
+            requirementComponentList.add(requirementComponent);
+        }
+        else {
+            requirementComponentList.add(requirementComponent);
+        }
     }
 }
 
