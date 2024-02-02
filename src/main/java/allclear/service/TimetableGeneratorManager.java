@@ -1,7 +1,6 @@
 package allclear.service;
 
 import allclear.domain.member.Member;
-import allclear.domain.requirement.Requirement;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableClassInfo;
@@ -29,10 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -117,29 +114,39 @@ public class TimetableGeneratorManager {
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         TimetableGenerator timetableGenerator = member.getTimetableGenerator();
 
+        //조회할 과목 학년 저장
+        Integer memberLevel = member.getLevel();
+        if (LocalDate.now().getMonthValue() < 3)
+            memberLevel++;
+
+
         List<Subject> subjectList = new ArrayList<>();
 
         //학과 전공 기초/필수 조회
         subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
-                        .category("전기")
+                        .category1("전기")
+                        .category2("전필")
                         .majorClassification("소프트")
-                        .year(String.valueOf(member.getLevel()))
-                        .build()
-        )));
-        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
-                SubjectSpecification.builder()
-                        .category("전필")
-                        .majorClassification("소프트")
-                        .year(String.valueOf(member.getLevel()))
+                        .year(String.valueOf(memberLevel))
                         .build()
         )));
 
         //입학년도 별 교과과정 조회
-        subjectList.addAll(subjectRepository.findAllById(timetableGenerator.getCurriculumSubjectIdList()));
+        for (Long subjectId : timetableGenerator.getCurriculumSubjectIdList())
+            subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                    SubjectSpecification.builder()
+                            .category1("전기")
+                            .category2("전필")
+                            .subjectId(subjectId)
+                            .year(String.valueOf(memberLevel))
+                            .build()
+            )));
 
-        //수강한 과목 제외
-        subjectList.removeIf(subject -> timetableGenerator.getPrevSubjectIdList().contains(subject.getSubjectId()));
+        //불필요 과목 삭제
+        removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
+        //과목 정렬
+        sortSubject(subjectList, memberLevel);
 
         return new Step3to6ResponseDto(subjectList);
     }
@@ -168,8 +175,34 @@ public class TimetableGeneratorManager {
      * Get
      */
     public Step3to6ResponseDto suggestLiberalArtsSubject(Long userId) {
-        return new Step3to6ResponseDto(null);
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        TimetableGenerator timetableGenerator = member.getTimetableGenerator();
+
+        //조회할 과목 학년 저장
+        Integer memberLevel = member.getLevel();
+        if (LocalDate.now().getMonthValue() < 3)
+            memberLevel++;
+
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        //학과 전공 기초/필수 조회
+        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .category1("교필")
+                        .year(String.valueOf(memberLevel))
+                        .build()
+        )));
+
+        //불필요 과목 삭제
+        removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
+        //과목 정렬
+        sortSubject(subjectList, memberLevel);
+
+        return new Step3to6ResponseDto(subjectList);
     }
+
 
     //==Step5==//
 
@@ -179,13 +212,50 @@ public class TimetableGeneratorManager {
      * Get
      */
     public Step3to6ResponseDto suggestMajorElectiveSubject(Long userId) {
-        return new Step3to6ResponseDto(null);
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        TimetableGenerator timetableGenerator = member.getTimetableGenerator();
+
+        //조회할 과목 학년 저장
+        Integer memberLevel = member.getLevel();
+        if (LocalDate.now().getMonthValue() < 3)
+            memberLevel++;
+
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        //학과 전공 기초/필수 조회
+        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .category1("전선")
+                        .majorClassification("소프트")
+                        .year(String.valueOf(memberLevel))
+                        .build()
+        )));
+
+        //입학년도 별 교과과정 조회
+        for (Long subjectId : timetableGenerator.getCurriculumSubjectIdList())
+            subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                    SubjectSpecification.builder()
+                            .category1("전선")
+                            .subjectId(subjectId)
+                            .year(String.valueOf(memberLevel))
+                            .build()
+            )));
+
+        //불필요 과목 삭제
+        removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
+        //과목 정렬
+        sortSubject(subjectList, memberLevel);
+
+        return new Step3to6ResponseDto(subjectList);
     }
+
 
     //==Step6==//
 
     /**
-     * 전공 선택 추천 (미완성)
+     * 교양 선택 추천 (미완성)
      * Step6
      * Get
      */
@@ -314,5 +384,24 @@ public class TimetableGeneratorManager {
      */
     public void deleteTimetableGeneratorSubject(Long timetableGeneratorSubjectId) {
         tgSubjectRepository.deleteById(timetableGeneratorSubjectId);
+    }
+
+    //중복 과목 및 수강한 과목 삭제
+    private void removeUnnecessarySubject(List<Subject> subjectList, List<Long> prevSubjectIdList) {
+        //수강한 과목 제외
+        subjectList.removeIf(subject -> prevSubjectIdList.contains(subject.getSubjectId() / 100));
+        //중복 과목 제외
+        Set<Long> uniqueSubjectIds = new HashSet<>();
+        List<Subject> uniqueSubjects = new ArrayList<>();
+        for (Subject subject : subjectList)
+            if (uniqueSubjectIds.add(subject.getSubjectId()))
+                uniqueSubjects.add(subject);
+        subjectList.clear();
+        subjectList.addAll(uniqueSubjects);
+    }
+
+    //유저 학년의 과목 앞쪽으로 정렬
+    private void sortSubject(List<Subject> subjectList, int level) {
+        subjectList.sort(Comparator.comparing(o -> !o.getSubjectTarget().contains(String.valueOf(level))));
     }
 }
