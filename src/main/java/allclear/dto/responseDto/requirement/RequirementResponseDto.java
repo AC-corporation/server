@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -17,14 +16,16 @@ public class RequirementResponseDto {
     private Long requirementId;
     private List<RequirementComponentResponseDto> requirementComponentList;
 
-    public RequirementResponseDto(Requirement requirement) {
-        this.requirementId = requirement.getRequirementId();
+    public static RequirementResponseDto from(Requirement requirement){
         List<RequirementComponentResponseDto> requirementComponentResponseDtoList = requirement.getRequirementComponentList()
                 .stream()
-                .map(RequirementComponentResponseDto::new)
-                .collect(Collectors.toList());
-        this.requirementComponentList = requirementComponentResponseDtoList;
-    }
+                .map(RequirementComponentResponseDto::from)
+                .toList();
 
+        return RequirementResponseDto.builder()
+                .requirementId(requirement.getRequirementId())
+                .requirementComponentList(requirementComponentResponseDtoList)
+                .build();
+    }
 
 }

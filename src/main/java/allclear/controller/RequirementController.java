@@ -18,8 +18,8 @@ public class RequirementController {
 
 
     @Operation(summary = "졸업요건 조회", description = "졸업요건 조회")
-    @GetMapping("/get/{userId}")
-    public ApiResponse<RequirementResponseDto> get(@PathVariable Long userId){ //인자 수정 필요
+    @GetMapping("/{userId}")
+    public ApiResponse<RequirementResponseDto> getRequirement(@PathVariable Long userId){
         return ApiResponse.onSuccess("졸업요건 조회에 성공했습니다",requirementService.getRequirement(userId));
     }
 }

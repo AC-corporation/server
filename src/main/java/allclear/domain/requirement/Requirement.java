@@ -13,19 +13,20 @@ import java.util.List;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Requirement {
     @Id @GeneratedValue
     @Column(name = "requirement_id")
     private Long requirementId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Column(name = "requirement_component_list")
-    private List<RequirementComponent> requirementComponentList = new ArrayList<>();
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @Column(name = "requirement_component_list")
+    private List<RequirementComponent> requirementComponentList;
 
 
     //==연관관계 메서드==//
@@ -35,8 +36,8 @@ public class Requirement {
     }
 
     public void addRequirementComponent(RequirementComponent requirementComponent){
-        requirementComponentList.add(requirementComponent);
         requirementComponent.setRequirement(this);
+        this.requirementComponentList.add(requirementComponent);
     }
 }
 

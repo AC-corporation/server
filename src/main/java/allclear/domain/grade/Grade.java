@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Getter
 @Builder
@@ -27,23 +28,13 @@ public class Grade {
 
     @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "semester_grade_list")
-    private List<SemesterGrade> semesterGradeList = new ArrayList<>();
+    private List<SemesterGrade> semesterGradeList;
 
     @Column(name = "total_credit")
     private Double totalCredit; //총 이수 학점
 
     @Column(name = "average_grade")
     private String averageGrade;
-
-
-    //==초기화 메서드==//
-    public void setTotalCredit(Double totalCredit) {
-        this.totalCredit = totalCredit;
-    }
-
-    public void setAverageGrade(String averageGrade) {
-        this.averageGrade = averageGrade;
-    }
 
 
     //==연관관계 메서드==//

@@ -281,41 +281,61 @@ public class MemberService {
         member.getRoles().add("USER");
 
 
-        Requirement requirement = new Requirement();
-        requirement.setMember(member);
+        Requirement requirement = Requirement.builder()
+                .member(member)
+                .requirementComponentList(new ArrayList<>())
+                .build();
 
-        RequirementComponent requirementComponent1;
-        requirementComponent1 = RequirementComponent.builder().requirement(requirement)
+        RequirementComponent requirementComponent1 = RequirementComponent.builder()
+                .requirement(requirement)
                 .requirementArgument("testArgument1")
                 .requirementCategory("testCategory1")
                 .requirementCriteria(3.0)
                 .requirementComplete(1.0)
-                .requirementResult("부족").build();
-        requirement.addRequirementComponent(requirementComponent1);
+                .requirementResult("부족")
+                .build();
 
-        RequirementComponent requirementComponent2;
-        requirementComponent2 = RequirementComponent.builder().requirement(requirement)
+        RequirementComponent requirementComponent2 = RequirementComponent.builder()
+                .requirement(requirement)
                 .requirementArgument("testArgument2")
                 .requirementCategory("testCategory2")
                 .requirementCriteria(3.0)
                 .requirementComplete(3.0)
-                .requirementResult("충족").build();
+                .requirementResult("충족")
+                .build();
+
+        requirement.addRequirementComponent(requirementComponent1);
         requirement.addRequirementComponent(requirementComponent2);
 
+        //grade
+        Grade grade = Grade.builder()
+                .member(member)
+                .averageGrade("4.5")
+                .totalCredit(110.5)
+                .semesterGradeList(new ArrayList<>())
+                .build();
 
-        Grade grade = new Grade();
-        grade.setMember(member);
-        grade.setAverageGrade("4.5");
-        grade.setTotalCredit(110.5);
         ArrayList<SemesterSubject> semesterSubjectList1 = new ArrayList<>();
         semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject1", "4.5"));
         semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject2", "4.5"));
-        SemesterGrade semesterGrade1 = SemesterGrade.createSemesterGrade(grade, "4.5", semesterSubjectList1);
+
+        SemesterGrade semesterGrade1 = SemesterGrade.builder()
+                .grade(grade)
+                .semesterAverageGrade("4.5")
+                .semesterSubjectList(semesterSubjectList1)
+                .build();
         grade.addSemesterGrade(semesterGrade1);
+
+
         ArrayList<SemesterSubject> semesterSubjectList2 = new ArrayList<>();
         semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject4", "4.0"));
         semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject5", "3.0"));
-        SemesterGrade semesterGrade2 = SemesterGrade.createSemesterGrade(grade, "3.5", semesterSubjectList2);
+
+        SemesterGrade semesterGrade2 = SemesterGrade.builder()
+                .grade(grade)
+                .semesterAverageGrade("3.5")
+                .semesterSubjectList(semesterSubjectList2)
+                .build();
         grade.addSemesterGrade(semesterGrade2);
 
 

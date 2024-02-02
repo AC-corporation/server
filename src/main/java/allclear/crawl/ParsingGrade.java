@@ -20,9 +20,10 @@ public class ParsingGrade {
         String semesterAverageGrade; // 학기 평균 학점
 
         semesterAverageGrade = "";
-        grade = new Grade();
-        grade.setTotalCredit(Double.parseDouble(totalCredit));
-        grade.setAverageGrade(averageGrade);
+        grade = Grade.builder()
+                .totalCredit(Double.parseDouble(totalCredit))
+                .averageGrade(averageGrade)
+                .build();
         ArrayList<SemesterSubject> tmpList = new ArrayList<>();
 
         for(int i=0;i<detailGrades.size();i++){
@@ -30,7 +31,12 @@ public class ParsingGrade {
                 break;
             if(detailGrades.get(i).contains("*")){ // 학년 학기 문자열이면 *를 포함하고 있음
                 if (!tmpList.isEmpty()){
-                    grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList));
+                    SemesterGrade semesterGrade = SemesterGrade.builder()
+                            .grade(grade)
+                            .semesterAverageGrade(semesterAverageGrade)
+                            .semesterSubjectList(tmpList)
+                            .build();
+                    grade.addSemesterGrade(semesterGrade);
 
                 }
                 tmpList = new ArrayList<>();
@@ -48,7 +54,12 @@ public class ParsingGrade {
             }
         }
         if (!tmpList.isEmpty()){ // 마지막 학기 추가
-            grade.addSemesterGrade(SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, tmpList));
+            SemesterGrade semesterGrade = SemesterGrade.builder()
+                    .grade(grade)
+                    .semesterAverageGrade(semesterAverageGrade)
+                    .semesterSubjectList(tmpList)
+                    .build();
+            grade.addSemesterGrade(semesterGrade);
         }
 
         return grade;
