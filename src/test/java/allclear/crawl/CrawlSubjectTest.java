@@ -33,7 +33,10 @@ class CrawlSubjectTest {
                 ClassInfo classInfo = classInfoList.get(j);
                 System.out.println(classInfo.getClassDay()); // 요일
                 try{
+                    System.out.println("시간");
+                    System.out.println(classInfo.getStartTime().getHour()); // 시간
                     System.out.println(classInfo.getStartTime().getMinute()); // 시간
+                    System.out.println(classInfo.getEndTime().getHour()); // 시간
                     System.out.println(classInfo.getEndTime().getMinute()); // 시간
                 }
                 catch (Exception e) {
