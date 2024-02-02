@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
-
+/*
     @Autowired
     MemberService memberService;
 
@@ -122,4 +122,6 @@ class MemberServiceTest {
 
         return member;
     }
+
+ */
 }

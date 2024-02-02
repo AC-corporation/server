@@ -32,4 +32,9 @@ public class RequirementComponent {
     @Column(name = "requirement_result")
     private String requirementResult; //중족여부
 
+    public void setRequirement(Requirement requirement)
+    {
+        this.requirement =requirement;
+    }
+
 }

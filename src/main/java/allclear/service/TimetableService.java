@@ -13,7 +13,6 @@ import allclear.repository.subject.SubjectRepository;
 import allclear.repository.timetable.TimetableRepository;
 import allclear.repository.timetable.TimetableSubjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,31 +22,31 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class TimetableService {
-    @Autowired
     private final TimetableRepository timetableRepository;
-    @Autowired
     private final TimetableSubjectRepository timetableSubjectRepository;
-    @Autowired
     private final SubjectRepository subjectRepository;
-    @Autowired
     private final MemberRepository memberRepository;
 
 
     private Timetable findOne(Long id) {
-        return timetableRepository.findById(id).get();
+        return timetableRepository.findById(id).orElse(null);
     }
 
     //시간표 추가
     @Transactional
     public Long createTimetable(Long memberId, CreateTimetableRequestDto request) {
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).orElse(null);
 
-        Timetable timetable = Timetable.createTimetable(
-                member,
-                request.getTableName(),
-                request.getTableYear(),
-                request.getSemester()
-        );
+//        Timetable timetable = Timetable.createTimetable(
+//                member,
+//                request.getTableName(),
+//                request.getTableYear(),
+//                request.getSemester()
+//        );
+        Timetable timetable = Timetable.builder().member(member)
+                .tableName(request.getTableName())
+                .tableYear(request.getTableYear())
+                .semester(request.getSemester()).build();
         timetableRepository.save(timetable);
         return timetable.getTimetableId();
     }
@@ -56,9 +55,10 @@ public class TimetableService {
     //시간표 업데이트
     public void updateTimetable(Long timetableId, UpdateTimetableRequestDto request) {
         Timetable timetable = findOne(timetableId);
-        timetable.setTableName(request.getTableName());
-        timetable.setTableYear(request.getTableYear());
-        timetable.setSemester(request.getSemester());
+//        timetable.setTableName(request.getTableName());
+//        timetable.setTableYear(request.getTableYear());
+//        timetable.setSemester(request.getSemester());
+        timetable.updateTimetable(request.getTableName(), request.getTableYear(), request.getSemester());
     }
 
     //시간표 조회
@@ -78,7 +78,7 @@ public class TimetableService {
     @Transactional
     public Long addTimetableSubject(Long timetableId, AddTimetableSubjectRequestDto request) {
         Timetable timetable = findOne(timetableId);
-        Subject subject = subjectRepository.findById(request.getSubjectId()).get();
+        Subject subject = subjectRepository.findById(request.getSubjectId()).orElse(null);
 
         //시간표 과목 생성해서 시간표에 추가
         TimetableSubject timetableSubject = TimetableSubject.createActualTimeTableSubject(subject);
@@ -98,13 +98,18 @@ public class TimetableService {
         //ClassInfo 리스트 초기화
         List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
         for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoList()) {
-            TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
-                    classInfoRequestDto.getProfessor(),
-                    classInfoRequestDto.getClassDay(),
-                    classInfoRequestDto.getStartTime(),
-                    classInfoRequestDto.getEndTime(),
-                    classInfoRequestDto.getClassRoom()
-            );
+//            TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
+//                    classInfoRequestDto.getProfessor(),
+//                    classInfoRequestDto.getClassDay(),
+//                    classInfoRequestDto.getStartTime(),
+//                    classInfoRequestDto.getEndTime(),
+//                    classInfoRequestDto.getClassRoom()
+//            );
+            TimetableClassInfo timetableClassInfo = TimetableClassInfo.builder().professor(classInfoRequestDto.getProfessor())
+                    .classDay(classInfoRequestDto.getClassDay())
+                    .startTime(classInfoRequestDto.getStartTime())
+                    .endTime(classInfoRequestDto.getEndTime())
+                    .classRoom(classInfoRequestDto.getClassRoom()).build();
             timetableClassInfoList.add(timetableClassInfo);
         }
 
@@ -124,20 +129,27 @@ public class TimetableService {
     //시간표 과목 수정
     @Transactional
     public void updateTimetableSubject(Long timetableSubjectId, UpdateTimetableSubjectRequestDto request) {
-        TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
+        TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).orElse(null);
+        assert timetableSubject != null;
         if (request.getSubjectName() != null)
             timetableSubject.setSubjectName(request.getSubjectName());
         if (request.getClassInfoRequestDtoList() != null){
             //ClassInfo 리스트 초기화
             List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
             for (ClassInfoRequestDto classInfoRequestDto : request.getClassInfoRequestDtoList()) {
-                TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
-                        classInfoRequestDto.getProfessor(),
-                        classInfoRequestDto.getClassDay(),
-                        classInfoRequestDto.getStartTime(),
-                        classInfoRequestDto.getEndTime(),
-                        classInfoRequestDto.getClassRoom()
-                );
+//                TimetableClassInfo timetableClassInfo = TimetableClassInfo.createClassInfo(
+//                        classInfoRequestDto.getProfessor(),
+//                        classInfoRequestDto.getClassDay(),
+//                        classInfoRequestDto.getStartTime(),
+//                        classInfoRequestDto.getEndTime(),
+//                        classInfoRequestDto.getClassRoom()
+//                );
+                TimetableClassInfo timetableClassInfo =TimetableClassInfo.builder()
+                        .professor(classInfoRequestDto.getProfessor())
+                        .classDay(classInfoRequestDto.getClassDay())
+                        .startTime(classInfoRequestDto.getStartTime())
+                        .endTime(classInfoRequestDto.getEndTime())
+                        .classRoom(classInfoRequestDto.getClassRoom()).build();
                 timetableClassInfoList.add(timetableClassInfo);
             }
             timetableSubject.setTimetableClassInfoList(timetableClassInfoList);
@@ -146,7 +158,8 @@ public class TimetableService {
 
     //시간표 과목 조회
     public TimetableSubjectResponseDto getTimetableSubject(Long timetableSubjectId) {
-        TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).get();
+        TimetableSubject timetableSubject = timetableSubjectRepository.findById(timetableSubjectId).orElse(null);
+        assert timetableSubject != null;
         return new TimetableSubjectResponseDto(timetableSubject);
     }
 

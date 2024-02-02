@@ -7,15 +7,16 @@ import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class CrawlMemberInfo {
@@ -34,11 +35,19 @@ public class CrawlMemberInfo {
     private String firstSemester; // 최초 학기
     private String totalCredit; // 총 이수 학점
     private String averageGrade; // 평균 학점
+    private List<Long> prevSubjectIdList = new ArrayList<>(); // 수강한 과목 리스트
+    private List<Long> curriculumSubjectIdList = new ArrayList<>(); // 전공 교과 과정 리스트
+    private Integer enterYear; // 입학 연도
+    private String university; // 대학
+    private String major; // 학부
+    private String detailMajor; // 전공
+    WebElement target; // 크롤링 할 요소
+    String targetPath; // 크롤링 할 요소가 있는 경로
+    String targetText; // 크롤링 할 문자
     WebDriver driver;
 
     public CrawlMemberInfo(String usaintId, String usaintPassword){
 
-        member = new Member();
 
         // 로그인
         try {
@@ -55,6 +64,7 @@ public class CrawlMemberInfo {
             crawlRequirementComponent();
             crawlEntireGrades();
             crawlDetailGrades();
+            crawlCurriculumSubject(enterYear, university, major, detailMajor);
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
@@ -70,10 +80,12 @@ public class CrawlMemberInfo {
         try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
             grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
+            prevSubjectIdList = ParsingGrade.prevSubjectIdList;
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
         }
+
     }
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
@@ -155,31 +167,60 @@ public class CrawlMemberInfo {
 
         // user_name 크롤링
         target = driver.findElement(By.id("WDC9"));
-        member.setMemberName(target.getAttribute("value"));
+        String user_name = target.getAttribute("value");
+//        member.setUsername(target.getAttribute("value"));
 
         // university 크롤링
         target = driver.findElement(By.id("WDBB"));
-        member.setUniversity(target.getAttribute("value"));
+        university = target.getAttribute("value");
+//        member.setUniversity(target.getAttribute("value"));
+//        university = member.getUniversity();
 
         // major 크롤링
         target = driver.findElement(By.id("WDC4"));
-        member.setMajor(target.getAttribute("value"));
+        major = target.getAttribute("value");
+//        member.setMajor(target.getAttribute("value"));
+//        major = member.getMajor();
 
         // mail 크롤링
         target = driver.findElement(By.id("WDF6"));
-        member.setEmail(target.getAttribute("value"));
+        String mail = target.getAttribute("value");
+//        member.setEmail(target.getAttribute("value"));
 
         // classType 크롤링
         target = driver.findElement(By.id("WDD6"));
-        member.setClassType(target.getAttribute("value"));
+        String classType = target.getAttribute("value");
+//        member.setClassType(target.getAttribute("value"));
 
         // year 크롤링
         target = driver.findElement(By.id("WDE1"));
-        member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
+        int year = Integer.parseInt(target.getAttribute("value").strip());
+//        member.setLevel(Integer.parseInt(target.getAttribute("value").strip()));
 
         // semester 크롤링
         target = driver.findElement(By.id("WDE5"));
-        member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
+        int semester = Integer.parseInt(target.getAttribute("value").strip());
+//        member.setSemester(Integer.parseInt(target.getAttribute("value").strip()));
+
+        // 입학 연도 크롤링
+        target = driver.findElement(By.id("WDB7"));
+        enterYear = Integer.parseInt(target.getAttribute("value").strip());
+        // 전공 크롤링
+        target = driver.findElement(By.id("WDCD"));
+        if (target == null)
+            detailMajor = null;
+        else
+            detailMajor = target.getAttribute("value").strip();
+
+        member = Member.builder()
+                .username(user_name)
+                        .university(university)
+                                .major(major)
+                                        .email(mail)
+                                                .classType(classType)
+                                                        .level(year)
+                                                                .semester(semester)
+                                                                        .build();
 
         // 기본 프레임으로 돌아가기
         driver.switchTo().defaultContent();
@@ -283,12 +324,12 @@ public class CrawlMemberInfo {
         }
 
         // 총 신청 학점
-        target = driver.findElement(By.id("WD0151"));
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[7]/td/table/tbody/tr/td/table/tbody/tr[1]/td[2]/span/input"));
         totalCredit = target.getAttribute("value");
 
 
         // 전체 평균 학점
-        target = driver.findElement(By.id("WD015E"));
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[7]/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]/span/input"));
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭
@@ -378,7 +419,6 @@ public class CrawlMemberInfo {
         String targetText; // 크롤링 할 문자
 
         // 크롤링 환경 셋팅 시작
-
         // 기본 프레임 이동
         driver.switchTo().defaultContent();
 
@@ -415,7 +455,6 @@ public class CrawlMemberInfo {
             selectedSemester = targetText;
 
             detailGrades.add("*"+selectedYear+ " "+selectedSemester); //구분해주는용
-
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
                 yearFlag = 1;
@@ -425,21 +464,22 @@ public class CrawlMemberInfo {
             // 학기별 세부 성적 크롤링
             while (true) {
                 for (int i = 2; i <= 9; i++) {
-                    if(i==5)
+                    if(i == 5 || i == 8) //  크롤링 안 되는 열 예외 처리
                         continue;
                     try{
-                        if (cnt == 1)
-                            targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[12]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[" + cnt + "]/th[" + i + "]/div/div/span/span";
-                        else
-                            targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[12]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[" + cnt + "]/td[" + i + "]/span/span[1]";
-
+                        targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[12]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[" + cnt + "]/td[" + i + "]/span/span";
                         target = driver.findElement(By.xpath(targetPath));
                         targetText = target.getText().strip();
-                        detailGrades.add(targetText);
                     } catch (Exception e) {
-                        inEndFlag = true;
-                        break;
+                        if (i == 2){
+                            inEndFlag = true;
+                            break;
+                        }
+                        else { // 중간 빈 열로 발생하는 오류
+                            targetText = "";
+                        }
                     }
+                    detailGrades.add(targetText);
                 }
                 if (inEndFlag) {
                     break;
@@ -460,49 +500,169 @@ public class CrawlMemberInfo {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        driver.switchTo().defaultContent();
+    }
 
+    // 교과 과정별 과목 Id 크롤링
+    public void crawlCurriculumSubject(Integer enterYear, String university, String major, String detailMajor) {
+        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
+        int firstYear; // 학년도 콤보박스에서 자동으로 선택되는 학년도, 유세인트 업데이트 시마다 수정됨
 
+        target = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
+        target.click(); // 학사 관리 클릭
+        target = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]/div/ul/li[2]/a"));
+        target.click(); // 수강신청/교과과정 클릭
+        target = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div[1]/div[2]/ul/li[9]/a"));
+        target.click(); // 입학연도 별 교과과정 클릭
 
-            // 버튼 클릭시 팝업 처리 로직 시작
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-//            try {
-//                WebElement iframe3 = driver.findElement(By.xpath("//*[@id=\"URLSPW-0\"]"));
-//
-//                // 버튼 클릭시 팝업 처리 로직 시작
-//                driver.switchTo().frame(iframe3);
-//                WebElement closeBtn = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/div[1]/div/div[1]/table/tbody/tr/td[3]/a"));
-//                closeBtn.click();
-//
-//                // 기본 프레임 이동
-//                driver.switchTo().defaultContent();
-//
-//                try {
-//                    Thread.sleep(7000); // 7초 동안 실행을 멈추기
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                try {
-//                    Thread.sleep(3000); // 3초 동안 실행을 멈추기
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                driver.switchTo().frame(iframe1);
-//                driver.switchTo().frame(iframe2);
-//            } catch (Exception e) {
-//                // 기본 프레임 이동
-//                driver.switchTo().defaultContent();
-//
-//                try {
-//                    Thread.sleep(7000); // 7초 동안 실행을 멈추기
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//
-//                driver.switchTo().frame(iframe1);
-//                driver.switchTo().frame(iframe2);
-//            }
-//            // 버튼 클릭시 팝업 처리 로직 끝
+        // iframe 이동
+        WebElement iframe1 = driver.findElement(By.xpath("//*[@id=\"contentAreaFrame\"]"));
+        driver.switchTo().frame(iframe1);
+        WebElement iframe2 = driver.findElement(By.xpath("//*[@id=\"isolatedWorkArea\"]"));
+        driver.switchTo().frame(iframe2);
+        // 크롤링 환경 셋팅 끝
+
+        // 입학 년도 설정
+        target = driver.findElement(By.id("WD58"));
+        firstYear = Integer.parseInt(target.getAttribute("value").substring(0, 4)); // 자동 선택 학년도 추출
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[1]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[1]/td/table/tbody/tr/td/table/tbody/tr[1]/td/div/table/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/input"));
+        target.click();
+        for (int i = 0; i < firstYear - enterYear; i++) { // 조회 입학 연도 설정
+            scroll.sendKeys(Keys.ARROW_UP).perform();
+        }
+        scroll.click().perform();
+
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 단과 대학 설정
+        target = driver.findElement(By.id("WD75"));
+        target.click();
+        scroll.sendKeys(Keys.PAGE_UP).perform();
+        while (true) {
+            if (target.getAttribute("value").equals(university)) {
+                scroll.click().perform();
+                break;
+            }
+            scroll.sendKeys(Keys.ARROW_DOWN).perform();
+        }
+
+        try {
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 학과 설정
+        target = driver.findElement(By.id("WD8A"));
+        target.click();
+        scroll.sendKeys(Keys.PAGE_UP).perform();
+        while (true) {
+            if (target.getAttribute("value").equals(major)) {
+                scroll.click().perform();
+                break;
+            }
+            scroll.sendKeys(Keys.ARROW_DOWN).perform();
+        }
+
+        try {
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 전공 설정
+        if (major.equals("건축학부")) { // 건축학부 경우 전공 존재
+            target = driver.findElement(By.id("WD97"));
+            target.click();
+            scroll.sendKeys(Keys.PAGE_UP).perform();
+            while (true) {
+                if (target.getAttribute("value").equals(detailMajor)) {
+                    scroll.click().perform();
+                    break;
+                }
+                scroll.sendKeys(Keys.ARROW_DOWN).perform();
+            }
+        }
+
+        try {
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[1]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr/td/div/div/div[2]/span[1]"));
+        target.click(); // 검색 클릭
+
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 팝업 창 닫기
+        WebElement iframe3Element = driver.findElement(By.name("URLSPW-0"));
+        driver.switchTo().frame(iframe3Element);
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/div[1]/div/div[4]/div/table/tbody/tr/td[3]/table/tbody/tr/td/div"));
+        target.click(); // 팝업 창 닫기 클릭
+
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 프레임 이동
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame(iframe1);
+        driver.switchTo().frame(iframe2);
+
+        try {
+            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        Long prevHeight = 0L; // 이전 스크롤바 위치
+        Long nextHeight = 0L; // 이후 스크롤바 위치
+        boolean exitFlag = false; // 반복문 종료 플래그
+        int tr = 1; // 행
+
+        while (true) {
+            try {
+                target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]/tr[" + tr + "]/td[4]/div/a/span"));
+                targetText = target.getText();
+                curriculumSubjectIdList.add(Long.parseLong(targetText));
+            } catch (Exception e) {
+                if (exitFlag)
+                    break;
+                try {
+                    Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+                } catch (InterruptedException interruptedException) {}
+                target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]"));
+                target.click();
+                scroll.sendKeys(Keys.PAGE_DOWN).perform();
+                prevHeight = nextHeight;
+                nextHeight = (Long) js.executeScript("return arguments[0].getBoundingClientRect().bottom", target);
+                if (Objects.equals(prevHeight, nextHeight))
+                    exitFlag = true;
+                try {
+                    Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+                } catch (InterruptedException interruptedException) {}
+                tr--; // 예외로 인해 크롤링 하지 못한 부분 다시 재시도
+            }
+            tr++;
         }
     }
 

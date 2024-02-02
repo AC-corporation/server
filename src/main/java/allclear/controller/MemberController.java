@@ -1,16 +1,19 @@
 package allclear.controller;
 
 import allclear.dto.requestDto.member.*;
+import allclear.dto.responseDto.jwt.JwtToken;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags="api 정보 제공하는 컨트롤러")
+
+
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -57,8 +60,8 @@ public class MemberController {
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
     public ApiResponse login(@RequestBody LoginRequestDto loginRequestDto){
-        Long memberId = memberService.login(loginRequestDto);
-        return ApiResponse.onSuccess("로그인에 성공했습니다", memberId);
+        JwtToken jwtToken = memberService.login(loginRequestDto);
+        return ApiResponse.onSuccess("로그인에 성공했습니다", jwtToken);
     }
 
     //로그아웃
@@ -70,7 +73,7 @@ public class MemberController {
 
     //업데이트
     @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PutMapping("/update/{userId}")
+    @PutMapping("/{userId}")
     public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         memberService.updateMember(userId, updateMemberRequestDto);
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
@@ -78,14 +81,14 @@ public class MemberController {
 
     //유저조회
     @Operation(summary = "유저 조회", description = "유저 조회")
-    @GetMapping("/get/{userId}")
+    @GetMapping("/{userId}")
     public ApiResponse get(@PathVariable Long userId) { //인자 수정 필요
         return ApiResponse.onSuccess("유저 조회에 성공했습니다", memberService.getMember(userId));
     }
 
     //회원탈퇴
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
-    @DeleteMapping("/delete/{userId}")
+    @DeleteMapping("/{userId}")
     public ApiResponse delete(@PathVariable Long userId) {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다");
