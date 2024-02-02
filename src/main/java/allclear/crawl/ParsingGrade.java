@@ -24,41 +24,32 @@ public class ParsingGrade {
                 .totalCredit(Double.parseDouble(totalCredit))
                 .averageGrade(averageGrade)
                 .build();
-        ArrayList<SemesterSubject> tmpList = new ArrayList<>();
+        ArrayList<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
         for(int i=0;i<detailGrades.size();i++){
             if(i+5>=detailGrades.size())
                 break;
             if(detailGrades.get(i).contains("*")){ // 학년 학기 문자열이면 *를 포함하고 있음
-                if (!tmpList.isEmpty()){
-                    SemesterGrade semesterGrade = SemesterGrade.builder()
-                            .grade(grade)
-                            .semesterAverageGrade(semesterAverageGrade)
-                            .semesterSubjectList(tmpList)
-                            .build();
+                if (!semesterSubjectList.isEmpty()){
+                    SemesterGrade semesterGrade =  SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, semesterSubjectList);
                     grade.addSemesterGrade(semesterGrade);
-
                 }
-                tmpList = new ArrayList<>();
+                semesterSubjectList = new ArrayList<>();
                 year = detailGrades.get(i).substring(1, 5); // 해당 성적의 년도 추출
                 semester = detailGrades.get(i).substring(9, 11).strip(); // 해당 성적의 학기 추출
                 semesterAverageGrade = getSemesterAverageGrade(year,semester,entireGrades);
                 // 년도와 학기를 통해 해당 학기 평균 성적 추출
             }
             else{
-                tmpList.add(SemesterSubject.createSemesterSubject(detailGrades.get(i+2),detailGrades.get(i+1)));
+                semesterSubjectList.add(SemesterSubject.createSemesterSubject(detailGrades.get(i+2),detailGrades.get(i+1)));
                 // 과목명과 등급을 통해 SemesterSubject 생성
                 prevSubjectIdList.add(Long.parseLong(detailGrades.get(i + 5))); // 과목 ID 추출
                 i = i + 5; // 다음 과목으로 이동
 
             }
         }
-        if (!tmpList.isEmpty()){ // 마지막 학기 추가
-            SemesterGrade semesterGrade = SemesterGrade.builder()
-                    .grade(grade)
-                    .semesterAverageGrade(semesterAverageGrade)
-                    .semesterSubjectList(tmpList)
-                    .build();
+        if (!semesterSubjectList.isEmpty()){ // 마지막 학기 추가
+            SemesterGrade semesterGrade = SemesterGrade.createSemesterGrade(grade, semesterAverageGrade, semesterSubjectList);
             grade.addSemesterGrade(semesterGrade);
         }
 

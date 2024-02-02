@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Grade {
@@ -44,7 +43,12 @@ public class Grade {
     }
 
     public void addSemesterGrade(SemesterGrade semesterGrade) {
-        semesterGradeList.add(semesterGrade);
-        semesterGrade.setGrade(this);
+        if (semesterGradeList == null) {
+            semesterGradeList = new ArrayList<>();
+            semesterGradeList.add(semesterGrade);
+        }
+        else {
+            semesterGradeList.add(semesterGrade);
+        }
     }
 }

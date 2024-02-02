@@ -54,37 +54,32 @@ public class ParsingRequirement {
                     continue;
                 default:
             }
-//            RequirementComponent requirementComponent = new RequirementComponent();
-//            requirementComponent.setRequirementCategory(category); // 이수구분
+
             String requirementArgument;
             Double requirementCriteria;
             Double requirementComplete;
             String requirementResult;
+
             if (requirementStringList.get(i).isEmpty()){ // 졸업요건, 값이 비어있는 경우
-//                requirementArgument = requirementComponent.setRequirementArgument("");
                 requirementArgument = "";
             }
             else{
-//                requirementArgument = requirementComponent.setRequirementArgument(requirementStringList.get(i));
                 requirementArgument = requirementStringList.get(i);
             }
+
             if(requirementStringList.get(i+1).isEmpty()){ // 기준값, 값이 비어있는 경우
-//               requirementCriteria = requirementComponent.setRequirementCriteria((Double)null);
                 requirementCriteria = (Double)null;
             }
             else{
-//                requirementCriteria = requirementComponent.setRequirementCriteria(Double.parseDouble(requirementStringList.get(i+1)));
                 requirementCriteria = Double.parseDouble(requirementStringList.get(i+1));
             }
+
             if (requirementStringList.get(i+2).isEmpty()){ // 계산값, 값이 비어있는 경우
-//                requirementComplete = requirementComponent.setRequirementComplete((Double)null);
                 requirementComplete = (Double)null;
             }
             else{
-//               requirementComplete = requirementComponent.setRequirementComplete(Double.parseDouble(requirementStringList.get(i+2)));
                 requirementComplete = Double.parseDouble(requirementStringList.get(i+2));
             }
-//            requirementResult = requirementComponent.setRequirementResult(requirementStringList.get(i+4)); // 충족여부
             requirementResult = requirementStringList.get(i+4); // 충족여부
 
             RequirementComponent requirementComponent = RequirementComponent.builder()

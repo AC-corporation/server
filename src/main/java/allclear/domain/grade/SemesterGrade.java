@@ -37,8 +37,16 @@ public class SemesterGrade {
 
     //==연관관계 메서드==//
     public void addSemesterSubject(SemesterSubject semesterSubject) {
-        semesterSubjectList.add(semesterSubject);
+
         semesterSubject.setSemesterGrade(this);
+        if (semesterSubjectList == null) {
+            semesterSubjectList = new ArrayList<>();
+            semesterSubjectList.add(semesterSubject);
+        }
+        else {
+            semesterSubjectList.add(semesterSubject);
+        }
+
     }
 
     //==생성 메서드==//
