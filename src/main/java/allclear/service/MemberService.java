@@ -97,6 +97,9 @@ public class MemberService {
     //회원가입
     @Transactional
     public Long createMember(MemberSignupRequestDto request) {
+        if (memberRepository.findByEmail(request.getEmail()).isPresent())
+            throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+
         String password = passwordEncoder.encode(request.getPassword());
 
         String usaintId = request.getUsaintId();
