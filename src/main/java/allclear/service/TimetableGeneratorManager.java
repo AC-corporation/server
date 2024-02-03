@@ -8,6 +8,7 @@ import allclear.domain.timetable.TimetableClassInfo;
 import allclear.domain.timetable.TimetableSubject;
 import allclear.domain.timetableGenerator.*;
 import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
+import allclear.dto.requestDto.timetable.TimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetableGenerator.*;
 import allclear.dto.responseDto.timetableGenerator.Step3to6ResponseDto;
 import allclear.dto.responseDto.timetableGenerator.Step7ResponseDto;
@@ -74,30 +75,31 @@ public class TimetableGeneratorManager {
      * Step2
      * Post
      */
-    public Long addCustomTimetableGeneratorSubject(Long userId, Step2RequestDto requestDto) {
+    public void addCustomTimetableGeneratorSubjects(Long userId, Step2RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
-        ArrayList<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
+        List<TimetableGeneratorSubject> timetableGeneratorSubjectList = new ArrayList<>();
+        for (TimetableSubjectRequestDto timetableSubjectRequestDto : requestDto.getTimetableSubjectRequestDtoList()) {
+            List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
 
-        for (ClassInfoRequestDto classInfoRequestDto : requestDto.getClassInfoRequestDtoList()) {
-            timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo.builder()
-                    .professor(classInfoRequestDto.getProfessor())
-                    .classDay(classInfoRequestDto.getClassDay())
-                    .startTime(classInfoRequestDto.getStartTime())
-                    .endTime(classInfoRequestDto.getEndTime())
-                    .classRoom(classInfoRequestDto.getClassRoom())
-                    .build()
+            for (ClassInfoRequestDto classInfoRequestDto : timetableSubjectRequestDto.getClassInfoRequestDtoList()) {
+                timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo.builder()
+                        .professor(classInfoRequestDto.getProfessor())
+                        .classDay(classInfoRequestDto.getClassDay())
+                        .startTime(classInfoRequestDto.getStartTime())
+                        .endTime(classInfoRequestDto.getEndTime())
+                        .classRoom(classInfoRequestDto.getClassRoom())
+                        .build()
+                );
+            }
+
+            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createCustomTimetableGeneratorSubject(
+                    timetableSubjectRequestDto.getSubjectName(),
+                    timetableGeneratorClassInfoList
             );
+
+            timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
         }
-
-        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createCustomTimetableGeneratorSubject(
-                requestDto.getSubjectName(),
-                timetableGeneratorClassInfoList
-        );
-
-        timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
-
-        tgRepository.flush();
-        return timetableGeneratorSubject.getId();
+        tgSubjectRepository.saveAll(timetableGeneratorSubjectList);
     }
 
 

@@ -25,7 +25,8 @@ public class TimetableGeneratorController {
     @Operation(summary = "직접 추가", description = "생성할 시간표에 선택한 과목 등록")
     @PostMapping("/step2/{userId}")
     public ApiResponse step2(@PathVariable Long userId, @RequestBody Step2RequestDto requestDto) {
-        return ApiResponse.onSuccess("step2 성공했습니다", timetableGeneratorManager.addCustomTimetableGeneratorSubject(userId, requestDto));
+        timetableGeneratorManager.addCustomTimetableGeneratorSubjects(userId, requestDto);
+        return ApiResponse.onSuccess("step2 성공했습니다");
     }
 
     //==step3==//

@@ -1,6 +1,6 @@
 package allclear.dto.requestDto.timetableGenerator;
 
-import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
+import allclear.dto.requestDto.timetable.TimetableSubjectRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Step2RequestDto {
-    String subjectName;
-    List<ClassInfoRequestDto> classInfoRequestDtoList;
+    List<TimetableSubjectRequestDto> timetableSubjectRequestDtoList;
 }
