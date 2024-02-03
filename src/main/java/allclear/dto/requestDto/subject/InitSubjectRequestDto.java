@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class UpdateSubjectRequestDto {
+public class InitSubjectRequestDto {
     @NotBlank
     private Integer year;
     @NotBlank

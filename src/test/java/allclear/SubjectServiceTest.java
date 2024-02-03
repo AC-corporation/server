@@ -1,7 +1,7 @@
 package allclear;
 
-import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.SubjectListRequestDto;
+import allclear.dto.requestDto.subject.InitSubjectRequestDto;
+import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.service.SubjectService;
@@ -22,15 +22,15 @@ public class SubjectServiceTest {
     @Test
     public void 초기화() {
         //given
-        CreateSubjectRequestDto requestDto = new CreateSubjectRequestDto(
+        InitSubjectRequestDto requestDto = new InitSubjectRequestDto(
                 2023, "1", "20223168", "todo!9844"
         );
 
         //when
-        subjectService.createSubject(requestDto);
+        subjectService.initSubject(requestDto);
 
         //then
-        SubjectListResponseDto responseDto = subjectService.getSubjectSearch(new SubjectListRequestDto(), 0);
+        SubjectListResponseDto responseDto = subjectService.getSubjectSearch(new SubjectSearchRequestDto(), 0);
 
         for (SubjectResponseDto subjectResponseDto : responseDto.getSubjectResponseDtoList()) {
             System.out.println(subjectResponseDto.getSubjectId());
