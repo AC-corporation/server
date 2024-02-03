@@ -17,7 +17,10 @@ import java.util.List;
 @Builder
 public class SubjectSpecification {
     private String searchString; //검색할 문자열
+    private Long subjectId; //과목 번호 앞에서부터 8자리
     private String subjectName; //과목 이름
+    private String category1; //전필, 교선 등 구분
+    private String category2;
     private String professor; //교수명
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
@@ -55,6 +58,9 @@ public class SubjectSpecification {
                         cb.like(classInfoJoin.get("classDay"), likeSearchString)
                 ));
             }
+            if (specification.getSubjectId() != null) {
+                predicates.add(cb.like(root.get("subjectId").as(String.class), specification.getSubjectId().toString() + "%"));
+            }
             if (specification.getSubjectName() != null && !specification.getSubjectName().isEmpty()) {
                 predicates.add(cb.like(root.get("subjectName"), "%" + specification.getSubjectTarget() + "%"));
             }
@@ -63,6 +69,15 @@ public class SubjectSpecification {
             }
             if (specification.getDepartment() != null && !specification.getDepartment().isEmpty()) {
                 predicates.add(cb.like(root.get("department"), "%" + specification.getDepartment() + "%"));
+            }
+            if ((specification.getCategory1() != null && !specification.getCategory1().isEmpty())
+                    || (specification.getCategory2() != null && !specification.getCategory2().isEmpty())) {
+                List<Predicate> orPredicates = new ArrayList<>();
+                if (specification.getCategory1() != null && !specification.getCategory1().isEmpty())
+                    orPredicates.add(cb.like(root.get("majorClassification"), "%" + specification.getCategory1() + "%"));
+                if (specification.getCategory2() != null && !specification.getCategory2().isEmpty())
+                    orPredicates.add(cb.like(root.get("majorClassification"), "%" + specification.getCategory2() + "%"));
+                predicates.add(cb.or(orPredicates.toArray(new Predicate[0])));
             }
             if (specification.getMajorClassification() != null && !specification.getMajorClassification().isEmpty()) {
                 predicates.add(cb.like(root.get("majorClassification"), "%" + specification.getMajorClassification() + "%"));

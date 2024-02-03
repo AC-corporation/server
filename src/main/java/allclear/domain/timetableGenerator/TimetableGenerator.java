@@ -48,6 +48,11 @@ public class TimetableGenerator {
         timetableGeneratorSubject.setTimetableGenerator(this);
     }
 
+    public void addTimetableGeneratorTimetable(TimetableGeneratorTimetable timetableGeneratorTimetable) {
+        timetableGeneratorTimetableList.add(timetableGeneratorTimetable);
+        timetableGeneratorTimetable.setTimetableGenerator(this);
+    }
+
     public void initGenerator(int tableYear,int semester){
         this.tableYear = tableYear;
         this.semester = semester;
