@@ -1,7 +1,6 @@
 package allclear.controller;
 
-import allclear.dto.requestDto.subject.SubjectListRequestDto;
-import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
+import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
 import allclear.global.response.ApiResponse;
 import allclear.service.SubjectService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +27,7 @@ public class SubjectController {
 
     @Operation(summary = "과목 조건 검색 조회")
     @GetMapping("/search")
-    public ApiResponse getSubjectSearch(@RequestBody SubjectListRequestDto requestDto,
+    public ApiResponse getSubjectSearch(@RequestBody SubjectSearchRequestDto requestDto,
                                         @RequestParam(value = "page", defaultValue = "0", required = false) int page
                                         ) {
         return ApiResponse.onSuccess("과목 조건 검색에 성공했습니다", subjectService.getSubjectSearch(requestDto, page));

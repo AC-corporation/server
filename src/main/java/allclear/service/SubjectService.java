@@ -3,9 +3,8 @@ package allclear.service;
 import allclear.crawl.CrawlSubjectInfo;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
-import allclear.dto.requestDto.subject.CreateSubjectRequestDto;
-import allclear.dto.requestDto.subject.SubjectListRequestDto;
-import allclear.dto.requestDto.subject.UpdateSubjectRequestDto;
+import allclear.dto.requestDto.subject.InitSubjectRequestDto;
+import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
 import allclear.dto.responseDto.subject.SubjectListResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.global.exception.GlobalException;
@@ -29,22 +28,9 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final ClassInfoRepository classInfoRepository;
 
-    //과목 추가
+    //과목 생성(업데이트)
     @Transactional
-    public void createSubject(CreateSubjectRequestDto request) {
-        CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
-                request.getYear(),
-                request.getSemester(),
-                request.getUsaintId(),
-                request.getUsaintPassword()
-        );
-        List<Subject> subjectList = subjectInfo.getSubjects();
-        subjectRepository.saveAll(subjectList);
-    }
-
-    //과목 업데이트
-    @Transactional
-    public void updateSubject(UpdateSubjectRequestDto request) {
+    public void initSubject(InitSubjectRequestDto request) {
         CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
                 request.getYear(),
                 request.getSemester(),
@@ -61,37 +47,26 @@ public class SubjectService {
             if (foundSubject == null) {
                 subjectRepository.save(subject);
             } else {
-//                foundSubject.setSubjectName(subject.getSubjectName());
-//                foundSubject.setMajorClassification(subject.getMajorClassification());
-//                foundSubject.setMultiMajorClassification(subject.getMultiMajorClassification());
-//                foundSubject.setEngineeringCertification(subject.getEngineeringCertification());
-//                foundSubject.setClassType(subject.getClassType());
-//                foundSubject.setCredit(subject.getCredit());
-//                foundSubject.setDesign(subject.getDesign());
-//                foundSubject.setSubjectTime(subject.getSubjectTime());
-//                foundSubject.setSubjectTarget(subject.getSubjectTarget());
-                foundSubject.updateSubject(subject.getSubjectName(), subject.getMajorClassification(), subject.getMultiMajorClassification(), subject.getEngineeringCertification(),
-                         subject.getClassType(),subject.getCredit(),subject.getDesign()
-                ,subject.getSubjectTime(),subject.getSubjectTarget());
+                foundSubject.updateSubject(subject.getSubjectName(), subject.getMajorClassification(),
+                        subject.getMultiMajorClassification(), subject.getEngineeringCertification(),
+                        subject.getClassType(), subject.getCredit(), subject.getDesign(),
+                        subject.getSubjectTime(), subject.getSubjectTarget());
                 // classInfo 연관관계 삭제 및 DB 삭제
-                List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
-                Iterator<ClassInfo> iterator = removeClassInfoList.iterator();
-                while (iterator.hasNext()) { // 연관관계 삭제
-                    ClassInfo classInfo = iterator.next();
-                    iterator.remove();
-                    classInfo.setSubject(null);
-                    classInfoRepository.deleteById(classInfo.getId()); // DB 삭제
-                }
+                classInfoRepository.deleteAll(foundSubject.getClassInfoList());
+                foundSubject.getClassInfoList().clear();
+                subjectRepository.save(subject);
                 foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
-
+                subjectRepository.save(subject);
             }
         }
-
     }
 
     //==과목 조회==//
 
-    //단건 조회
+    /**
+     * 단건 조회
+     * Get
+     */
     public SubjectResponseDto getSubject(Long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
         if (subject == null)
@@ -110,16 +85,19 @@ public class SubjectService {
         return new SubjectListResponseDto(subjectPage);
     }
 
-    //검색 조회
-    public SubjectListResponseDto getSubjectSearch(SubjectListRequestDto request, int page) {
+    /**
+     * 검색 조회
+     * Get
+     */
+    public SubjectListResponseDto getSubjectSearch(SubjectSearchRequestDto request, int page) {
         Pageable pageable = PageRequest.of(page, 30);
 
         Page<Subject> subjectPage = subjectRepository.findAll(SubjectSpecification.subjectFilter(
-                        SubjectSpecification.builder()
-                                .subjectTarget(request.getSubjectTarget())
-                                .year(request.getYear())
-                                .searchString(request.getSearchString())
-                                .build()), pageable
+                SubjectSpecification.builder()
+                        .subjectTarget(request.getSubjectTarget())
+                        .year(request.getYear())
+                        .searchString(request.getSearchString())
+                        .build()), pageable
         );
         if (subjectPage.getContent().isEmpty())
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
