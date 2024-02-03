@@ -65,12 +65,12 @@ public class CrawlMemberInfo {
             crawlMemberComponent();
             crawlCurriculumSubject(enterYear, university, major, detailMajor);
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_USER_CRAWLING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         try {
             prevSubjectIdList = ParsingGrade.prevSubjectIdList;
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USER_PARSING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
 
         //졸업요건 크롤링
@@ -80,12 +80,12 @@ public class CrawlMemberInfo {
                 throw new Exception();
 
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_REQUIREMENT_CRAWLING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._REQUIREMENT_PARSING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
 
         //성적 크롤링
@@ -95,12 +95,12 @@ public class CrawlMemberInfo {
             if (totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null)
                 throw new Exception();
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_GRADE_CRAWLING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         try {
             grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._GRADE_PARSING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
     }
 

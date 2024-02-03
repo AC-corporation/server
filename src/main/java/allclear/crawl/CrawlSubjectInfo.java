@@ -54,7 +54,7 @@ public class CrawlSubjectInfo {
             //crawlTeachingSubjects(); // 교직 크롤링
         }
         catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_SUBJECT_CRAWLING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
         // 파싱
         try {
@@ -65,7 +65,7 @@ public class CrawlSubjectInfo {
             //subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
         }
         catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._SUBJECT_PARSING_FAILED);
+            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
 
     }
