@@ -25,15 +25,8 @@ public enum GlobalErrorCode {
     //유세인트
     _USAINT_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "4101", "유세인트 아이디 또는 비밀번호가 잘못되었습니다"),
     _USAINT_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "4102", "유세인트 서버를 이용할 수 없습니다"),
-    _USAINT_USER_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "유저 크롤링에 실패했습니다"),
-    _USAINT_GRADE_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4104", "성적 크롤링에 실패했습니다"),
-
-    _USAINT_REQUIREMENT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4105", "졸업요건 크롤링에 실패했습니다"),
-    _USAINT_SUBJECT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4106", "과목 크롤링에 실패했습니다"),
-    _USER_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4107", "유저 데이터 저장에 실패했습니다"),
-    _GRADE_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4108", "성적 데이터 저장에 실패했습니다"),
-    _REQUIREMENT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4109", "졸업요건 데이터 저장에 실패했습니다"),
-    _SUBJECT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4107", "과목 데이터 저장에 실패했습니다"),
+    _USAINT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "크롤링에 실패했습니다"),
+    _USAINT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4104", "유저 데이터 저장에 실패했습니다"),
 
     // 인증
     _INVALID_REFRESHTOKEN(HttpStatus.UNAUTHORIZED,"4201","유효하지 않은 토큰입니다"),
