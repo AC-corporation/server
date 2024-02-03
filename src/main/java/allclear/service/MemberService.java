@@ -88,6 +88,7 @@ public class MemberService {
         refreshTokenRepository.save(RefreshToken.builder()
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
+                        .member(member)
                 .build());
 
         return response;

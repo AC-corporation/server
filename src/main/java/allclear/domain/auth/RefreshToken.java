@@ -1,5 +1,6 @@
 package allclear.domain.auth;
 
+import allclear.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,10 @@ public class RefreshToken {
 
     @Column(name = "refresh_token")
     private String refreshToken;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private Member member;
+
 
     // 업데이트 함수
     public void updateRefreshToken(String accessToken, String refreshToken){
