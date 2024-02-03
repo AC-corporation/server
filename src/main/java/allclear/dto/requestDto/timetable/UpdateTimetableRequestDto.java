@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
 public class UpdateTimetableRequestDto {
     private String tableName;
-    private Integer tableYear; //학년도
-    private Integer semester; //학기
+    private List<TimetableSubjectRequestDto> timetableSubjectRequestDtoList;
 }

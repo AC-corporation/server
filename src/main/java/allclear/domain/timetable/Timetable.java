@@ -18,6 +18,7 @@ public class Timetable {
     @Column(name = "timetable_id")
     private Long timetableId;
 
+    @Setter
     @Column(name = "table_name")
     private String tableName; //시간표 이름
     @Column(name = "table_year")
@@ -42,22 +43,5 @@ public class Timetable {
     public void addTimetableSubject(TimetableSubject timetableSubject) {
         timetableSubjectList.add(timetableSubject);
         timetableSubject.setTimetable(this);
-    }
-
-
-    //==생성 메서드==//
-//    public static Timetable createTimetable(Member member, String tableName, int tableYear, int semester) {
-//        Timetable timeTable = new Timetable();
-//        timeTable.setMember(member);
-//        timeTable.setTableName(tableName);
-//        timeTable.setTableYear(tableYear);
-//        timeTable.setSemester(semester);
-//        return timeTable;
-//    }
-
-    public void updateTimetable(String tableName, int tableYear, int semester ){
-        this.tableName = tableName;
-        this.tableYear = tableYear;
-        this.semester = semester;
     }
 }
