@@ -7,7 +7,10 @@ import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.Getter;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
@@ -16,9 +19,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
 public class CrawlMemberInfo {
 
     @Getter
@@ -27,6 +28,10 @@ public class CrawlMemberInfo {
     private Requirement requirement;
     @Getter
     private Grade grade;
+    @Getter
+    private List<Long> prevSubjectIdList = new ArrayList<>(); // 수강한 과목 리스트
+    @Getter
+    private List<Long> curriculumSubjectIdList = new ArrayList<>(); // 전공 교과 과정 리스트
 
     private ArrayList<String> requirementComponentList = new ArrayList<>();
     private ArrayList<String> entireGrades = new ArrayList<>();  //  전체 성적 리스트
@@ -35,8 +40,6 @@ public class CrawlMemberInfo {
     private String firstSemester; // 최초 학기
     private String totalCredit; // 총 이수 학점
     private String averageGrade; // 평균 학점
-    private List<Long> prevSubjectIdList = new ArrayList<>(); // 수강한 과목 리스트
-    private List<Long> curriculumSubjectIdList = new ArrayList<>(); // 전공 교과 과정 리스트
     private Integer enterYear; // 입학 연도
     private String university; // 대학
     private String major; // 학부
@@ -46,46 +49,59 @@ public class CrawlMemberInfo {
     String targetText; // 크롤링 할 문자
     WebDriver driver;
 
-    public CrawlMemberInfo(String usaintId, String usaintPassword){
+    public CrawlMemberInfo(String usaintId, String usaintPassword) {
 
-
-        // 로그인
+        //로그인
         try {
             loginUsaint(usaintId, usaintPassword);
         } catch (GlobalException e) {
             throw e;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
 
+        //유저 크롤링
         try {
-            // 크롤링
             crawlMemberComponent();
-            crawlRequirementComponent();
-            crawlEntireGrades();
-            crawlDetailGrades();
             crawlCurriculumSubject(enterYear, university, major, detailMajor);
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._USAINT_USER_CRAWLING_FAILED);
         }
-        catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
-        }
-
-        if(requirementComponentList == null){
-            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
-        }
-        if(totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null){
-            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
+        try {
+            prevSubjectIdList = ParsingGrade.prevSubjectIdList;
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._USER_PARSING_FAILED);
         }
 
+        //졸업요건 크롤링
+        try {
+            crawlRequirementComponent();
+            if (requirementComponentList == null)
+                throw new Exception();
+
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._USAINT_REQUIREMENT_CRAWLING_FAILED);
+        }
         try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-            grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
-            prevSubjectIdList = ParsingGrade.prevSubjectIdList;
-        }
-        catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED); // 파싱 실패
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._REQUIREMENT_PARSING_FAILED);
         }
 
+        //성적 크롤링
+        try {
+            crawlEntireGrades();
+            crawlDetailGrades();
+            if (totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null)
+                throw new Exception();
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._USAINT_GRADE_CRAWLING_FAILED);
+        }
+        try {
+            grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
+        } catch (Exception e) {
+            throw new GlobalException(GlobalErrorCode._GRADE_PARSING_FAILED);
+        }
     }
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
@@ -214,13 +230,13 @@ public class CrawlMemberInfo {
 
         member = Member.builder()
                 .username(user_name)
-                        .university(university)
-                                .major(major)
-                                        .email(mail)
-                                                .classType(classType)
-                                                        .level(year)
-                                                                .semester(semester)
-                                                                        .build();
+                .university(university)
+                .major(major)
+                .email(mail)
+                .classType(classType)
+                .level(year)
+                .semester(semester)
+                .build();
 
         // 기본 프레임으로 돌아가기
         driver.switchTo().defaultContent();
@@ -333,7 +349,7 @@ public class CrawlMemberInfo {
         averageGrade = target.getAttribute("value");
 
         // 팝업 창 닫기 클릭
-        try{
+        try {
             WebElement iframe3 = driver.findElement(By.xpath("//*[@id=\"URLSPW-0\"]"));
             driver.switchTo().frame(iframe3);
 
@@ -359,7 +375,7 @@ public class CrawlMemberInfo {
             // web frame 변경
             driver.switchTo().frame(iframe1);
             driver.switchTo().frame(iframe2);
-        }catch(Exception e){
+        } catch (Exception e) {
             // 기본 frame으로 frame 재설정
             driver.switchTo().defaultContent();
 
@@ -454,7 +470,7 @@ public class CrawlMemberInfo {
             targetText = target.getAttribute("value").strip();
             selectedSemester = targetText;
 
-            detailGrades.add("*"+selectedYear+ " "+selectedSemester); //구분해주는용
+            detailGrades.add("*" + selectedYear + " " + selectedSemester); //구분해주는용
             // 플래그 설정 ( 성적을 끝까지 크롤링 했는지 확인 하기 위함 )
             if (firstYear.equals(selectedYear))
                 yearFlag = 1;
@@ -464,18 +480,17 @@ public class CrawlMemberInfo {
             // 학기별 세부 성적 크롤링
             while (true) {
                 for (int i = 2; i <= 9; i++) {
-                    if(i == 5 || i == 8) //  크롤링 안 되는 열 예외 처리
+                    if (i == 5 || i == 8) //  크롤링 안 되는 열 예외 처리
                         continue;
-                    try{
+                    try {
                         targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[12]/td/table/tbody/tr/td/table/tbody/tr/td/table/tbody/tr/td[1]/table/tbody/tr[" + cnt + "]/td[" + i + "]/span/span";
                         target = driver.findElement(By.xpath(targetPath));
                         targetText = target.getText().strip();
                     } catch (Exception e) {
-                        if (i == 2){
+                        if (i == 2) {
                             inEndFlag = true;
                             break;
-                        }
-                        else { // 중간 빈 열로 발생하는 오류
+                        } else { // 중간 빈 열로 발생하는 오류
                             targetText = "";
                         }
                     }
@@ -648,7 +663,8 @@ public class CrawlMemberInfo {
 
                 try {
                     Thread.sleep(500); // 0.5초 동안 실행을 멈추기
-                } catch (InterruptedException interruptedException) {}
+                } catch (InterruptedException interruptedException) {
+                }
 
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]"));
                 target.click();
@@ -657,7 +673,8 @@ public class CrawlMemberInfo {
 
                 try {
                     Thread.sleep(500); // 0.5초 동안 실행을 멈추기
-                } catch (InterruptedException interruptedException) {}
+                } catch (InterruptedException interruptedException) {
+                }
 
                 tr--; // 예외로 인해 크롤링 하지 못한 부분 다시 재시도
             }
