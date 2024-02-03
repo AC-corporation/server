@@ -54,8 +54,9 @@ public class TimetableService {
     public void updateTimetable(Long id, UpdateTimetableRequestDto request) {
         Timetable timetable = timetableRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
-        timetable.getTimetableSubjectList().clear();
         timetableSubjectRepository.deleteAll(timetable.getTimetableSubjectList());
+        timetable.getTimetableSubjectList().clear();
+        timetableRepository.save(timetable);
 
         //시간표에 과목 추가
         for (TimetableSubjectRequestDto subjectRequestDto : request.getTimetableSubjectRequestDtoList()) {
