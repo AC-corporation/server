@@ -9,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class UpdateTimetableSubjectRequestDto {
+public class TimetableSubjectRequestDto {
     String subjectName;
+    Long subjectId; //커스텀 과목: null, 유세인트: 과목 ID
     List<ClassInfoRequestDto> classInfoRequestDtoList;
 }
