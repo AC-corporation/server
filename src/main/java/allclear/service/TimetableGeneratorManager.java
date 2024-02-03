@@ -58,11 +58,11 @@ public class TimetableGeneratorManager {
      */
     public void initTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
-        timetableGenerator.initGenerator(requestDto.getTableYear(), requestDto.getSemester());
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
         timetableGenerator.getTimetableGeneratorSubjectList().clear();
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         tgSubjectRepository.deleteAll(timetableGenerator.getTimetableGeneratorSubjectList());
+        timetableGenerator.initGenerator(requestDto.getTableYear(), requestDto.getSemester());
         tgRepository.save(timetableGenerator);
     }
 
@@ -84,7 +84,8 @@ public class TimetableGeneratorManager {
                     .classDay(classInfoRequestDto.getClassDay())
                     .startTime(classInfoRequestDto.getStartTime())
                     .endTime(classInfoRequestDto.getEndTime())
-                    .classRoom(classInfoRequestDto.getClassRoom()).build()
+                    .classRoom(classInfoRequestDto.getClassRoom())
+                    .build()
             );
         }
 
