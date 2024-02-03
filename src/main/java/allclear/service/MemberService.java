@@ -64,6 +64,7 @@ public class MemberService {
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+        Long memberId = member.getMemberId();
 
         //비밀번호 확인
         if (!passwordEncoder.matches(password, member.getPassword())) {
@@ -80,12 +81,16 @@ public class MemberService {
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
+        JwtToken response = JwtToken.builder().grantType(jwtToken.getGrantType())
+                .refreshToken(jwtToken.getRefreshToken()).accessToken(jwtToken.getAccessToken())
+                .memberId(memberId).build();
+
         refreshTokenRepository.save(RefreshToken.builder()
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
                 .build());
 
-        return jwtToken;
+        return response;
     }
 
     //회원가입
