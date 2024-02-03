@@ -1,5 +1,6 @@
 package allclear.domain.member;
 
+import allclear.domain.auth.RefreshToken;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
@@ -54,6 +55,10 @@ public class Member implements UserDetails{
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @Column(name = "timetable_list")
     private List<Timetable> timetableList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private RefreshToken refreshToken;
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
