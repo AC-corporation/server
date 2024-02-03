@@ -633,33 +633,32 @@ public class CrawlMemberInfo {
             e.printStackTrace();
         }
 
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        Long prevHeight = 0L; // 이전 스크롤바 위치
-        Long nextHeight = 0L; // 이후 스크롤바 위치
         boolean exitFlag = false; // 반복문 종료 플래그
         int tr = 1; // 행
 
         while (true) {
             try {
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]/tr[" + tr + "]/td[4]/div/a/span"));
+                exitFlag = false; // 예외가 발생하지 않으면 종료 플래그를 false 설정
                 targetText = target.getText();
                 curriculumSubjectIdList.add(Long.parseLong(targetText));
             } catch (Exception e) {
                 if (exitFlag)
                     break;
+
                 try {
                     Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                 } catch (InterruptedException interruptedException) {}
+
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td/table/tbody[1]/tr[2]/td[1]/div/div[2]/table/tbody[1]"));
                 target.click();
                 scroll.sendKeys(Keys.PAGE_DOWN).perform();
-                prevHeight = nextHeight;
-                nextHeight = (Long) js.executeScript("return arguments[0].getBoundingClientRect().bottom", target);
-                if (Objects.equals(prevHeight, nextHeight))
-                    exitFlag = true;
+                exitFlag = true;
+
                 try {
                     Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                 } catch (InterruptedException interruptedException) {}
+
                 tr--; // 예외로 인해 크롤링 하지 못한 부분 다시 재시도
             }
             tr++;

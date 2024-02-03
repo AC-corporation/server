@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 public class RequirementComponent {
     @Id @GeneratedValue
     @Column(name = "requirement_component_id")

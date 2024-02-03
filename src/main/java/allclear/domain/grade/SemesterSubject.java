@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class SemesterSubject {
     @Id
     @GeneratedValue
@@ -36,9 +36,9 @@ public class SemesterSubject {
 
     //==생성 메서드==//
     public static SemesterSubject createSemesterSubject(String semesterSubjectName, String semesterSubjectScore) {
-        SemesterSubject semesterSubject = new SemesterSubject();
-        semesterSubject.semesterSubjectName = semesterSubjectName;
-        semesterSubject.semesterSubjectScore = semesterSubjectScore;
-        return semesterSubject;
+        return SemesterSubject.builder()
+                .semesterSubjectName(semesterSubjectName)
+                .semesterSubjectScore(semesterSubjectScore)
+                .build();
     }
 }

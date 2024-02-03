@@ -19,7 +19,7 @@ public class GradeController {
 
     @Operation(summary = "전체 성적 조회", description = "전체 성적 조회")
     @GetMapping("/getGrade/{userId}")
-    public ApiResponse<GradeResponseDto> get(@PathVariable Long userId){
+    public ApiResponse<GradeResponseDto> getGrade(@PathVariable Long userId){
         return ApiResponse.onSuccess("전체 성적 조회에 성공했습니다",gradeService.getGrade(userId));
     }
 
@@ -27,6 +27,6 @@ public class GradeController {
     @Operation(summary = "학기별 성적 조회", description = "학기별 성적 조회")
     @GetMapping("/getSemesterGrade/{semesterGradeId}")
     public ApiResponse<SemesterGradeResponseDto> getSemesterGrade(@PathVariable Long semesterGradeId){
-        return ApiResponse.onSuccess("학기별 성적 조회에 성공했습니다",gradeService.getSemesterGradeResponse(semesterGradeId));
+        return ApiResponse.onSuccess("학기별 성적 조회에 성공했습니다",gradeService.getSemesterGrade(semesterGradeId));
     }
 }

@@ -25,13 +25,11 @@ public class RequirementService {
     }
 
 
-    /**
-     * 졸업요건 조회
-     */
+    //졸업요건 조회
     public RequirementResponseDto getRequirement(Long memberId){
         Requirement requirement = findByMemberId(memberId);
         if (requirement == null)
             throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
-        return new RequirementResponseDto(requirement);
+        return RequirementResponseDto.from(requirement);
     }
 }

@@ -40,7 +40,7 @@ class RequirementTest {
 
         //requirement를 dto로 반환
         //원래는 requirementService의 getRequirement(id) 사용
-        RequirementResponseDto requirementResponseDto = new RequirementResponseDto(requirement);
+        RequirementResponseDto requirementResponseDto = RequirementResponseDto.from(requirement);
 
         System.out.println("requiremnetResponseDto : " + requirementResponseDto.getRequirementId());
         for (int i = 0; i < requirementResponseDto.getRequirementComponentList().size(); i++) {
