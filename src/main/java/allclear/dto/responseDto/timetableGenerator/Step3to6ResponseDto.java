@@ -17,7 +17,7 @@ public class Step3to6ResponseDto {
     public Step3to6ResponseDto(List<RequirementComponent> requirementComponentList, List<Subject> subjectList) {
         this.requirementComponentResponseDtoList = requirementComponentList
                 .stream()
-                .map(RequirementComponentResponseDto::new)
+                .map(RequirementComponentResponseDto::from)
                 .collect(Collectors.toList());
         this.subjectResponseDtoList = subjectList
                 .stream()
