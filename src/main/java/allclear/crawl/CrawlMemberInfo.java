@@ -51,8 +51,7 @@ public class CrawlMemberInfo {
 
     public CrawlMemberInfo(String usaintId, String usaintPassword) {
 
-
-        // 로그인
+        //로그인
         try {
             loginUsaint(usaintId, usaintPassword);
         } catch (GlobalException e) {
@@ -78,7 +77,7 @@ public class CrawlMemberInfo {
         try {
             crawlRequirementComponent();
             if (requirementComponentList == null)
-                throw new GlobalException(GlobalErrorCode._USAINT_REQUIREMENT_CRAWLING_FAILED); // 파싱 실패
+                throw new Exception();
 
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_REQUIREMENT_CRAWLING_FAILED);
@@ -94,7 +93,7 @@ public class CrawlMemberInfo {
             crawlEntireGrades();
             crawlDetailGrades();
             if (totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null)
-                throw new GlobalException(GlobalErrorCode._USAINT_GRADE_CRAWLING_FAILED); // 파싱 실패
+                throw new Exception();
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_GRADE_CRAWLING_FAILED);
         }
