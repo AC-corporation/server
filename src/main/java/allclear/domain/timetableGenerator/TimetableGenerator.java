@@ -56,15 +56,7 @@ public class TimetableGenerator {
     public void initGenerator(int tableYear,int semester){
         this.tableYear = tableYear;
         this.semester = semester;
+        this.timetableGeneratorTimetableList = new ArrayList<>();
+        this.timetableGeneratorSubjectList = new ArrayList<>();
     }
-
-//    public void setPrevSubjectIdList(List<Long> prevSubjectIdList)
-//    {
-//        this.prevSubjectIdList = prevSubjectIdList;
-//    }
-//
-//    public void setCurriculumSubjectIdList(List<Long> curriculumSubjectIdList){
-//        this.curriculumSubjectIdList = curriculumSubjectIdList;
-//    }
-
 }
