@@ -1,14 +1,12 @@
 package allclear.service;
 
 import allclear.domain.member.Member;
+import allclear.domain.requirement.RequirementComponent;
 import allclear.domain.subject.Subject;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetable.TimetableClassInfo;
 import allclear.domain.timetable.TimetableSubject;
-import allclear.domain.timetableGenerator.TimetableGenerator;
-import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
-import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
-import allclear.domain.timetableGenerator.TimetableGeneratorTimetable;
+import allclear.domain.timetableGenerator.*;
 import allclear.dto.requestDto.timetable.ClassInfoRequestDto;
 import allclear.dto.requestDto.timetableGenerator.*;
 import allclear.dto.responseDto.timetableGenerator.Step3to6ResponseDto;
@@ -118,16 +116,18 @@ public class TimetableGeneratorManager {
         Integer memberLevel = member.getLevel();
         if (LocalDate.now().getMonthValue() < 3)
             memberLevel++;
+        //조회할 과목 전공 저장
+        String major = majorConvertor(member.getMajor());
 
 
         List<Subject> subjectList = new ArrayList<>();
 
-        //학과 전공 기초/필수 조회
+        //학과 전공 기초/필수 과목 조회
         subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("전기")
                         .category2("전필")
-                        .majorClassification("소프트")
+                        .majorClassification(major)
                         .year(String.valueOf(memberLevel))
                         .build()
         )));
@@ -147,8 +147,13 @@ public class TimetableGeneratorManager {
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
         sortSubject(subjectList, memberLevel);
-
-        return new Step3to6ResponseDto(subjectList);
+        //졸업요건 조회
+        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
+                .stream()
+                .filter(requirementComponent -> (requirementComponent.getRequirementArgument().contains("전필")
+                        || requirementComponent.getRequirementArgument().contains("전기"))
+                        && !requirementComponent.getRequirementArgument().contains("전선")).toList();
+        return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
 
     /**
@@ -187,7 +192,7 @@ public class TimetableGeneratorManager {
 
         List<Subject> subjectList = new ArrayList<>();
 
-        //학과 전공 기초/필수 조회
+        //교양 필수 과목 조회
         subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("교필")
@@ -199,8 +204,11 @@ public class TimetableGeneratorManager {
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
         sortSubject(subjectList, memberLevel);
-
-        return new Step3to6ResponseDto(subjectList);
+        //졸업요건 조회
+        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
+                .stream()
+                .filter(requirementComponent -> requirementComponent.getRequirementCategory().equals("교양필수")).toList();
+        return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
 
 
@@ -220,15 +228,17 @@ public class TimetableGeneratorManager {
         Integer memberLevel = member.getLevel();
         if (LocalDate.now().getMonthValue() < 3)
             memberLevel++;
+        //조회할 과목 전공 저장
+        String major = majorConvertor(member.getMajor());
 
 
         List<Subject> subjectList = new ArrayList<>();
 
-        //학과 전공 기초/필수 조회
+        //학과 전공 선택 과목 조회
         subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("전선")
-                        .majorClassification("소프트")
+                        .majorClassification(major)
                         .year(String.valueOf(memberLevel))
                         .build()
         )));
@@ -247,8 +257,12 @@ public class TimetableGeneratorManager {
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
         sortSubject(subjectList, memberLevel);
+        //졸업요건 조회
+        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
+                .stream()
+                .filter(requirementComponent -> requirementComponent.getRequirementArgument().contains("전선")).toList();
 
-        return new Step3to6ResponseDto(subjectList);
+        return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
 
 
@@ -260,7 +274,36 @@ public class TimetableGeneratorManager {
      * Get
      */
     public Step3to6ResponseDto suggestLiberalArtsElectiveSubject(Long userId) {
-        return new Step3to6ResponseDto(null);
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        TimetableGenerator timetableGenerator = member.getTimetableGenerator();
+
+        //조회할 과목 학년 저장
+        Integer memberLevel = member.getLevel();
+        if (LocalDate.now().getMonthValue() < 3)
+            memberLevel++;
+
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        //교양 선택 과목 조회
+        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                SubjectSpecification.builder()
+                        .category1("교선")
+                        .majorClassification("소프트")
+                        .year(String.valueOf(memberLevel))
+                        .build()
+        )));
+
+        //불필요 과목 삭제
+        removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
+        //과목 정렬
+        sortSubject(subjectList, memberLevel);
+        //졸업요건 조회
+        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
+                .stream()
+                .filter(requirementComponent -> requirementComponent.getRequirementCategory().equals("교양선택")).toList();
+        return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
 
 
@@ -286,7 +329,6 @@ public class TimetableGeneratorManager {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAllById(requestDto.getTimetableGeneratorSubjectIdList());
-
         for (TimetableGeneratorSubject tgSubject : tgSubjectList)
             tgSubject.setSelected(true);
     }
@@ -296,8 +338,83 @@ public class TimetableGeneratorManager {
      * Step 7
      * Post
      */
-    public void generateTimetable(Long userId) {
-    }
+//    public void generateTimetableList(Long userId) {
+//        TimetableGenerator timetableGenerator = findById(userId);
+//        List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
+//
+//        List<TimetableGeneratorTimetable> tgTimetableList = new ArrayList<>();
+//
+//
+//        Set<String> selectedSubjectIds = new HashSet<>();
+//
+//        // Filter selected subjects
+//        for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
+//            if (tgSubject.isSelected()) {
+//                // Use first 8 characters for subject id check
+//                selectedSubjectIds.add(tgSubject.getSubject().getSubjectId().toString().substring(0, 8));
+//            }
+//        }
+//
+//        generateTimetables(tgSubjectList, tgTimetableList, new ArrayList<>(), 0, selectedSubjectIds);
+//
+//        for (TimetableGeneratorTimetable tgTimetable : tgTimetableList)
+//            timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
+//        tgTimetableRepository.saveAll(tgTimetableList);
+//    }
+//
+//    private static void generateTimetables(List<TimetableGeneratorSubject> subjects,
+//                                           List<TimetableGeneratorTimetable> allTimetables,
+//                                           List<TimetableGeneratorClassInfo> currentClasses,
+//                                           int creditCount,
+//                                           Set<String> selectedSubjectIds) {
+//        if (creditCount > 18.5) {
+//            return; // Exceeds maximum credit limit
+//        }
+//
+//        for (TimetableGeneratorSubject subject : subjects) {
+//            if (!subject.isSelected()) {
+//                continue; // Skip non-selected subjects
+//            }
+//
+//            // Check for subject id duplication
+//            if (selectedSubjectIds.contains(subject.getSubjectId().substring(0, 8))) {
+//                continue;
+//            }
+//
+//            for (TimetableGeneratorClassInfo classInfo : subject.getTimetableGeneratorClassInfoList()) {
+//                if (isTimeSlotAvailable(currentClasses, classInfo)) {
+//                    List<TimetableGeneratorClassInfo> newClasses = new ArrayList<>(currentClasses);
+//                    newClasses.add(classInfo);
+//
+//                    Set<String> newSelectedSubjectIds = new HashSet<>(selectedSubjectIds);
+//                    newSelectedSubjectIds.add(subject.getSubjectId().substring(0, 8));
+//
+//                    // Recursively generate timetables for the remaining subjects
+//                    generateTimetables(subjects, allTimetables, newClasses, creditCount + subject.getSubject().getCredit(), newSelectedSubjectIds);
+//                }
+//            }
+//        }
+//
+//        // Create a new timetable with the current set of classes
+//        if (!currentClasses.isEmpty()) {
+//            TimetableGeneratorTimetable timetable = new TimetableGeneratorTimetable();
+//            timetable.getTimetableGeneratorSubjectList().addAll(subjects);
+//            timetable.setTimetableGeneratorClassInfoList(currentClasses);
+//            allTimetables.add(timetable);
+//        }
+//    }
+//
+//    //시간대 충돌 체크
+//    private boolean isTimeSlotAvailable(List<TimetableGeneratorClassInfo> currentClasses, TimetableGeneratorClassInfo newClass) {
+//        for (TimetableGeneratorClassInfo existingClass : currentClasses) {
+//            if (existingClass.getClassDay().equals(newClass.getClassDay()) &&
+//                    !existingClass.getEndTime().plusMinutes(10).isBefore(newClass.getStartTime()) &&
+//                    !existingClass.getStartTime().isAfter(newClass.getEndTime().plusMinutes(10))) {
+//                return false; // Time slot conflict
+//            }
+//        }
+//        return true; // No time slot conflict
+//    }
 
 
     //==Step8==//
@@ -339,7 +456,10 @@ public class TimetableGeneratorManager {
                 .semester(timetableGenerator.getSemester()).build();
 
         //시간표에 과목 추가
-        for (TimetableGeneratorSubject generatorSubject : generatorTimetable.getTimetableGeneratorSubjectList()) {
+        for (TimetableGeneratorSubject generatorSubject : generatorTimetable.getTimetableGeneratorTimetableSubjectList()
+                .stream()
+                .map(TimetableGeneratorTimetableSubject::getTimetableGeneratorSubject)
+                .toList()) {
             TimetableSubject timetableSubject;
 
             if (generatorSubject.getSubject() == null) {
@@ -384,6 +504,22 @@ public class TimetableGeneratorManager {
      */
     public void deleteTimetableGeneratorSubject(Long timetableGeneratorSubjectId) {
         tgSubjectRepository.deleteById(timetableGeneratorSubjectId);
+    }
+
+
+    //전공 문자열 변환
+    private String majorConvertor(String major) {
+        //IT 대학
+        return major.contains("컴퓨터") ? "컴퓨터"
+                : major.contains("소프트") ? "소프트"
+                : major.contains("AI융합") ? "AI융합"
+                : major.contains("글로벌미디어") ? "글로벌미디어"
+                : major.contains("글로벌미디어") ? "글로벌미디어"
+                : major.contains("미디어경영") ? "미디어경영"
+                : major.contains("정보보호") ? "정보보호"
+                : major.contains("전자정보공학부 it융합") ? "IT융합"
+                : major.contains("전자정보공학부 전자공학") ? "전자공학"
+                : major.substring(0, major.length() - 2);
     }
 
     //중복 과목 및 수강한 과목 삭제

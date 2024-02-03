@@ -95,7 +95,7 @@ public class TimetableGeneratorController {
     @PostMapping("/step7/{userId}")
     public ApiResponse step7(@PathVariable Long userId, @RequestBody Step7RequestDto requestDto) {
         timetableGeneratorManager.checkSelectedTimetableSubject(requestDto);
-        timetableGeneratorManager.generateTimetable(userId);
+        timetableGeneratorManager.generateTimetableList(userId);
         return ApiResponse.onSuccess("step7 성공했습니다");
     }
 

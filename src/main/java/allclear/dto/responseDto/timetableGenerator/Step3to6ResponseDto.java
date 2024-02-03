@@ -1,6 +1,8 @@
 package allclear.dto.responseDto.timetableGenerator;
 
+import allclear.domain.requirement.RequirementComponent;
 import allclear.domain.subject.Subject;
+import allclear.dto.responseDto.requirement.RequirementComponentResponseDto;
 import allclear.dto.responseDto.subject.SubjectResponseDto;
 import lombok.Getter;
 
@@ -9,13 +11,17 @@ import java.util.stream.Collectors;
 
 @Getter
 public class Step3to6ResponseDto {
+    private List<RequirementComponentResponseDto> requirementComponentResponseDtoList;
     private List<SubjectResponseDto> subjectResponseDtoList;
 
-    public Step3to6ResponseDto(List<Subject> subjectList) {
-        List<SubjectResponseDto> subjectResponseDtoList = subjectList
+    public Step3to6ResponseDto(List<RequirementComponent> requirementComponentList, List<Subject> subjectList) {
+        this.requirementComponentResponseDtoList = requirementComponentList
+                .stream()
+                .map(RequirementComponentResponseDto::new)
+                .collect(Collectors.toList());
+        this.subjectResponseDtoList = subjectList
                 .stream()
                 .map(SubjectResponseDto::new)
                 .collect(Collectors.toList());
-        this.subjectResponseDtoList = subjectResponseDtoList;
     }
 }
