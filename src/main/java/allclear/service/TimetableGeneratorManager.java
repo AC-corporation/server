@@ -338,7 +338,7 @@ public class TimetableGeneratorManager {
      * Step 7
      * Post
      */
-//    public void generateTimetableList(Long userId) {
+    public void generateTimetableList(Long userId) {
 //        TimetableGenerator timetableGenerator = findById(userId);
 //        List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
 //
@@ -360,7 +360,7 @@ public class TimetableGeneratorManager {
 //        for (TimetableGeneratorTimetable tgTimetable : tgTimetableList)
 //            timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
 //        tgTimetableRepository.saveAll(tgTimetableList);
-//    }
+    }
 //
 //    private static void generateTimetables(List<TimetableGeneratorSubject> subjects,
 //                                           List<TimetableGeneratorTimetable> allTimetables,
