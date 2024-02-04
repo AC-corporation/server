@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 @Entity
 @Builder
@@ -36,6 +37,9 @@ public class ClassInfo {
             this.subject = null;
         }
         else {
+            if (subject.getClassInfoList() == null){
+                subject.setClassInfoList(new ArrayList<>());
+            }
             subject.getClassInfoList().add(this);
             this.subject = subject;
         }
