@@ -287,7 +287,6 @@ public class TimetableGeneratorManager {
         List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("교선")
-                        .majorClassification("소프트")
                         .year(String.valueOf(memberLevel))
                         .build()
         )));
