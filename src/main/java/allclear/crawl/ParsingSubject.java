@@ -65,7 +65,6 @@ public class ParsingSubject {
                             classInfo.setSubject(subject);
                             classInfoList.add(classInfo);
                         }
-                        subject.setClassInfoList(classInfoList);
                         break;
                     case 9 : // 수강대상
                         subject.setSubjectTarget(str);
@@ -92,7 +91,6 @@ public class ParsingSubject {
         int endTimeMinute;
 
         if (classInfoString.length() < 2){ // 강의시간(강의실)이 존재하지 않을 경우
-//            classInfo = ClassInfo.createClassInfo("","",null,null, "");
            classInfo = ClassInfo.builder().professor("").classDay("").startTime(null).endTime(null).classRoom("").build();
             return classInfo;
         }
@@ -122,12 +120,13 @@ public class ParsingSubject {
             subStr = classInfoString.substring(classInfoString.indexOf("(") + 1);
             professorAndClassroom = new ArrayList<>(Arrays.asList(subStr.split("-")));
             classRoom = professorAndClassroom.get(0); // 강의 장소
-            professor = professorAndClassroom.get(1); // 교수명
+            if (professorAndClassroom.size() > 2)
+                classRoom = classRoom.concat(professorAndClassroom.get(1));
+            professor = professorAndClassroom.get(professorAndClassroom.size() - 1); // 교수명
             professor = professor.substring(0, professor.length()-1); // 교수명 문자열 중 ")" 제거
 
             i = i + 2; // 요일의 개수가 여러 개인 경우
         }
-//        classInfo = ClassInfo.createClassInfo(professor, classDay, startTime, endTime, classRoom);
         classInfo = ClassInfo.builder().professor(professor).classDay(classDay)
                 .startTime(startTime)
                 .endTime(endTime)

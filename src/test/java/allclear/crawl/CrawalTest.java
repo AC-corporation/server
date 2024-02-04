@@ -19,8 +19,6 @@ public class CrawalTest {
         System.out.println(member.getClassType());
         System.out.println(member.getLevel());
         System.out.println(member.getSemester());
-        System.out.println(crawlMemberInfo.getEnterYear());
-        System.out.println(crawlMemberInfo.getDetailMajor());
 
 
         List<Long> tmpList = crawlMemberInfo.getPrevSubjectIdList();
