@@ -63,41 +63,17 @@ public class CrawlMemberInfo {
         //유저 크롤링
         try {
             crawlMemberComponent();
+            crawlRequirementComponent();
+            crawlEntireGrades();
+            crawlDetailGrades();
             crawlCurriculumSubject(enterYear, university, major, detailMajor);
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
+
         try {
             prevSubjectIdList = ParsingGrade.prevSubjectIdList;
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
-        }
-
-        //졸업요건 크롤링
-        try {
-            crawlRequirementComponent();
-            if (requirementComponentList == null)
-                throw new Exception();
-
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
-        }
-        try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
-        }
-
-        //성적 크롤링
-        try {
-            crawlEntireGrades();
-            crawlDetailGrades();
-            if (totalCredit == null || averageGrade == null || entireGrades == null || detailGrades == null)
-                throw new Exception();
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
-        }
-        try {
             grade = ParsingGrade.parsingGradeString(totalCredit, averageGrade, entireGrades, detailGrades);
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
