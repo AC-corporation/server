@@ -59,10 +59,10 @@ public class TimetableGeneratorManager {
      */
     public void initTimetableGenerator(Long userId, Step1RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
-        timetableGenerator.getTimetableGeneratorTimetableList().clear();
-        timetableGenerator.getTimetableGeneratorSubjectList().clear();
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         tgSubjectRepository.deleteAll(timetableGenerator.getTimetableGeneratorSubjectList());
+        timetableGenerator.getTimetableGeneratorTimetableList().clear();
+        timetableGenerator.getTimetableGeneratorSubjectList().clear();
         timetableGenerator.initGenerator(requestDto.getTableYear(), requestDto.getSemester());
         tgRepository.save(timetableGenerator);
     }
