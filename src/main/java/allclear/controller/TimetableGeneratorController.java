@@ -110,8 +110,7 @@ public class TimetableGeneratorController {
     @Operation(summary = "생성된 시간표 저장")
     @PostMapping("/step8/{userId}")
     public ApiResponse step8(@PathVariable Long userId, @RequestBody Step8RequestDto requestDto) {
-        timetableGeneratorManager.saveTimetable(userId, requestDto);
-        return ApiResponse.onSuccess("step8 성공했습니다");
+        return ApiResponse.onSuccess("step8 성공했습니다", timetableGeneratorManager.saveTimetable(userId, requestDto));
     }
 
 

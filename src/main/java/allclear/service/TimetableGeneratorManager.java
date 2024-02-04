@@ -437,26 +437,22 @@ public class TimetableGeneratorManager {
      * Step8
      * Post
      */
-    public void saveTimetable(Long userId, Step8RequestDto requestDto) {
+    public Long saveTimetable(Long userId, Step8RequestDto requestDto) {
         //생성할 시간표를 시간표 생성기에서 찾아오기
         TimetableGeneratorTimetable generatorTimetable = tgTimetableRepository.findById(requestDto.getTimetableGeneratorTimetableId())
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
         TimetableGenerator timetableGenerator = findById(userId);
 
         //시간표 객체 생성
-//        Timetable timetable = Timetable.createTimetable(
-//                member,
-//                "새 시간표",
-//                timetableGenerator.getTableYear(),
-//                timetableGenerator.getSemester()
-//        );
-
-        Timetable timetable = Timetable.builder().member(member)
+        Timetable timetable = Timetable
+                .builder()
                 .tableName("새 시간표")
                 .tableYear(timetableGenerator.getTableYear())
-                .semester(timetableGenerator.getSemester()).build();
+                .semester(timetableGenerator.getSemester())
+                .build();
+        timetable.setMember(member);
 
         //시간표에 과목 추가
         for (TimetableGeneratorSubject generatorSubject : generatorTimetable.getTimetableGeneratorTimetableSubjectList()
@@ -497,6 +493,7 @@ public class TimetableGeneratorManager {
         }
         //DB에 시간표 저장
         timetableRepository.save(timetable);
+        return timetable.getTimetableId();
     }
 
 
