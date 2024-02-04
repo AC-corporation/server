@@ -1,5 +1,6 @@
 package allclear.dto.requestDto.timetableGenerator;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,5 +11,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Step7RequestDto {
-    List<Long> timetableGeneratorSubjectIdList;
+    private List<Long> timetableGeneratorSubjectIdList;
 }

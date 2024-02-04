@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Step4RequestDto implements Step3to6requestDto {
-    List<Long> subjectIdList;
+    private List<Long> subjectIdList;
 }

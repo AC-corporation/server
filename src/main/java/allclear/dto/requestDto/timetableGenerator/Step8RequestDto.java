@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Step8RequestDto {
     @NotBlank
-    Long timetableGeneratorTimetableId;
+    private Long timetableGeneratorTimetableId;
 }
