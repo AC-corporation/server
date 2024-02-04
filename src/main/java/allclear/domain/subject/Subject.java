@@ -41,7 +41,7 @@ public class Subject {
 
 
     public void updateSubject(String subjectName,String majorClassification, String multiMajorClassification, String engineeringCertification,
-                              String classType, double credit, int design , double subjectTime, String subjectTarget)
+                              String classType, Double credit, Integer design , Double subjectTime, String subjectTarget)
     {
         this.subjectName = subjectName;
         this.majorClassification = majorClassification;
