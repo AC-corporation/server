@@ -11,5 +11,5 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Step2RequestDto {
-    List<TimetableSubjectRequestDto> timetableSubjectRequestDtoList;
+    private List<TimetableSubjectRequestDto> timetableSubjectRequestDtoList;
 }
