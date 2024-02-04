@@ -194,7 +194,7 @@ public class TimetableGeneratorManager {
         //교양 필수 과목 조회
         List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
-                        .category1("교필")
+                        .majorClassification("교필")
                         .year(String.valueOf(memberLevel))
                         .build()
         )));
@@ -286,7 +286,7 @@ public class TimetableGeneratorManager {
         //교양 선택 과목 조회
         List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
-                        .category1("교선")
+                        .majorClassification("교선")
                         .year(String.valueOf(memberLevel))
                         .build()
         )));
