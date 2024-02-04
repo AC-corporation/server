@@ -48,9 +48,9 @@ public class SubjectService {
                 subjectRepository.save(subject);
             } else {
                 foundSubject.updateSubject(subject.getSubjectName(), subject.getMajorClassification(),
-                        subject.getMultiMajorClassification(), subject.getEngineeringCertification(),
-                        subject.getClassType(), subject.getCredit(), subject.getDesign(),
-                        subject.getSubjectTime(), subject.getSubjectTarget());
+                        subject.getMultiMajorClassification(), subject.getLiberalArtsClassification(),
+                        subject.getEngineeringCertification(), subject.getClassType(), subject.getCredit(),
+                        subject.getDesign(), subject.getSubjectTime(), subject.getSubjectTarget());
                 // classInfo 연관관계 삭제 및 DB 삭제
                 classInfoRepository.deleteAll(foundSubject.getClassInfoList());
                 foundSubject.getClassInfoList().clear();

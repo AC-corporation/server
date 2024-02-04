@@ -106,7 +106,7 @@ public class TimetableGeneratorManager {
     //==Step3==//
 
     /**
-     * 전공 기초/필수 추천 (미완성)
+     * 전공 기초/필수 추천
      * Step3
      * Get
      */
@@ -123,10 +123,8 @@ public class TimetableGeneratorManager {
         String major = majorConvertor(member.getMajor());
 
 
-        List<Subject> subjectList = new ArrayList<>();
-
         //학과 전공 기초/필수 과목 조회
-        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+        List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("전기")
                         .category2("전필")
@@ -153,8 +151,8 @@ public class TimetableGeneratorManager {
         //졸업요건 조회
         List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
                 .stream()
-                .filter(requirementComponent -> (requirementComponent.getRequirementArgument().contains("전필")
-                        || requirementComponent.getRequirementArgument().contains("전기"))
+                .filter(requirementComponent -> (requirementComponent.getRequirementCategory().equals("전공기초")
+                        || requirementComponent.getRequirementCategory().equals("전공"))
                         && !requirementComponent.getRequirementArgument().contains("전선")).toList();
         return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
@@ -193,10 +191,8 @@ public class TimetableGeneratorManager {
             memberLevel++;
 
 
-        List<Subject> subjectList = new ArrayList<>();
-
         //교양 필수 과목 조회
-        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+        List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("교필")
                         .year(String.valueOf(memberLevel))
@@ -218,7 +214,7 @@ public class TimetableGeneratorManager {
     //==Step5==//
 
     /**
-     * 전공 선택 추천 (미완성)
+     * 전공 선택 추천
      * Step5
      * Get
      */
@@ -235,12 +231,11 @@ public class TimetableGeneratorManager {
         String major = majorConvertor(member.getMajor());
 
 
-        List<Subject> subjectList = new ArrayList<>();
-
         //학과 전공 선택 과목 조회
-        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+        List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("전선")
+                        .category2("전필")
                         .majorClassification(major)
                         .year(String.valueOf(memberLevel))
                         .build()
@@ -251,6 +246,7 @@ public class TimetableGeneratorManager {
             subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                     SubjectSpecification.builder()
                             .category1("전선")
+                            .category2("전필")
                             .subjectId(subjectId)
                             .year(String.valueOf(memberLevel))
                             .build()
@@ -287,10 +283,8 @@ public class TimetableGeneratorManager {
             memberLevel++;
 
 
-        List<Subject> subjectList = new ArrayList<>();
-
         //교양 선택 과목 조회
-        subjectList.addAll(subjectRepository.findAll(SubjectSpecification.subjectFilter(
+        List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
                 SubjectSpecification.builder()
                         .category1("교선")
                         .majorClassification("소프트")
