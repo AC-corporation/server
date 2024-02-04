@@ -20,7 +20,7 @@ public class Subject {
     private String subjectName; //과목 이름
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     @Column(name = "class_info_list")
-    private List<ClassInfo> classInfoList = new ArrayList<>(); //강의 시간, 요일, 강의실, 교수명
+    private List<ClassInfo> classInfoList; //강의 시간, 요일, 강의실, 교수명
 
 
     private String department; //개설 학과
