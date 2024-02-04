@@ -26,7 +26,7 @@ public enum GlobalErrorCode {
     _USAINT_LOGIN_FAILED(HttpStatus.BAD_REQUEST, "4101", "유세인트 아이디 또는 비밀번호가 잘못되었습니다"),
     _USAINT_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "4102", "유세인트 서버를 이용할 수 없습니다"),
     _USAINT_CRAWLING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4103", "크롤링에 실패했습니다"),
-    _USAINT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4104", "유저 데이터 저장에 실패했습니다"),
+    _USAINT_PARSING_FAILED(HttpStatus.NOT_IMPLEMENTED, "4104", "데이터 저장에 실패했습니다"),
 
     // 인증
     _INVALID_REFRESHTOKEN(HttpStatus.UNAUTHORIZED,"4201","유효하지 않은 토큰입니다"),
