@@ -21,6 +21,7 @@ public class SubjectResponseDto {
     private String department; //개설 학과
     private String majorClassification; //이수 구분(주전공)
     private String multiMajorClassification; //이수 구분(다전공)
+    private String liberalArtsClassification; //교과 영역(교양 구분)
     private String engineeringCertification; //공학 인증
     private String classType; //분반
     private Double credit; //학점
@@ -32,15 +33,14 @@ public class SubjectResponseDto {
     public SubjectResponseDto(Subject subject) {
         this.subjectId = subject.getSubjectId();
         this.subjectName = subject.getSubjectName();
-        this.classInfoResponseDtoList = new ArrayList<>(subject.getClassInfoList()
+        this.classInfoResponseDtoList = subject.getClassInfoList()
                 .stream()
-                .map(ClassInfoResponseDto::new)
-                .collect(Collectors.toList())
-        );
+                .map(ClassInfoResponseDto::new).collect(Collectors.toList());
         this.department = subject.getDepartment();
         this.majorClassification = subject.getMajorClassification();
         this.multiMajorClassification = subject.getMultiMajorClassification();
         this.engineeringCertification = subject.getEngineeringCertification();
+        this.liberalArtsClassification = subject.getLiberalArtsClassification();
         this.classType = subject.getClassType();
         this.credit = subject.getCredit();
         this.design = subject.getDesign();
