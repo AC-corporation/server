@@ -3,7 +3,6 @@ package allclear.domain.subject;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +27,8 @@ public class Subject {
     private String majorClassification; //이수 구분(주전공)
     @Column(name = "multi_major_classification")
     private String multiMajorClassification; //이수 구분(다전공)
+    @Column(name = "liberal_arts_classification")
+    private String liberalArtsClassification; //교과 영역(교양 구분)
     @Column(name = "engineering_certification")
     private String engineeringCertification; //공학 인증
     @Column(name = "class_type")
@@ -40,21 +41,22 @@ public class Subject {
     private String subjectTarget; //수강 대상
 
 
-    public void updateSubject(String subjectName,String majorClassification, String multiMajorClassification, String engineeringCertification,
-                              String classType, Double credit, Integer design , Double subjectTime, String subjectTarget)
-    {
+    public void updateSubject(String subjectName, String majorClassification, String multiMajorClassification,
+                              String liberalArtsClassification, String engineeringCertification,
+                              String classType, Double credit, Integer design, Double subjectTime, String subjectTarget) {
         this.subjectName = subjectName;
         this.majorClassification = majorClassification;
         this.multiMajorClassification = multiMajorClassification;
+        this.liberalArtsClassification = liberalArtsClassification;
         this.engineeringCertification = engineeringCertification;
         this.classType = classType;
         this.credit = credit;
         this.design = design;
         this.subjectTime = subjectTime;
-        this.subjectTarget=subjectTarget;
+        this.subjectTarget = subjectTarget;
     }
 
-    public void setClassInfoList(List<ClassInfo> classInfoList){
-        this.classInfoList=classInfoList;
+    public void setClassInfoList(List<ClassInfo> classInfoList) {
+        this.classInfoList = classInfoList;
     }
 }
