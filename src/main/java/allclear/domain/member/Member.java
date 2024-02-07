@@ -10,7 +10,6 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,17 +36,21 @@ public class Member implements UserDetails{
     private String username;
     private String university;
     private String major;
+    private String detailMajor; // 세부 전공 ex) 건축학부 건축공학 전공
 
     @Column(name = "class_type")
     private String classType; //분반
     private int level; //학년
     private int semester; //학기
+    private String admissionYear; // 입학연도
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Requirement requirement;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Grade grade;
+
+    private List<Long> prevSubjectIdList; // 이전 수강한 과목 리스트
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private TimetableGenerator timetableGenerator;
@@ -104,7 +107,8 @@ public class Member implements UserDetails{
         this.timetableGenerator = timetableGenerator;
     }
 
-    public void updateMember(String username, String university, String major,String classType,String email,int level,int semester){
+    public void updateMember(String username, String university, String major,String classType,String email,
+                             int level,int semester, String admissionYear, String detailMajor){
         this.username = username;
         this.university = university;
         this.email = email;
@@ -112,6 +116,13 @@ public class Member implements UserDetails{
         this.classType = classType;
         this.level = level;
         this.semester = semester;
+        this.admissionYear = admissionYear;
+        this.detailMajor = detailMajor;
+
+    }
+
+    public void setPrevSubjectIdList(List<Long> prevSubjectIdList) {
+        this.prevSubjectIdList = prevSubjectIdList;
     }
 
 }

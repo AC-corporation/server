@@ -1,9 +1,8 @@
-package allclear.crawl;
+package allclear.crawl.Requirement;
 
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
 import lombok.Getter;
-
 import java.util.ArrayList;
 
 @Getter
@@ -16,7 +15,7 @@ public class ParsingRequirement {
         requirement = new Requirement();
         String requirementString;
         String category = "";
-        for(int i=0;i<requirementStringList.size();i++){
+        for(int i = 0;i < requirementStringList.size(); i++){
             if(!requirementStringList.get(i).isEmpty())
                 requirementString = requirementStringList.get(i);
             else
@@ -67,20 +66,20 @@ public class ParsingRequirement {
                 requirementArgument = requirementStringList.get(i);
             }
 
-            if(requirementStringList.get(i+1).isEmpty()){ // 기준값, 값이 비어있는 경우
+            if(requirementStringList.get(i + 1).isEmpty()){ // 기준값, 값이 비어있는 경우
                 requirementCriteria = (Double)null;
             }
             else{
-                requirementCriteria = Double.parseDouble(requirementStringList.get(i+1));
+                requirementCriteria = Double.parseDouble(requirementStringList.get(i + 1));
             }
 
-            if (requirementStringList.get(i+2).isEmpty()){ // 계산값, 값이 비어있는 경우
+            if (requirementStringList.get(i + 2).isEmpty()){ // 계산값, 값이 비어있는 경우
                 requirementComplete = (Double)null;
             }
             else{
-                requirementComplete = Double.parseDouble(requirementStringList.get(i+2));
+                requirementComplete = Double.parseDouble(requirementStringList.get(i + 2));
             }
-            requirementResult = requirementStringList.get(i+4); // 충족여부
+            requirementResult = requirementStringList.get(i + 4); // 충족여부
 
             RequirementComponent requirementComponent = RequirementComponent.builder()
                             .requirementCategory(category)

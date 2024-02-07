@@ -1,4 +1,4 @@
-package allclear.crawl;
+package allclear.crawl.subject;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;

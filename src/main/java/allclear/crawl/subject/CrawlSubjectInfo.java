@@ -1,4 +1,4 @@
-package allclear.crawl;
+package allclear.crawl.subject;
 
 import allclear.domain.subject.Subject;
 import allclear.global.exception.GlobalException;

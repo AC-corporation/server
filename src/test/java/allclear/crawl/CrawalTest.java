@@ -10,6 +10,7 @@ import java.util.List;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
+        /*
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "비밀번호");
         Member member = crawlMemberInfo.getMember();
         System.out.println(member.getUsername());
@@ -31,6 +32,8 @@ public class CrawalTest {
         for(int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
         }
+
+         */
 
 
 

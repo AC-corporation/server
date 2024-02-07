@@ -2,16 +2,12 @@ package allclear.controller;
 
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.jwt.JwtToken;
-import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import allclear.global.response.ApiResponse;
 import allclear.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-
 
 
 @RestController
@@ -55,7 +51,6 @@ public class MemberController {
             return ApiResponse.onFailure(GlobalErrorCode._INVALID_CODE);
     }
 
-
     //로그인
     @Operation(summary = "로그인", description = "이메일, 비밀번호")
     @PostMapping("/login")
@@ -71,11 +66,27 @@ public class MemberController {
         return ApiResponse.onSuccess("로그아웃에 성공했습니다");
     }
 
-    //업데이트
-    @Operation(summary = "정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PutMapping("/{userId}")
-    public ApiResponse update(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
+    // 학적 정보 업데이트
+    @Operation(summary = "학적 정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
+    @PutMapping("/updateMember/{userId}")
+    public ApiResponse updateMember(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         memberService.updateMember(userId, updateMemberRequestDto);
+        return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
+    }
+
+    // 졸업요건 업데이트
+    @Operation(summary = "졸업 요건 정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
+    @PutMapping("/updateRequirement/{userId}")
+    public ApiResponse updateRequirement(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
+        memberService.updateRequirement(userId, updateMemberRequestDto);
+        return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
+    }
+
+    // 성적 및 커리큘럼 업데이트
+    @Operation(summary = "성적 및 교과과정 정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
+    @PutMapping("/updateGradeAndCurriculum/{userId}")
+    public ApiResponse updateGradeAndCurriculum(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
+        memberService.updateGradeAndCurriculum(userId, updateMemberRequestDto);
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
     }
 
