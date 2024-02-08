@@ -68,7 +68,7 @@ public class MemberController {
 
     // 학적 정보 업데이트
     @Operation(summary = "학적 정보 업데이트", description = "유저 Id, 유세인트 Id, Pwd 필요")
-    @PutMapping("/updateMember/{userId}")
+    @PutMapping("/updateUser/{userId}")
     public ApiResponse updateMember(@PathVariable Long userId, @RequestBody UpdateMemberRequestDto updateMemberRequestDto){
         memberService.updateMember(userId, updateMemberRequestDto);
         return ApiResponse.onSuccess("정보 업데이트에 성공했습니다");
