@@ -42,6 +42,7 @@ public class Member implements UserDetails{
     private String classType; //분반
     private int level; //학년
     private int semester; //학기
+    @Column(name = "admission_year")
     private String admissionYear; // 입학연도
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
