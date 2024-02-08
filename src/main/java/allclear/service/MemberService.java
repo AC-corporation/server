@@ -1,6 +1,9 @@
 package allclear.service;
 
 import allclear.crawl.CrawlMemberInfo;
+import allclear.crawl.Grade.CrawlGradeAndCurriculumInfo;
+import allclear.crawl.LoginUsaint;
+import allclear.crawl.Requirement.CrawlRequirementInfo;
 import allclear.domain.auth.RefreshToken;
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
@@ -31,7 +34,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +43,8 @@ import java.util.Random;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-//@Transactional
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final RequirementRepository requirementRepository;
     private final GradeRepository gradeRepository;
@@ -52,9 +54,7 @@ public class MemberService {
     private final EmailCodeRepository emailCodeRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
-
     private final TimetableGeneratorRepository timetableGeneratorRepository;
-
 
     //로그인
     @Transactional
@@ -105,9 +105,10 @@ public class MemberService {
         String usaintId = request.getUsaintId();
         String usaintPassword = request.getUsaintPassword();
 
-
+        // 유세인트 로그인
+        LoginUsaint loginUsaint = new LoginUsaint(usaintId, usaintPassword);
         //멤버 정보 크롤링
-        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(usaintId, usaintPassword);
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(loginUsaint.getDriver());
 
         //크롤링 한 데이터 member에 저장
         Member newMember = crawlMemberInfo.getMember();
@@ -121,30 +122,13 @@ public class MemberService {
                 .major(newMember.getMajor())
                 .classType(newMember.getClassType())
                 .level(newMember.getLevel())
-                .semester(newMember.getSemester()).build();
+                .semester(newMember.getSemester())
+                .admissionYear(newMember.getAdmissionYear())
+                .detailMajor(newMember.getDetailMajor())
+                .build();
         member.getRoles().add(request.getRole());
 
-        //졸업요건
-        Requirement newRequirement = crawlMemberInfo.getRequirement();
-        newRequirement.setMember(member);
-
-        //성적
-        Grade newGrade = crawlMemberInfo.getGrade();
-        newGrade.setMember(member);
-
-        //시간표 생성기
-        TimetableGenerator newTimetableGenerator;
-        newTimetableGenerator = TimetableGenerator.builder()
-                .tableYear(member.getLevel())
-                .semester(member.getSemester())
-                .prevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList())
-                .curriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList())
-                .build();
-        newTimetableGenerator.setMember(member);
-
-        //memberId 생성
         memberRepository.save(member);
-
         return member.getMemberId();
     }
 
@@ -191,64 +175,126 @@ public class MemberService {
             return false;
     }
 
-    //회원 정보 업데이트
+    //회원 학적 정보 업데이트
     @Transactional
     public void updateMember(Long memberId, UpdateMemberRequestDto requestDto) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
-        Requirement requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).orElse(null);
-        Grade grade = gradeRepository.findById(member.getGrade().getGradeId()).orElse(null);
 
         String usaintId = requestDto.getUsaintId();
         String usaintPassword = requestDto.getUsaintPassword();
-        CrawlMemberInfo crawlInfo = new CrawlMemberInfo(usaintId, usaintPassword);
 
-        //멤버 초기화
-        Member newMember = crawlInfo.getMember();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+
+        // 멤버 업데이트
+        LoginUsaint loginUsaint = new LoginUsaint(usaintId, usaintPassword);
+        CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo(loginUsaint.getDriver());
+
+        Member newMember = crawlMemberInfo.getMember();
         member.updateMember(newMember.getUsername(), newMember.getUniversity(), newMember.getMajor(),
-                newMember.getClassType(), newMember.getEmail(), newMember.getLevel(), newMember.getSemester());
+                newMember.getClassType(), newMember.getEmail(), newMember.getLevel(), newMember.getSemester(),
+                newMember.getAdmissionYear(), newMember.getDetailMajor());
+        memberRepository.save(member);
+    }
 
-        //졸업요건 초기화
-        assert requirement != null;
-        List<RequirementComponent> removeRequirementComponentList = requirement.getRequirementComponentList();
-        for (RequirementComponent component : removeRequirementComponentList) { // 연관관계 삭제
-            component.setRequirement(null);
+    // 졸업 요건 업데이트
+    @Transactional
+    public void updateRequirement(Long memberId, UpdateMemberRequestDto requestDto) {
+
+        Requirement requirement;
+        String usaintId = requestDto.getUsaintId();
+        String usaintPassword = requestDto.getUsaintPassword();
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+
+        // 졸업요건 업데이트
+        LoginUsaint loginUsaint = new LoginUsaint(usaintId, usaintPassword);
+        CrawlRequirementInfo crawlRequirementInfo = new CrawlRequirementInfo(loginUsaint.getDriver());
+        Requirement newRequirement = crawlRequirementInfo.getRequirement();
+
+        if (member.getRequirement() != null)
+            requirement = requirementRepository.findById(member.getRequirement().getRequirementId()).orElse(null);
+        else
+            requirement = null;
+
+        if (requirement != null) {
+            List<RequirementComponent> removeRequirementComponentList = requirement.getRequirementComponentList();
+            for (RequirementComponent removeComponent : removeRequirementComponentList) { // 연관 관계 삭제
+                removeComponent.setRequirement(null);
+            }
+            removeRequirementComponentList.clear();
+            requirementRepository.deleteById(requirement.getRequirementId()); // DB 삭제
+            requirementRepository.flush(); // DB 반영
         }
-        removeRequirementComponentList.clear();
-        requirementRepository.deleteById(requirement.getRequirementId()); // DB 삭제
-        requirementRepository.flush(); // DB 반영
-        Requirement newRequirement = crawlInfo.getRequirement();
         newRequirement.setMember(member);
         requirementRepository.save(newRequirement);
+    }
 
-        //성적 초기화
-        assert grade != null;
-        List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
-        for (SemesterGrade removeSemesterGrade : removeSemesterGradeList) {
-            List<SemesterSubject> removeSemesterSubjectList = removeSemesterGrade.getSemesterSubjectList();
-            for (SemesterSubject semesterSubject : removeSemesterSubjectList) {
-                semesterSubject.setSemesterGrade(null);
+    // 성적 및 교과과정 정보 업데이트
+    @Transactional
+    public void updateGradeAndCurriculum(Long memberId, UpdateMemberRequestDto requestDto) {
+
+        Grade grade;
+        String usaintId = requestDto.getUsaintId();
+        String usaintPassword = requestDto.getUsaintPassword();
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+
+        // 성적 업데이트
+        LoginUsaint loginUsaint = new LoginUsaint(usaintId, usaintPassword);
+        CrawlGradeAndCurriculumInfo crawlGradeInfo = new CrawlGradeAndCurriculumInfo(loginUsaint.getDriver(), member);
+        Grade newGrade = crawlGradeInfo.getGrade();
+
+        if (member.getGrade() != null)
+            grade = gradeRepository.findById(member.getGrade().getGradeId()).orElse(null);
+        else
+            grade = null;
+
+        if (grade != null) {
+            List<SemesterGrade> removeSemesterGradeList = grade.getSemesterGradeList();
+            for (SemesterGrade removeSemesterGrade : removeSemesterGradeList) {
+                List<SemesterSubject> removeSemesterSubjectList = removeSemesterGrade.getSemesterSubjectList();
+                for (SemesterSubject removeSemesterSubject : removeSemesterSubjectList) {
+                    removeSemesterSubject.setSemesterGrade(null);
+                }
+                removeSemesterSubjectList.clear();
+                removeSemesterGrade.setGrade(null);
             }
-            removeSemesterSubjectList.clear();
-            removeSemesterGrade.setGrade(null);
+            grade.getSemesterGradeList().clear();
+            gradeRepository.deleteById(grade.getGradeId()); // DB 삭제
+            gradeRepository.flush(); // DB 반영
         }
-        grade.getSemesterGradeList().clear();
-        gradeRepository.deleteById(grade.getGradeId()); // DB 삭제
-        gradeRepository.flush(); // DB 반영
-        Grade newGrade = crawlInfo.getGrade();
         newGrade.setMember(member);
         gradeRepository.save(newGrade);
 
-        //시간표 생성기 초기화
+        //시간표 생성기 업데이트
+
         TimetableGenerator timetableGenerator;
-        timetableGenerator = timetableGeneratorRepository.findById(member.getTimetableGenerator().getId())
-                .orElse(null);
-        assert timetableGenerator != null;
-        timetableGenerator.getPrevSubjectIdList().clear();
-        timetableGenerator.getCurriculumSubjectIdList().clear();
-        timetableGeneratorRepository.save(timetableGenerator);
-        timetableGenerator.getPrevSubjectIdList().addAll(crawlInfo.getPrevSubjectIdList());
-        timetableGenerator.getCurriculumSubjectIdList().addAll(crawlInfo.getCurriculumSubjectIdList());
+
+        if (member.getTimetableGenerator() != null)
+            timetableGenerator = timetableGeneratorRepository.findById(member.getTimetableGenerator().getId())
+                    .orElse(null);
+        else
+            timetableGenerator = null;
+
+        if (timetableGenerator != null) {
+            timetableGenerator.getPrevSubjectIdList().clear();
+            timetableGenerator.getCurriculumSubjectIdList().clear();
+            timetableGeneratorRepository.save(timetableGenerator);
+            timetableGenerator.getPrevSubjectIdList().addAll(member.getPrevSubjectIdList());
+            timetableGenerator.getCurriculumSubjectIdList().addAll(crawlGradeInfo.getCurriculumSubjectIdList());
+        }
+        else {
+            timetableGenerator = TimetableGenerator.builder()
+                    .tableYear(member.getLevel())
+                    .semester(member.getSemester())
+                    .prevSubjectIdList(member.getPrevSubjectIdList())
+                    .curriculumSubjectIdList(crawlGradeInfo.getCurriculumSubjectIdList())
+                    .build();
+            timetableGenerator.setMember(member);
+
+        }
         timetableGeneratorRepository.save(timetableGenerator);
     }
 

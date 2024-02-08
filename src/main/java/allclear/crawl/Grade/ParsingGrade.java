@@ -1,9 +1,8 @@
-package allclear.crawl;
+package allclear.crawl.Grade;
 
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.grade.SemesterSubject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public class ParsingGrade {
     static List<Long> prevSubjectIdList = new ArrayList<>(); // 수강한 과목 Id 리스트
 
     public static Grade parsingGradeString(String totalCredit, String averageGrade,ArrayList<String> entireGrades, ArrayList<String> detailGrades){
+
         String year; // 학년
         String semester; // 학기
         String semesterAverageGrade; // 학기 평균 학점
@@ -26,8 +26,9 @@ public class ParsingGrade {
                 .build();
         ArrayList<SemesterSubject> semesterSubjectList = new ArrayList<>();
 
-        for(int i=0;i<detailGrades.size();i++){
-            if(i+5>=detailGrades.size())
+        for(int i = 0; i < detailGrades.size(); i++){
+
+            if( i + 5 >= detailGrades.size())
                 break;
             if(detailGrades.get(i).contains("*")){ // 학년 학기 문자열이면 *를 포함하고 있음
                 if (!semesterSubjectList.isEmpty()){
@@ -65,8 +66,8 @@ public class ParsingGrade {
         String semesterAverageGrade = "";
 
 
-        for(int i=0;i<entireGrades.size()-1;i++){
-            if(i+5>=entireGrades.size())
+        for(int i = 0; i < entireGrades.size() - 1; i++){
+            if(i + 5 >= entireGrades.size())
                 break;
             if(entireGrades.get(i).isEmpty()) // 값이 비어있다면 값을 가져오지 않음
                 continue;

@@ -1,7 +1,6 @@
 package allclear.service;
 
-import allclear.crawl.CrawlSubjectInfo;
-import allclear.domain.subject.ClassInfo;
+import allclear.crawl.subject.CrawlSubjectInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.InitSubjectRequestDto;
 import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Service

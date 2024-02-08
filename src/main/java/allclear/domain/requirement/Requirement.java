@@ -24,7 +24,7 @@ public class Requirement {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RequirementComponent> requirementComponentList;
 
 
