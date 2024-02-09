@@ -324,9 +324,13 @@ public class TimetableGeneratorManager {
      * Post
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
-        List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAllById(requestDto.getTimetableGeneratorSubjectIdList());
-        for (TimetableGeneratorSubject tgSubject : tgSubjectList)
-            tgSubject.setSelected(true);
+        List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
+        for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
+            tgSubject.setSelected(false);
+            if (requestDto.getTimetableGeneratorSubjectIdList().contains(tgSubject.getId())) {
+                tgSubject.setSelected(true);
+            }
+        }
     }
 
     /**
@@ -335,12 +339,12 @@ public class TimetableGeneratorManager {
      * Post
      */
     public void generateTimetableList(Long userId) {
-//        TimetableGenerator timetableGenerator = findById(userId);
-//        List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
-//
-//        List<TimetableGeneratorTimetable> tgTimetableList = new ArrayList<>();
-//
-//
+        TimetableGenerator timetableGenerator = findById(userId);
+        List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
+
+        List<TimetableGeneratorTimetable> newTGTimetableList = new ArrayList<>();
+
+
 //        Set<String> selectedSubjectIds = new HashSet<>();
 //
 //        // Filter selected subjects
@@ -351,18 +355,20 @@ public class TimetableGeneratorManager {
 //            }
 //        }
 //
-//        generateTimetables(tgSubjectList, tgTimetableList, new ArrayList<>(), 0, selectedSubjectIds);
-//
-//        for (TimetableGeneratorTimetable tgTimetable : tgTimetableList)
-//            timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
-//        tgTimetableRepository.saveAll(tgTimetableList);
+//        generateTimetables(tgSubjectList, newTGTimetableList, 0);
+
+        // 생성기 시간표 초기화 후 생성한 시간표 넣기
+        tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
+        timetableGenerator.getTimetableGeneratorTimetableList().clear();
+        tgRepository.save(timetableGenerator);
+        for (TimetableGeneratorTimetable tgTimetable : newTGTimetableList)
+            timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
+        tgTimetableRepository.saveAll(newTGTimetableList);
     }
-//
-//    private static void generateTimetables(List<TimetableGeneratorSubject> subjects,
-//                                           List<TimetableGeneratorTimetable> allTimetables,
-//                                           List<TimetableGeneratorClassInfo> currentClasses,
-//                                           int creditCount,
-//                                           Set<String> selectedSubjectIds) {
+
+//    private void generateTimetables(List<TimetableGeneratorSubject> subjects,
+//                                    List<TimetableGeneratorTimetable> newTGTimetableL
+//                                           int creditCount) {
 //        if (creditCount > 18.5) {
 //            return; // Exceeds maximum credit limit
 //        }
