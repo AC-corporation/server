@@ -83,7 +83,8 @@ public class TimetableGeneratorManager {
             List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
 
             for (ClassInfoRequestDto classInfoRequestDto : timetableSubjectRequestDto.getClassInfoRequestDtoList()) {
-                timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo.builder()
+                timetableGeneratorClassInfoList.add(TimetableGeneratorClassInfo
+                        .builder()
                         .professor(classInfoRequestDto.getProfessor())
                         .classDay(classInfoRequestDto.getClassDay())
                         .startTime(classInfoRequestDto.getStartTime())
@@ -386,13 +387,17 @@ public class TimetableGeneratorManager {
         }
 
         for (TimetableGeneratorSubject checkSubject : tgSubjectList) {
+            //이미 선택한 과목 넘기기
+            if (selectedSubjects.contains(checkSubject))
+                continue;
+
             //실제 과목 리스트 생성
             List<TimetableGeneratorSubject> selectedActualSubjects = selectedSubjects
                     .stream()
                     .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
                     .toList();
 
-            //중복된 과목이면 넘기기
+            //유세인트 중복 과목 넘기기
             if (checkSubject.getSubject() != null
                     && selectedActualSubjects
                     .stream()
