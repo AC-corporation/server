@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -341,23 +342,30 @@ public class TimetableGeneratorManager {
     public void generateTimetableList(Long userId) {
         TimetableGenerator timetableGenerator = findById(userId);
         List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
-
         List<TimetableGeneratorTimetable> newTGTimetableList = new ArrayList<>();
+        //필수 수강 과목 스택에 추가
+        Stack<TimetableGeneratorSubject> selectedSubjects = new Stack<>();
+        selectedSubjects.addAll(tgSubjectList
+                .stream()
+                .filter(TimetableGeneratorSubject::isSelected)
+                .toList()
+        );
+        //필수 수강 과목 학점 계산
+        double creditCount = 0;
+        for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
+            if (selectedSubject.getSubject() != null)
+                creditCount += selectedSubject.getSubject().getCredit();
+        }
+        //필수 수강 과목이 아닌 과목
+        List<TimetableGeneratorSubject> nonSelectedSubjects = tgSubjectList
+                .stream()
+                .filter(timetableGeneratorSubject -> !timetableGeneratorSubject.isSelected())
+                .toList();
 
+        //새 시간표 생성하여 newTGTimetableList에 저장
+        generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount);
 
-//        Set<String> selectedSubjectIds = new HashSet<>();
-//
-//        // Filter selected subjects
-//        for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
-//            if (tgSubject.isSelected()) {
-//                // Use first 8 characters for subject id check
-//                selectedSubjectIds.add(tgSubject.getSubject().getSubjectId().toString().substring(0, 8));
-//            }
-//        }
-//
-//        generateTimetables(tgSubjectList, newTGTimetableList, 0);
-
-        // 생성기 시간표 초기화 후 생성한 시간표 넣기
+        //생성기 시간표 초기화 후 생성한 시간표 넣기
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
         tgRepository.save(timetableGenerator);
@@ -366,57 +374,79 @@ public class TimetableGeneratorManager {
         tgTimetableRepository.saveAll(newTGTimetableList);
     }
 
-//    private void generateTimetables(List<TimetableGeneratorSubject> subjects,
-//                                    List<TimetableGeneratorTimetable> newTGTimetableL
-//                                           int creditCount) {
-//        if (creditCount > 18.5) {
-//            return; // Exceeds maximum credit limit
-//        }
-//
-//        for (TimetableGeneratorSubject subject : subjects) {
-//            if (!subject.isSelected()) {
-//                continue; // Skip non-selected subjects
-//            }
-//
-//            // Check for subject id duplication
-//            if (selectedSubjectIds.contains(subject.getSubjectId().substring(0, 8))) {
-//                continue;
-//            }
-//
-//            for (TimetableGeneratorClassInfo classInfo : subject.getTimetableGeneratorClassInfoList()) {
-//                if (isTimeSlotAvailable(currentClasses, classInfo)) {
-//                    List<TimetableGeneratorClassInfo> newClasses = new ArrayList<>(currentClasses);
-//                    newClasses.add(classInfo);
-//
-//                    Set<String> newSelectedSubjectIds = new HashSet<>(selectedSubjectIds);
-//                    newSelectedSubjectIds.add(subject.getSubjectId().substring(0, 8));
-//
-//                    // Recursively generate timetables for the remaining subjects
-//                    generateTimetables(subjects, allTimetables, newClasses, creditCount + subject.getSubject().getCredit(), newSelectedSubjectIds);
-//                }
-//            }
-//        }
-//
-//        // Create a new timetable with the current set of classes
-//        if (!currentClasses.isEmpty()) {
-//            TimetableGeneratorTimetable timetable = new TimetableGeneratorTimetable();
-//            timetable.getTimetableGeneratorSubjectList().addAll(subjects);
-//            timetable.setTimetableGeneratorClassInfoList(currentClasses);
-//            allTimetables.add(timetable);
-//        }
-//    }
-//
-//    //시간대 충돌 체크
-//    private boolean isTimeSlotAvailable(List<TimetableGeneratorClassInfo> currentClasses, TimetableGeneratorClassInfo newClass) {
-//        for (TimetableGeneratorClassInfo existingClass : currentClasses) {
-//            if (existingClass.getClassDay().equals(newClass.getClassDay()) &&
-//                    !existingClass.getEndTime().plusMinutes(10).isBefore(newClass.getStartTime()) &&
-//                    !existingClass.getStartTime().isAfter(newClass.getEndTime().plusMinutes(10))) {
-//                return false; // Time slot conflict
-//            }
-//        }
-//        return true; // No time slot conflict
-//    }
+    private void generateTimetables(List<TimetableGeneratorSubject> tgSubjectList,
+                                    List<TimetableGeneratorTimetable> tgTimetableList,
+                                    Stack<TimetableGeneratorSubject> selectedSubjects,
+                                    double creditCount) {
+
+        if (creditCount > 18.5) {
+            return;
+        } else if (creditCount >= 15.0) {
+            tgTimetableList.add(TimetableGeneratorTimetable.createTimetableGeneratorTimetable(tgSubjectList));
+        }
+
+        for (TimetableGeneratorSubject checkSubject : tgSubjectList) {
+            //실제 과목 리스트 생성
+            List<TimetableGeneratorSubject> selectedActualSubjects = selectedSubjects
+                    .stream()
+                    .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
+                    .toList();
+
+            //중복된 과목이면 넘기기
+            if (checkSubject.getSubject() != null
+                    && selectedActualSubjects
+                    .stream()
+                    .map(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject().getSubjectId() / 100)
+                    .toList()
+                    .contains(checkSubject.getSubject().getSubjectId() / 100)) {
+                continue;
+            }
+
+            //과목을 추가했을 때 이수 가능한 학점 초과라면 넘기기
+            double checkCredit = checkSubject.getSubject() != null ? checkSubject.getSubject().getCredit() : 0;
+            if (creditCount + checkCredit > 18.5) {
+                continue;
+            }
+
+            //충돌 시간대라면 넘기기
+            if (!isTimeSlotAvailable(checkSubject, selectedSubjects)) {
+                continue;
+            }
+
+            selectedSubjects.push(checkSubject);
+            generateTimetables(tgSubjectList, tgTimetableList, selectedSubjects, creditCount + checkCredit);
+            selectedSubjects.pop();
+        }
+    }
+
+    //시간대 충돌 체크
+    private boolean isTimeSlotAvailable(TimetableGeneratorSubject checkSubject,
+                                        Stack<TimetableGeneratorSubject> selectedSubjects) {
+        //이미 선택한 과목들 시간대 추출
+        List<TimetableGeneratorClassInfo> selectedClassInfoList = new ArrayList<>();
+        selectedSubjects
+                .stream()
+                .map(timetableGeneratorSubject -> selectedClassInfoList.addAll(
+                        timetableGeneratorSubject.getTimetableGeneratorClassInfoList()));
+        //시간대 충돌 체크
+        for (TimetableGeneratorClassInfo checkClassInfo : checkSubject.getTimetableGeneratorClassInfoList()) {
+            for (TimetableGeneratorClassInfo selectedClassInfo : selectedClassInfoList) {
+                if (checkClassInfo.getClassDay().equals(selectedClassInfo.getClassDay())) { //같은 요일인지 검사
+                    LocalTime checkStartTime = checkClassInfo.getStartTime();
+                    LocalTime checkEndTime = checkClassInfo.getEndTime();
+                    //체크할 수업의 시작시간이 다른 수업시간 전후 10분과 겹치는지 검사
+                    if (checkStartTime.isAfter(selectedClassInfo.getStartTime().minusMinutes(10))
+                            && checkStartTime.isBefore(selectedClassInfo.getEndTime().plusMinutes(10)))
+                        return false;
+                    //체크할 수업의 종료시간이 다른 수업시간 전후 10분과 겹치는지 검사
+                    if (checkEndTime.isAfter(selectedClassInfo.getStartTime().minusMinutes(10))
+                            && checkEndTime.isBefore(selectedClassInfo.getEndTime().plusMinutes(10)))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
 
 
     //==Step8==//

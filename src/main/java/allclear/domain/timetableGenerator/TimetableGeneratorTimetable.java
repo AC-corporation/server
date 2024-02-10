@@ -19,7 +19,7 @@ public class TimetableGeneratorTimetable {
 
     @OneToMany(mappedBy = "timetableGeneratorTimetable", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "timetable_generator_timetable_subject_list")
-    private List<TimetableGeneratorTimetableSubject> timetableGeneratorTimetableSubjectList = new ArrayList<>();
+    private List<TimetableGeneratorTimetableSubject> timetableGeneratorTimetableSubjectList;
 
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,5 +35,16 @@ public class TimetableGeneratorTimetable {
                 .timetableGeneratorSubject(timetableGeneratorSubject)
                 .build()
         );
+    }
+
+    static public TimetableGeneratorTimetable createTimetableGeneratorTimetable(List<TimetableGeneratorSubject> tgSubjectList) {
+        TimetableGeneratorTimetable tgTimetable = TimetableGeneratorTimetable
+                .builder()
+                .timetableGeneratorTimetableSubjectList(new ArrayList<>())
+                .build();
+        for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
+            tgTimetable.addTimetableGeneratorTimetableSubject(tgSubject);
+        }
+        return tgTimetable;
     }
 }
