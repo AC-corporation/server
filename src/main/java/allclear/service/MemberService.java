@@ -28,6 +28,7 @@ import allclear.repository.requirement.RequirementRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -85,11 +86,16 @@ public class MemberService {
                 .refreshToken(jwtToken.getRefreshToken()).accessToken(jwtToken.getAccessToken())
                 .memberId(memberId).build();
 
+        RefreshToken alreadyToken = refreshTokenRepository.findByMember(member);
+        if(alreadyToken == null){
         refreshTokenRepository.save(RefreshToken.builder()
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
                         .member(member)
-                .build());
+                .build());}
+        else{
+            alreadyToken.updateRefreshToken(jwtToken.getAccessToken(), jwtToken.getRefreshToken());
+        }
 
         return response;
     }
@@ -99,6 +105,11 @@ public class MemberService {
     public Long createMember(MemberSignupRequestDto request) {
         if (memberRepository.findByEmail(request.getEmail()).isPresent())
             throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
+
+        // Roles 입력 안했을 시에 예외처리
+        if(!request.getRole().equals("USER")){
+            throw  new GlobalException(GlobalErrorCode._INVALID_ROLE);
+        }
 
         String password = passwordEncoder.encode(request.getPassword());
 
@@ -333,7 +344,7 @@ public class MemberService {
         Member member;
         member = Member.builder().email("test@email.com").password(passwordEncoder.encode("testPassword"))
                 .username("testUser").level(3).classType("가").major("소프트").semester(1).university("숭실대학교").build();
-        member.getRoles().add("USER");
+        member.getRoles().add("USER1");
 
 
         Requirement requirement = Requirement.builder()
