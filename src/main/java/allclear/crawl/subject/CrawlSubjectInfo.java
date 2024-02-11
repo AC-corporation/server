@@ -47,10 +47,10 @@ public class CrawlSubjectInfo {
         }
         // 크롤링
         try {
-            //crawlMajorSubjects(); // 학부 전공 크롤링
-            //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
-            //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
-            //crawlChapelSubjects(); // 채플 크롤링
+            crawlMajorSubjects(); // 학부 전공 크롤링
+            crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
+            crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
+            crawlChapelSubjects(); // 채플 크롤링
             crawlTeachingSubjects(); // 교직 크롤링
         }
         catch (Exception e){
@@ -58,10 +58,10 @@ public class CrawlSubjectInfo {
         }
         // 파싱
         try {
-            //subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
             subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
         }
         catch (Exception e){
