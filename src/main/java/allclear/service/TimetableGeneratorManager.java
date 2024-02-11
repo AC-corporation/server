@@ -342,6 +342,8 @@ public class TimetableGeneratorManager {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
+        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 4)
+            throw new GlobalException(GlobalErrorCode._UNAVAILABLE_SELECTED_SUBJECT_NUMBER);
         for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
             tgSubject.setSelected(false);
             if (requestDto.getTimetableGeneratorSubjectIdList().contains(tgSubject.getId())) {
@@ -368,8 +370,10 @@ public class TimetableGeneratorManager {
         );
         //필수 수강 과목 중 겹치는 시간대 있으면 예외처리
         for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
-            if (isOverlappingSubject(selectedSubject, selectedSubjects))
+            if (!isTimeSlotAvailable(selectedSubject, selectedSubjects))
                 throw new GlobalException(GlobalErrorCode._SCHEDULE_OVERLAPPED);
+            if (isOverlappedSubject(selectedSubject, selectedSubjects))
+                throw new GlobalException(GlobalErrorCode._SUBJECT_OVERLAPPED);
         }
 
         //필수 수강 과목 학점 계산
@@ -382,11 +386,13 @@ public class TimetableGeneratorManager {
         List<TimetableGeneratorSubject> nonSelectedSubjects = tgSubjectList
                 .stream()
                 .filter(tgSubject -> !tgSubject.isSelected())
-                .filter(tgSubject -> !isOverlappingSubject(tgSubject, selectedSubjects))
+                .filter(tgSubject -> !isOverlappedSubject(tgSubject, selectedSubjects))
                 .toList();
 
         //새 시간표 생성하여 newTGTimetableList에 저장
         generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount);
+        if (newTGTimetableList.size() >= 300)
+            throw new GlobalException(GlobalErrorCode._TOO_MANY_GENERATED_TIMETABLE);
 
         //생성기 시간표 초기화 후 생성한 시간표 넣기
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
@@ -395,10 +401,6 @@ public class TimetableGeneratorManager {
         for (TimetableGeneratorTimetable tgTimetable : newTGTimetableList)
             timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
         tgTimetableRepository.saveAll(newTGTimetableList);
-
-        System.out.println("=============================");
-        System.out.println("생성된 시간표 갯수: " + newTGTimetableList.size());
-        System.out.println("=============================");
     }
 
     private void generateTimetables(List<TimetableGeneratorSubject> tgSubjectList,
@@ -413,7 +415,7 @@ public class TimetableGeneratorManager {
 
         for (TimetableGeneratorSubject checkSubject : tgSubjectList) {
             //이미 선택한 과목 및 유세인트 중복 과목 넘기기
-            if (isOverlappingSubject(checkSubject, selectedSubjects)) {
+            if (isOverlappedSubject(checkSubject, selectedSubjects)) {
                 continue;
             }
 
@@ -435,15 +437,17 @@ public class TimetableGeneratorManager {
     }
 
     //유세인트 중복 과목 체크
-    private boolean isOverlappingSubject(TimetableGeneratorSubject checkSubject,
-                                         Collection<TimetableGeneratorSubject> selectedSubjects) {
+    private boolean isOverlappedSubject(TimetableGeneratorSubject checkSubject,
+                                        Collection<TimetableGeneratorSubject> selectedSubjects) {
         if (checkSubject.getSubject() == null)
             return false;
         List<Long> selectedSubjectIdList = selectedSubjects
                 .stream()
                 .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
+                .filter(timetableGeneratorSubject -> !timetableGeneratorSubject.equals(checkSubject))
                 .map(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject().getSubjectId() / 100)
                 .toList();
+
         //유세인트 중복 과목이면 true
         return selectedSubjectIdList.contains((checkSubject.getSubject().getSubjectId() / 100L));
     }
@@ -454,7 +458,7 @@ public class TimetableGeneratorManager {
         //이미 선택한 과목들 시간대 추출
         List<TimetableGeneratorClassInfo> selectedClassInfoList = new ArrayList<>();
         for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
-            if (checkSubject.getId().equals(selectedSubject.getId()))
+            if (checkSubject.equals(selectedSubject))
                 continue;
             selectedClassInfoList.addAll(selectedSubject.getTimetableGeneratorClassInfoList());
         }
