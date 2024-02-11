@@ -36,8 +36,7 @@ public enum GlobalErrorCode {
     //시간표 생성기
     _SCHEDULE_OVERLAPPED(HttpStatus.BAD_REQUEST, "4301", "중복된 일정입니다"),
     _SUBJECT_OVERLAPPED(HttpStatus.BAD_REQUEST, "4302", "중복된 과목입니다"),
-    _UNAVAILABLE_SELECTED_SUBJECT_NUMBER(HttpStatus.NOT_IMPLEMENTED, "4303", "필수 수강 과목이 4개 미만입니다"),
-    _TOO_MANY_GENERATED_TIMETABLE(HttpStatus.NOT_IMPLEMENTED, "4304","생성된 시간표가 너무 많습니다")
+    _UNAVAILABLE_SELECTED_SUBJECT_NUMBER(HttpStatus.NOT_IMPLEMENTED, "4303", "필수 수강 과목이 4개 미만입니다")
         ;
 
     private final HttpStatus httpStatus;

@@ -15,7 +15,7 @@ import java.util.Stack;
 
 class TimetableGeneratorManager {
 
-    //시간표 생성 (미완성)
+    //시간표 생성
     static List<TimetableGeneratorTimetable> generateTimetables(TimetableGenerator timetableGenerator) {
         List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
         List<TimetableGeneratorTimetable> newTGTimetableList = new ArrayList<>();
@@ -51,11 +51,12 @@ class TimetableGeneratorManager {
         //새 시간표 생성하여 newTGTimetableList에 저장
         generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount);
         if (newTGTimetableList.size() >= 300)
-            throw new GlobalException(GlobalErrorCode._TOO_MANY_GENERATED_TIMETABLE);
+            newTGTimetableList = newTGTimetableList.subList(0, 300);
 
         return newTGTimetableList;
     }
 
+    //시간표 생성 알고리즘
     private static void generateTimetables(List<TimetableGeneratorSubject> tgSubjectList,
                                     List<TimetableGeneratorTimetable> tgTimetableList,
                                     Stack<TimetableGeneratorSubject> selectedSubjects,
@@ -88,7 +89,6 @@ class TimetableGeneratorManager {
             selectedSubjects.pop();
         }
     }
-
 
     //유세인트 중복 과목 체크
     private static boolean isOverlappedSubject(TimetableGeneratorSubject checkSubject,
