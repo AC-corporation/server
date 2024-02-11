@@ -50,8 +50,8 @@ class TimetableGeneratorManager {
 
         //새 시간표 생성하여 newTGTimetableList에 저장
         generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount);
-        if (newTGTimetableList.size() >= 300)
-            newTGTimetableList = newTGTimetableList.subList(0, 300);
+        if (newTGTimetableList.size() >= 200)
+            newTGTimetableList = newTGTimetableList.subList(0, 200);
 
         return newTGTimetableList;
     }
@@ -136,6 +136,5 @@ class TimetableGeneratorManager {
         }
         return true;
     }
-
 
 }
