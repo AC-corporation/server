@@ -500,18 +500,14 @@ public class TimetableGeneratorManager {
                 List<TimetableClassInfo> timetableClassInfoList = new ArrayList<>();
                 for (TimetableGeneratorClassInfo generatorClassInfo : generatorSubject.getTimetableGeneratorClassInfoList()) {
                     timetableClassInfoList.add(
-//                            TimetableClassInfo.createClassInfo(
-//                            generatorClassInfo.getProfessor(),
-//                            generatorClassInfo.getClassDay(),
-//                            generatorClassInfo.getStartTime(),
-//                            generatorClassInfo.getEndTime(),
-//                            generatorClassInfo.getClassRoom()
-//                    )
-                            TimetableClassInfo.builder().professor(generatorClassInfo.getProfessor())
+                            TimetableClassInfo.
+                                    builder()
+                                    .professor(generatorClassInfo.getProfessor())
                                     .classDay(generatorClassInfo.getClassDay())
                                     .startTime(generatorClassInfo.getStartTime())
                                     .endTime(generatorClassInfo.getEndTime())
-                                    .classRoom(generatorClassInfo.getClassRoom()).build()
+                                    .classRoom(generatorClassInfo.getClassRoom())
+                                    .build()
                     );
                 }
                 timetableSubject = TimetableSubject.createCustomTimeTableSubject(
