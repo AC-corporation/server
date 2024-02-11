@@ -149,7 +149,7 @@ public class TimetableGeneratorManager {
         //불필요 과목 삭제
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
-        sortSubject(subjectList, memberLevel);
+        sortSubject(subjectList, major, memberLevel);
         //졸업요건 조회
         List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
                 .stream()
@@ -167,7 +167,17 @@ public class TimetableGeneratorManager {
     public void addActualTimetableGeneratorSubjects(Long userId, Step3to6requestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
 
-        List<Subject> subjectList = subjectRepository.findAllById(requestDto.getSubjectIdList());
+        //중복 선택된 과목 제외
+        List<Long> selectedSubjectId = timetableGenerator.getTimetableGeneratorSubjectList()
+                .stream()
+                .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
+                .map(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject().getSubjectId())
+                .toList();
+        List<Subject> subjectList = subjectRepository.findAllById(requestDto.getSubjectIdList())
+                .stream()
+                .filter(subject -> !selectedSubjectId.contains(subject.getSubjectId()))
+                .toList();
+
         for (Subject subject : subjectList) {
             TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject);
             timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
@@ -191,6 +201,8 @@ public class TimetableGeneratorManager {
         Integer memberLevel = member.getLevel();
         if (LocalDate.now().getMonthValue() < 3)
             memberLevel++;
+        //조회할 과목 전공 저장
+        String major = majorConvertor(member.getMajor());
 
 
         //교양 필수 과목 조회
@@ -198,13 +210,14 @@ public class TimetableGeneratorManager {
                 SubjectSpecification.builder()
                         .majorClassification("교필")
                         .year(String.valueOf(memberLevel))
+                        .subjectTarget(majorConvertor(member.getMajor()))
                         .build()
         )));
 
         //불필요 과목 삭제
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
-        sortSubject(subjectList, memberLevel);
+        sortSubject(subjectList, major, memberLevel);
         //졸업요건 조회
         List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
                 .stream()
@@ -257,7 +270,7 @@ public class TimetableGeneratorManager {
         //불필요 과목 삭제
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
-        sortSubject(subjectList, memberLevel);
+        sortSubject(subjectList, major, memberLevel);
         //졸업요건 조회
         List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
                 .stream()
@@ -283,6 +296,8 @@ public class TimetableGeneratorManager {
         Integer memberLevel = member.getLevel();
         if (LocalDate.now().getMonthValue() < 3)
             memberLevel++;
+        //조회할 과목 전공 저장
+        String major = majorConvertor(member.getMajor());
 
 
         //교양 선택 과목 조회
@@ -296,7 +311,7 @@ public class TimetableGeneratorManager {
         //불필요 과목 삭제
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
-        sortSubject(subjectList, memberLevel);
+        sortSubject(subjectList, major, memberLevel);
         //졸업요건 조회
         List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
                 .stream()
@@ -351,6 +366,12 @@ public class TimetableGeneratorManager {
                 .filter(TimetableGeneratorSubject::isSelected)
                 .toList()
         );
+        //필수 수강 과목 중 겹치는 시간대 있으면 예외처리
+        for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
+            if (isOverlappingSubject(selectedSubject, selectedSubjects))
+                throw new GlobalException(GlobalErrorCode._SCHEDULE_OVERLAPPED);
+        }
+
         //필수 수강 과목 학점 계산
         double creditCount = 0;
         for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
@@ -360,7 +381,8 @@ public class TimetableGeneratorManager {
         //필수 수강 과목이 아닌 과목
         List<TimetableGeneratorSubject> nonSelectedSubjects = tgSubjectList
                 .stream()
-                .filter(timetableGeneratorSubject -> !timetableGeneratorSubject.isSelected())
+                .filter(tgSubject -> !tgSubject.isSelected())
+                .filter(tgSubject -> !isOverlappingSubject(tgSubject, selectedSubjects))
                 .toList();
 
         //새 시간표 생성하여 newTGTimetableList에 저장
@@ -373,37 +395,25 @@ public class TimetableGeneratorManager {
         for (TimetableGeneratorTimetable tgTimetable : newTGTimetableList)
             timetableGenerator.addTimetableGeneratorTimetable(tgTimetable);
         tgTimetableRepository.saveAll(newTGTimetableList);
+
+        System.out.println("=============================");
+        System.out.println("생성된 시간표 갯수: " + newTGTimetableList.size());
+        System.out.println("=============================");
     }
 
     private void generateTimetables(List<TimetableGeneratorSubject> tgSubjectList,
                                     List<TimetableGeneratorTimetable> tgTimetableList,
                                     Stack<TimetableGeneratorSubject> selectedSubjects,
                                     double creditCount) {
-
         if (creditCount > 18.5) {
             return;
-        } else if (creditCount >= 15.0) {
-            tgTimetableList.add(TimetableGeneratorTimetable.createTimetableGeneratorTimetable(tgSubjectList));
+        } else if (creditCount >= 17.0) {
+            tgTimetableList.add(TimetableGeneratorTimetable.createTimetableGeneratorTimetable(selectedSubjects));
         }
 
         for (TimetableGeneratorSubject checkSubject : tgSubjectList) {
-            //이미 선택한 과목 넘기기
-            if (selectedSubjects.contains(checkSubject))
-                continue;
-
-            //실제 과목 리스트 생성
-            List<TimetableGeneratorSubject> selectedActualSubjects = selectedSubjects
-                    .stream()
-                    .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
-                    .toList();
-
-            //유세인트 중복 과목 넘기기
-            if (checkSubject.getSubject() != null
-                    && selectedActualSubjects
-                    .stream()
-                    .map(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject().getSubjectId() / 100)
-                    .toList()
-                    .contains(checkSubject.getSubject().getSubjectId() / 100)) {
+            //이미 선택한 과목 및 유세인트 중복 과목 넘기기
+            if (isOverlappingSubject(checkSubject, selectedSubjects)) {
                 continue;
             }
 
@@ -424,15 +434,31 @@ public class TimetableGeneratorManager {
         }
     }
 
+    //유세인트 중복 과목 체크
+    private boolean isOverlappingSubject(TimetableGeneratorSubject checkSubject,
+                                         Collection<TimetableGeneratorSubject> selectedSubjects) {
+        if (checkSubject.getSubject() == null)
+            return false;
+        List<Long> selectedSubjectIdList = selectedSubjects
+                .stream()
+                .filter(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject() != null)
+                .map(timetableGeneratorSubject -> timetableGeneratorSubject.getSubject().getSubjectId() / 100)
+                .toList();
+        //유세인트 중복 과목이면 true
+        return selectedSubjectIdList.contains((checkSubject.getSubject().getSubjectId() / 100L));
+    }
+
     //시간대 충돌 체크
     private boolean isTimeSlotAvailable(TimetableGeneratorSubject checkSubject,
-                                        Stack<TimetableGeneratorSubject> selectedSubjects) {
+                                        Collection<TimetableGeneratorSubject> selectedSubjects) {
         //이미 선택한 과목들 시간대 추출
         List<TimetableGeneratorClassInfo> selectedClassInfoList = new ArrayList<>();
-        selectedSubjects
-                .stream()
-                .map(timetableGeneratorSubject -> selectedClassInfoList.addAll(
-                        timetableGeneratorSubject.getTimetableGeneratorClassInfoList()));
+        for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
+            if (checkSubject.getId().equals(selectedSubject.getId()))
+                continue;
+            selectedClassInfoList.addAll(selectedSubject.getTimetableGeneratorClassInfoList());
+        }
+
         //시간대 충돌 체크
         for (TimetableGeneratorClassInfo checkClassInfo : checkSubject.getTimetableGeneratorClassInfoList()) {
             for (TimetableGeneratorClassInfo selectedClassInfo : selectedClassInfoList) {
@@ -483,6 +509,7 @@ public class TimetableGeneratorManager {
         Timetable timetable = Timetable
                 .builder()
                 .tableName("새 시간표")
+                .timetableSubjectList(new ArrayList<>())
                 .tableYear(timetableGenerator.getTableYear())
                 .semester(timetableGenerator.getSemester())
                 .build();
@@ -537,6 +564,10 @@ public class TimetableGeneratorManager {
     }
 
 
+    /**
+     * utils
+     */
+
     //전공 문자열 변환
     private String majorConvertor(String major) {
         //IT 대학
@@ -567,7 +598,9 @@ public class TimetableGeneratorManager {
     }
 
     //유저 학년의 과목 앞쪽으로 정렬
-    private void sortSubject(List<Subject> subjectList, int level) {
-        subjectList.sort(Comparator.comparing(o -> !o.getSubjectTarget().contains(String.valueOf(level))));
+    private void sortSubject(List<Subject> subjectList, String major, int level) {
+        subjectList.sort(Comparator
+                .comparing((Subject o) -> o.getSubjectTarget().contains(major) ? 0 : 1)
+                .thenComparing(o -> o.getSubjectTarget().contains(String.valueOf(level)) ? 0 : 1));
     }
 }
