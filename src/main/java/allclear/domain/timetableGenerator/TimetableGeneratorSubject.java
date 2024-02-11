@@ -81,6 +81,7 @@ public class TimetableGeneratorSubject {
                 .builder()
                 .subject(null)
                 .subjectName(subjectName)
+                .timetableGeneratorClassInfoList(new ArrayList<>())
                 .build();
         for (TimetableGeneratorClassInfo classInfo : classInfoList) {
             timetableGeneratorSubject.addTimetableGeneratorClassInfo(classInfo);
