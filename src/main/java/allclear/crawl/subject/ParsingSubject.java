@@ -4,22 +4,20 @@ import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ParsingSubject {
-    /*
-    과목 문자열 파싱함수
-     */
+
     static ArrayList<Subject> subjects = new ArrayList<>();
 
+    // 과목 문자열 파싱함수
     public static ArrayList<Subject> parsingSubjectString(ArrayList<String> subjectString){ //학부전공 과목 파싱 함수
+        Subject subject; // 과목 객체
+
         if (subjectString.isEmpty())
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
-        Subject subject;
         for(int i = 0; i < subjectString.size(); ){
             subject = new Subject(); // subject 객체 생성
             for(int j = 0; j < 10; j++){
@@ -28,7 +26,7 @@ public class ParsingSubject {
                     str = subjectString.get(i); // 문자열 리스트에서 문자열 꺼내기
                 }
                 else {
-                    str = ""; // 리스트가 공백인 경우 ""로 대체
+                    str = ""; // null인 경우 ""로 대체
                 }
                 switch (j){
                     case 0 : // 이수 구분(주전공)
@@ -56,14 +54,12 @@ public class ParsingSubject {
                         }
                         break;
                     case 8 : // 강의 시간 및 강의실
-                        List<ClassInfo> classInfoList = new ArrayList<>();
                         ArrayList<String> classInfoString = new ArrayList<>(Arrays.asList(str.split("\n")));
                         // 개행문자로 구분된 문자열을 split을 이용해 분할 후 리스트로 변환
                         for(int k = 0; k < classInfoString.size(); k++){
                             ClassInfo classInfo;
                             classInfo = makeClassInfo(classInfoString.get(k)); // classInfo 생성 후 반환
                             classInfo.setSubject(subject);
-                            classInfoList.add(classInfo);
                         }
                         break;
                     case 9 : // 수강대상
@@ -78,6 +74,7 @@ public class ParsingSubject {
 
     public static ClassInfo makeClassInfo(String classInfoString){ // ClassInfo 생성 후 반환 해주는 함수
         ClassInfo classInfo;
+
         String professor = ""; // 교수명
         LocalTime startTime = null; // 강의 시작 시간
         LocalTime endTime = null; // 강의 종료 시간
@@ -127,6 +124,7 @@ public class ParsingSubject {
 
             i = i + 2; // 요일의 개수가 여러 개인 경우
         }
+
         classInfo = ClassInfo.builder().professor(professor).classDay(classDay)
                 .startTime(startTime)
                 .endTime(endTime)

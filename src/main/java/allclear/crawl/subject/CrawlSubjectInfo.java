@@ -12,7 +12,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-
 import java.util.ArrayList;
 
 public class CrawlSubjectInfo {
@@ -23,8 +22,11 @@ public class CrawlSubjectInfo {
     private ArrayList<String> optionalGeneralSubjects = new ArrayList<>(); // 교양 선택 과목
     private ArrayList<String> chapelSubjects = new ArrayList<>(); // 채플 과목
     private ArrayList<String> teachingSubjects = new ArrayList<>(); // 교직 이수 과목
+    private final int requiredGeneralSubjectCount = 34; // 교양 필수 과목 개수, 유세인트 변경 시 수정 필요
+    private final int chapelSubjectCount = 3; // 채플 과목 개수, 현재 3개의 채플 과목 존재, 변경 시 수정 필요
 
     WebDriver driver; // 웹 드라이버
+    Actions scroll; // 콤보박스 스크롤 도구
     WebElement target; // 크롤링 할 요소
     String targetPath; // 크롤링 할 요소가 있는 경로
     String targetText; // 크롤링 할 문자
@@ -33,37 +35,38 @@ public class CrawlSubjectInfo {
         // 로그인
         try {
             loginUsaint(usaintId, usaintPassword);
-        } catch (GlobalException e) {
-            throw e;
-        } catch (Exception e){
+        }
+        catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
         }
+
         // 조회 연도 및 학기 설정
         try {
-            setYearSemester(year, semester);
+            setYearSemester(year, semester, scroll);
         } catch (Exception e){
-            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-            // 잘못된 연도와 학기로 조회 검사
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST); // 잘못된 연도와 학기로 조회 검사
         }
+
         // 크롤링
         try {
-            //crawlMajorSubjects(); // 학부 전공 크롤링
-            //crawlRequiredGeneralSubjects(); // 교양 필수 크롤링
-            //crawlOptionalGeneralSubjects(); // 교양 선택 크롤링
-            //crawlChapelSubjects(); // 채플 크롤링
-            crawlTeachingSubjects(); // 교직 크롤링
+            crawlMajorSubjects(scroll); // 학부 전공 크롤링
+            crawlRequiredGeneralSubjects(scroll); // 교양 필수 크롤링
+            crawlOptionalGeneralSubjects(scroll); // 교양 선택 크롤링
+            crawlChapelSubjects(scroll); // 채플 크롤링
+            crawlTeachingSubjects(scroll); // 교직 크롤링
         }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
+
         // 파싱
         try {
-            //subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
-            //subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
-            subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후반환
-        }
+            subjects.addAll(ParsingSubject.parsingSubjectString(majorSubjects)); // 학부 전공 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(requiredGeneralSubjects)); // 교양 필수 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(optionalGeneralSubjects)); // 교양 선택 과목 파싱 후반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(chapelSubjects)); // 채플 과목 파싱 후 반환
+            subjects.addAll(ParsingSubject.parsingSubjectString(teachingSubjects)); // 교직 과목 파싱 후 반환
+            }
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
@@ -71,9 +74,10 @@ public class CrawlSubjectInfo {
     }
 
     public void loginUsaint(String usaintId, String usaintPassword) { // 유세인트 로그인 함수
-        System.setProperty("ENCODING", "UTF-8");
+
+        System.setProperty("ENCODING", "UTF-8"); // 한국어 인코딩 설정
         WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
+        ChromeOptions options = new ChromeOptions(); // 크롬 드라이버 옵션 설정
 
         // 창 숨기는 옵션 추가
         options.addArguments("window-size=1920,1000");
@@ -88,26 +92,26 @@ public class CrawlSubjectInfo {
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-        /*
-         *사용자 정보 획득을 위한 로그인
-         */
+        scroll = new Actions(driver);
+
+        // 사용자 정보 획득을 위한 로그인
         driver.get(loginUrl); // 로그인 접속
         WebElement memberNameElement = driver.findElement(By.name("userid"));
-        WebElement passwordElement = driver.findElement(By.name("pwd")); // 로그인 시도
-        memberNameElement.sendKeys(usaintId);
-        passwordElement.sendKeys(usaintPassword);
+        WebElement passwordElement = driver.findElement(By.name("pwd"));
+        memberNameElement.sendKeys(usaintId); // 아이디 입력
+        passwordElement.sendKeys(usaintPassword); // 비밀번호 입력
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
-        loginButton.click();
+        loginButton.click(); // 로그인 버튼 클릭
+
         try {
             Thread.sleep(1000); // 1초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         try {
             WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
-            homeButton.click();
-            // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭
-            // 클릭이 안 될 경우 예외 처리
+            homeButton.click(); // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭, 클릭이 안 될 경우 예외 처리
         } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
@@ -120,16 +124,14 @@ public class CrawlSubjectInfo {
 
     }
 
-    public void setYearSemester(int year, String semester){ // 해당 년도와 학기에 해당하는 과목 요소 크롤링
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
-        int firstYear; // 학년도 콤보박스에서 자동으로 선택되는 학년도, 유세인트 업데이트 시마다 수정됨
-        int count = 0; // 콤보박스 이동 횟수 초기화
+    public void setYearSemester(int year, String semester, Actions scroll){ // 크롤링 년도 및 학기 설정
 
         try {
             Thread.sleep(1000); // 1초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         WebElement managementButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
         managementButton.click(); // 학사 관리 클릭
         WebElement requestButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]/div/ul/li[2]/a"));
@@ -153,16 +155,17 @@ public class CrawlSubjectInfo {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // firstYear 설정
-        target = driver.findElement(By.id("WD89")); // 자동 선택되어진 학년도 추출
-        firstYear = Integer.parseInt(target.getAttribute("value").substring(0,4));
+
         // 조회 학년도 선택
-        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td[2]/span/span"));
+        target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr/td[2]/span/input")); // 자동 선택되어진 학년도 추출
         target.click();
-        for (int i = 0; i < year - firstYear; i++) {  // 학년도 콤보박스에서 조회 해당 년도로 이동
+        while (true) {
+            if (target.getAttribute("value").substring(0, 4).equals(String.valueOf(year))) {
+                scroll.click().perform();
+                break;
+            }
             scroll.sendKeys(Keys.ARROW_DOWN).perform();
         }
-        scroll.click().perform();
 
         try {
             Thread.sleep(1000); // 1초 동안 실행을 멈추기
@@ -175,12 +178,16 @@ public class CrawlSubjectInfo {
         target.click();
         scroll.sendKeys(Keys.PAGE_UP).perform();
         // 조회 학기에 따른 콤보박스 이동횟수 설정
-        if (semester.equals("여름")) count = 1;
-        else if (semester.equals("2")) count = 2;
-        else if (semester.equals("겨울")) count = 3;
-        for(int i=0;i<count;i++){
-            scroll.sendKeys(Keys.ARROW_DOWN).perform();
+        int count = -1; // 콤보박스 이동 횟수
+        switch (semester) {
+            case "1" -> count = 0;
+            case "여름" -> count = 1;
+            case "2" -> count = 2;
+            case "겨울" -> count = 3;
         }
+
+        for(int i = 0;i < count;i++)
+            scroll.sendKeys(Keys.ARROW_DOWN).perform();
         scroll.click().perform();
 
         try {
@@ -190,20 +197,20 @@ public class CrawlSubjectInfo {
         }
     }
 
-    public void crawlMajorSubjects(){ // 학부전공별 과목 크롤링 환경 설정
-        int majorUniversityCount = 11; // 단과대학 개수
+    public void crawlMajorSubjects(Actions scroll){ // 학부전공별 과목 크롤링 환경 설정
+        int majorUniversityCount = 11; // 단과대학 개수, 유세인트 수정 시 변경 필요
         int majorCount = 0; // 단과대학별 학과 개수
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
 
-        for(int i=0;i<majorUniversityCount;i++){ // 단과대학 개수만큼 반복, 현재 11개의 단과대학 존재, 유세인트 수정 시 변경 필요
+        for(int i = 0;i < majorUniversityCount;i++){ // 단과대학 개수만큼 반복
             target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/" +
                     "table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/" +
                     "tbody/tr/td/table/tbody/tr/td[2]"));
-            target.click(); // 단과대학 콤보박스 클릭
+            target.click(); // 단과 대학 콤보박스 클릭
             scroll.sendKeys(Keys.ARROW_DOWN).perform();
             scroll.click().perform();
+
             try {
-                Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                Thread.sleep(500); // 0.5초 동안 실행을 멈추기
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -222,46 +229,50 @@ public class CrawlSubjectInfo {
                 case 10 : majorCount = 1; break; // 차세대반도체학과
             }
 
-            for (int j=0; j < majorCount; j++){
+            for (int j = 0; j < majorCount; j++) { // 단과대학별 학과 개수만큼 반복
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[3]"));
                 target.click(); // 학과 콤보박스 클릭
                 scroll.sendKeys(Keys.ARROW_DOWN).perform();
                 scroll.click().perform();
+
                 try {
-                    Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                    Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (i == 0 && j == 11){
+
+                if (i == 0 && j == 11) {
                     for(int k = 0; k < 3; k++){ // 스포츠학부, 생활체육전공, 스포츠 사이언스
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[4]"));
-                        target.click();
+                        target.click(); // 세부전공 콤보박스 클릭
                         scroll.sendKeys(Keys.ARROW_DOWN).perform();
                         scroll.click().perform();
+
                         try {
-                            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5); // 크롤링 수행
+                        crawlTable(1,5, scroll); // 크롤링 수행
                     }
                 }
-                else if (i == 6 && j == 5){
-                    for(int k=0; k < 4; k++){ // 건축학부, 건축공학전공, 건축학 전공, 실내건축 전공
+                else if (i == 6 && j == 5) {
+                    for(int k = 0; k < 4; k++){ // 건축학부, 건축공학전공, 건축학 전공, 실내건축 전공
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[4]"));
-                        target.click();
+                        target.click(); // 세부전공 콤보박스 클릭
                         scroll.sendKeys(Keys.ARROW_DOWN).perform();
                         scroll.click().perform();
                         try {
-                            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5); // 크롤링 수행
+                        crawlTable(1,5, scroll); // 크롤링 수행
                     }
                 }
                 else if (i == 7 && j == 4){
@@ -271,40 +282,37 @@ public class CrawlSubjectInfo {
                         scroll.sendKeys(Keys.ARROW_DOWN).perform();
                         scroll.click().perform();
                         try {
-                            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5); // 크롤링 수행
+                        crawlTable(1,5, scroll); // 크롤링 수행
                     }
                 }
                 else{ // 그 외 모든 학과
                     try {
-                        Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                        Thread.sleep(500); // 0.5초 동안 실행을 멈추기
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
                     target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                     target.click(); // 검색 클릭
-                    crawlTable(1,5); // 크롤링 수행
+                    crawlTable(1,5, scroll); // 크롤링 수행
                 }
             }
         }
 
     }
 
-    public void crawlRequiredGeneralSubjects(){ // 교양필수 크롤링
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
-        int subjectCount = 34; // 교양필수 과목 개수, 현재 34개의 교양필수 과목 존재, 변경 시 수정 필요
-
+    public void crawlRequiredGeneralSubjects(Actions scroll){ // 교양필수 크롤링
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/div[2]"));
         target.click(); // 교양필수 클릭
 
         try {
-            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -313,31 +321,31 @@ public class CrawlSubjectInfo {
         target.click(); // 콤보박스 클릭
         scroll.sendKeys(Keys.PAGE_UP).perform(); // 콤보박스 상단으로 이동
 
-        for(int i=0; i < subjectCount; i++){
+        for(int i=0; i < requiredGeneralSubjectCount; i++){
             if (i != 0){ // i = 0인 경우는 이미 클릭 수행 되어짐
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[2]/div/div/table/tbody/tr/td[4]"));
                 target.click(); // 콤보박스 클릭
                 scroll.sendKeys(Keys.ARROW_DOWN).perform();
             }
+
             try {
-                Thread.sleep(1000); // 1초 동안 실행을 멈추기
+                Thread.sleep(500); // 0.5초 동안 실행을 멈추기
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[2]/div/div/table/tbody/tr/td[5]"));
             target.click(); // 검색 클릭
-            crawlTable(2,5); // 크롤링 수행
+            crawlTable(2,5, scroll); // 크롤링 수행
         }
     }
 
-    public void crawlOptionalGeneralSubjects(){ // 교양선택 크롤링
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
-
+    public void crawlOptionalGeneralSubjects(Actions scroll){ // 교양선택 크롤링
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/div[3]"));
         target.click(); // 교양선택 클릭
 
         try {
-            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -347,18 +355,15 @@ public class CrawlSubjectInfo {
         scroll.sendKeys(Keys.PAGE_UP).perform(); // 콤보박스 상단으로 이동, 전체 선택
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[3]/div/div/div/table/tbody/tr/td/div/div/table/tbody/tr/td[3]"));
         target.click(); // 검색 클릭
-        crawlTable(3,7); // 크롤링 수행
+        crawlTable(3,8, scroll); // 크롤링 수행
     }
 
-    public void crawlChapelSubjects(){ // 채플 크롤링
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
-        int subjectCount = 3; // 채플 과목 개수, 현재 3개의 채플 과목 존재, 변경 시 수정 필요
-
+    public void crawlChapelSubjects(Actions scroll){ // 채플 크롤링
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/div[4]"));
         target.click(); // 채플 클릭
 
         try {
-            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -366,46 +371,43 @@ public class CrawlSubjectInfo {
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[4]/div/div/table/tbody/tr/td[4]"));
         target.click(); // 콤보박스 클릭
         scroll.sendKeys(Keys.PAGE_UP).perform(); // 콤보박스 상단으로 이동
-        for(int i=0; i < subjectCount; i++){
+        for(int i=0; i < chapelSubjectCount; i++){
             if (i != 0){ // i = 0인 경우는 이미 클릭 수행 되어짐
                 target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[4]/div/div/table/tbody/tr/td[4]"));
                 target.click(); // 콤보박스 클릭
                 scroll.sendKeys(Keys.ARROW_DOWN).perform();
             }
+
             try {
                 Thread.sleep(1000); // 1초 동안 실행을 멈추기
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[4]/div/div/table/tbody/tr/td[5]"));
             target.click(); // 검색 클릭
-            crawlTable(4,1); // 크롤링 수행
+            crawlTable(4,1, scroll); // 크롤링 수행
         }
     }
 
-    public void crawlTeachingSubjects(){ // 교직 크롤링
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
-
+    public void crawlTeachingSubjects(Actions scroll){ // 교직 크롤링
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[1]/td/table/tbody/tr/td[2]/div/div[5]"));
         target.click(); // 교직 클릭
 
         try {
-            Thread.sleep(1000); // 1초 동안 실행을 멈추기, 실행 안 멈출 시 오류 발생
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기, 실행 안 멈출 시 오류 발생
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[5]/div/div"));
         target.click(); // 검색 클릭
-        crawlTable(5,1); // 크롤링 수행
+        crawlTable(5,1, scroll); // 크롤링 수행
     }
 
-    public void crawlTable(int subjectFlag, int timeSleepTime){ // 테이블 크롤링 수행
-        Actions scroll = new Actions(driver); // 콤보박스 스크롤하기 위한 요소
+    public void crawlTable(int subjectFlag, int timeSleepTime, Actions scroll){ // 테이블 크롤링 수행
 
-        /*
-        timeSleepTime 동안 실행을 멈추기, 크롤링 항목별 대기 시간 차이 발생 때문
-         */
+        // timeSleepTime 동안 실행을 멈추기, 크롤링 항목별 대기 시간 차이 발생 때문
         try {
             Thread.sleep(1000L * timeSleepTime);
         } catch (InterruptedException e) {
@@ -459,7 +461,15 @@ public class CrawlSubjectInfo {
                 tr++;
             }
             catch (Exception e){ // 검색할게 없는 경우
+
+                try {
+                    Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
                 break;
+
             }
         }
     }
