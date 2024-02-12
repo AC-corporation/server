@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +39,14 @@ public class TimetableService {
     public Long createTimetable(Long memberId, CreateTimetableRequestDto request) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
-        Timetable timetable = Timetable.builder().member(member)
+        Timetable timetable = Timetable
+                .builder()
                 .tableName(request.getTableName())
                 .tableYear(request.getTableYear())
-                .semester(request.getSemester()).build();
+                .semester(request.getSemester())
+                .timetableSubjectList(new ArrayList<>())
+                .build();
+        timetable.setMember(member);
         timetableRepository.save(timetable);
         return timetable.getTimetableId();
     }
