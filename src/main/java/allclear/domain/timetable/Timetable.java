@@ -27,7 +27,7 @@ public class Timetable {
 
     @OneToMany(mappedBy = "timetable", cascade = CascadeType.ALL)
     @Column(name = "timetable_subject_list")
-    private List<TimetableSubject> timetableSubjectList = new ArrayList<>();
+    private List<TimetableSubject> timetableSubjectList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

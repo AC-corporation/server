@@ -1,8 +1,7 @@
 package allclear;
 
-import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
-import allclear.service.TimetableGeneratorManager;
+import allclear.service.timetableGenerator.TimetableGeneratorService;
 import jakarta.transaction.Transactional;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +15,13 @@ public class TimetableGeneratorTest {
     @Autowired
     private TimetableGeneratorRepository timetableGeneratorRepository;
     @Autowired
-    private TimetableGeneratorManager timetableGeneratorManager;
+    private TimetableGeneratorService timetableGeneratorService;
 
     private void 시간표_생성_테스트() {
         //given
 
         //when
-//        timetableGeneratorManager.generateTimetableList();
+//        timetableGeneratorService.generateTimetableList();
 
         //then
     }

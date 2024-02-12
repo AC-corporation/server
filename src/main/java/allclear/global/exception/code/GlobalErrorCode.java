@@ -32,6 +32,11 @@ public enum GlobalErrorCode {
     _INVALID_REFRESHTOKEN(HttpStatus.UNAUTHORIZED,"4201","유효하지 않은 토큰입니다"),
     _EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED,"4202","기간이 만료된 토큰입니다"),
     _INVALID_ROLE(HttpStatus.BAD_REQUEST,"4203","잘못된 유저 권한입니다."),
+
+    //시간표 생성기
+    _SCHEDULE_OVERLAPPED(HttpStatus.BAD_REQUEST, "4301", "중복된 일정입니다"),
+    _SUBJECT_OVERLAPPED(HttpStatus.BAD_REQUEST, "4302", "중복된 과목입니다"),
+    _UNAVAILABLE_SELECTED_SUBJECT_NUMBER(HttpStatus.NOT_IMPLEMENTED, "4303", "필수 수강 과목이 4개 미만입니다")
         ;
 
     private final HttpStatus httpStatus;
