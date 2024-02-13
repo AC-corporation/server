@@ -1,6 +1,10 @@
 package allclear.service;
 
 import allclear.crawl.subject.CrawlSubjectInfo;
+import allclear.domain.grade.SemesterGrade;
+import allclear.domain.grade.SemesterSubject;
+import allclear.domain.requirement.RequirementComponent;
+import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.InitSubjectRequestDto;
 import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
@@ -50,11 +54,14 @@ public class SubjectService {
                         subject.getEngineeringCertification(), subject.getClassType(), subject.getCredit(),
                         subject.getDesign(), subject.getSubjectTime(), subject.getSubjectTarget());
                 // classInfo 연관관계 삭제 및 DB 삭제
-                classInfoRepository.deleteAll(foundSubject.getClassInfoList());
-                foundSubject.getClassInfoList().clear();
-                subjectRepository.save(subject);
+                List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
+                for (ClassInfo removeClassInfo : removeClassInfoList) {
+                    removeClassInfo.setSubject(null);
+                }
+                removeClassInfoList.clear();
+                classInfoRepository.deleteAll(removeClassInfoList);
                 foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
-                subjectRepository.save(subject);
+                subjectRepository.save(foundSubject);
             }
         }
     }
