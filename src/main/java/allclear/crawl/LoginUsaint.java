@@ -50,7 +50,7 @@ public class LoginUsaint {
         Logger logger = Logger.getLogger("org.openqa.selenium");
         logger.setLevel(Level.OFF);
 
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
 
         //사용자 정보 획득을 위한 로그인
@@ -76,7 +76,7 @@ public class LoginUsaint {
         }
 
         try {
-            Thread.sleep(2000); // 2초 동안 실행을 멈추기
+            Thread.sleep(3000); // 3초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

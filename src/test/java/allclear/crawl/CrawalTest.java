@@ -1,5 +1,6 @@
 package allclear.crawl;
 
+import allclear.crawl.Grade.CrawlGradeAndCurriculumInfo;
 import allclear.domain.grade.Grade;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
@@ -10,6 +11,10 @@ import java.util.List;
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
+
+        LoginUsaint loginUsaint = new LoginUsaint("20203058", "Jjw112233$");
+        Member member = new Member();
+        CrawlGradeAndCurriculumInfo crawlGradeAndCurriculumInfo = new CrawlGradeAndCurriculumInfo(loginUsaint.driver, member);
         /*
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "비밀번호");
         Member member = crawlMemberInfo.getMember();
@@ -43,6 +48,7 @@ public class CrawalTest {
         System.out.println("************졸업 요건 리스트****************");
         for (int i=0;i<tmpList.size();i++){
             System.out.println(tmpList.get(i));
+
         }
         System.out.println("************전체 학기 성적****************");
         crawlMemberInfo.crawlEntireGrades();

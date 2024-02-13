@@ -70,15 +70,19 @@ public class CrawlGradeAndCurriculumInfo {
         // 학사 관리 버튼 클릭
         WebElement managementButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
         managementButton.click();
+        try {Thread.sleep(100); // 0.1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {e.printStackTrace();}
         // 성적/졸업 버튼 클릭
         WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
+        try {Thread.sleep(100); // 0.1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {e.printStackTrace();}
         // 학기별 성적 조회 클릭
         WebElement gradeCheckBtn = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/div[1]/div[2]/ul/li[1]/a"));
         gradeCheckBtn.click();
 
         try {
-            Thread.sleep(4000); // 4초 동안 실행을 멈추기
+            Thread.sleep(5000); // 5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -86,6 +90,8 @@ public class CrawlGradeAndCurriculumInfo {
         // web frame 변경
         WebElement iframe1 = driver.findElement(By.xpath("//*[@id=\"contentAreaFrame\"]"));
         driver.switchTo().frame(iframe1);
+        try {Thread.sleep(100); // 0.1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {e.printStackTrace();}
         WebElement iframe2 = driver.findElement(By.xpath("//*[@id=\"isolatedWorkArea\"]"));
         driver.switchTo().frame(iframe2);
 
