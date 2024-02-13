@@ -76,7 +76,7 @@ public class LoginUsaint {
         }
 
         try {
-            Thread.sleep(2000); // 2초 동안 실행을 멈추기
+            Thread.sleep(3000); // 3초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
