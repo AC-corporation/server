@@ -355,7 +355,7 @@ public class CrawlSubjectInfo {
         scroll.sendKeys(Keys.PAGE_UP).perform(); // 콤보박스 상단으로 이동, 전체 선택
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[3]/div/div/div/table/tbody/tr/td/div/div/table/tbody/tr/td[3]"));
         target.click(); // 검색 클릭
-        crawlTable(3,8, scroll); // 크롤링 수행
+        crawlTable(3,10, scroll); // 크롤링 수행
     }
 
     public void crawlChapelSubjects(Actions scroll){ // 채플 크롤링
@@ -386,7 +386,7 @@ public class CrawlSubjectInfo {
 
             target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[4]/div/div/table/tbody/tr/td[5]"));
             target.click(); // 검색 클릭
-            crawlTable(4,1, scroll); // 크롤링 수행
+            crawlTable(4,3, scroll); // 크롤링 수행
         }
     }
 
@@ -402,7 +402,7 @@ public class CrawlSubjectInfo {
 
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[5]/div/div"));
         target.click(); // 검색 클릭
-        crawlTable(5,1, scroll); // 크롤링 수행
+        crawlTable(5,3, scroll); // 크롤링 수행
     }
 
     public void crawlTable(int subjectFlag, int timeSleepTime, Actions scroll){ // 테이블 크롤링 수행
