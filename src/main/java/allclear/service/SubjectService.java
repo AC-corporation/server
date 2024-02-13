@@ -61,7 +61,7 @@ public class SubjectService {
                 removeClassInfoList.clear();
                 classInfoRepository.deleteAll(removeClassInfoList);
                 foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
-                subjectRepository.save(subject);
+                subjectRepository.save(foundSubject);
             }
         }
     }
