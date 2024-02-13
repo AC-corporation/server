@@ -50,7 +50,7 @@ public class LoginUsaint {
         Logger logger = Logger.getLogger("org.openqa.selenium");
         logger.setLevel(Level.OFF);
 
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
 
         //사용자 정보 획득을 위한 로그인
