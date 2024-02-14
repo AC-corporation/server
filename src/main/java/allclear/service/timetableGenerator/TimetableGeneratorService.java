@@ -120,7 +120,7 @@ public class TimetableGeneratorService {
 
         //조회할 과목 학년 저장
         Integer memberLevel = member.getLevel();
-        if (LocalDate.now().getMonthValue() < 3)
+        if (LocalDate.now().getMonthValue() < 3 && member.getSemester() == 2)
             memberLevel++;
         //조회할 과목 전공 저장
         String major = majorConvertor(member.getMajor());
@@ -200,7 +200,7 @@ public class TimetableGeneratorService {
 
         //조회할 과목 학년 저장
         Integer memberLevel = member.getLevel();
-        if (LocalDate.now().getMonthValue() < 3)
+        if (LocalDate.now().getMonthValue() < 3 && member.getSemester() == 2)
             memberLevel++;
         //조회할 과목 전공 저장
         String major = majorConvertor(member.getMajor());
@@ -240,7 +240,7 @@ public class TimetableGeneratorService {
 
         //조회할 과목 학년 저장
         Integer memberLevel = member.getLevel();
-        if (LocalDate.now().getMonthValue() < 3)
+        if (LocalDate.now().getMonthValue() < 3 && member.getSemester() == 2)
             memberLevel++;
         //조회할 과목 전공 저장
         String major = majorConvertor(member.getMajor());
@@ -294,7 +294,7 @@ public class TimetableGeneratorService {
 
         //조회할 과목 학년 저장
         Integer memberLevel = member.getLevel();
-        if (LocalDate.now().getMonthValue() < 3)
+        if (LocalDate.now().getMonthValue() < 3 && member.getSemester() == 2)
             memberLevel++;
         //조회할 과목 전공 저장
         String major = majorConvertor(member.getMajor());
