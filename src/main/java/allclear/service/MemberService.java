@@ -28,13 +28,13 @@ import allclear.repository.requirement.RequirementRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,13 +87,13 @@ public class MemberService {
                 .memberId(memberId).build();
 
         RefreshToken alreadyToken = refreshTokenRepository.findByMember(member);
-        if(alreadyToken == null){
-        refreshTokenRepository.save(RefreshToken.builder()
-                .accessToken(jwtToken.getAccessToken())
-                .refreshToken(jwtToken.getRefreshToken())
-                        .member(member)
-                .build());}
-        else{
+        if (alreadyToken == null) {
+            refreshTokenRepository.save(RefreshToken.builder()
+                    .accessToken(jwtToken.getAccessToken())
+                    .refreshToken(jwtToken.getRefreshToken())
+                    .member(member)
+                    .build());
+        } else {
             alreadyToken.updateRefreshToken(jwtToken.getAccessToken(), jwtToken.getRefreshToken());
         }
 
@@ -107,8 +107,8 @@ public class MemberService {
             throw new GlobalException(GlobalErrorCode._DUPLICATE_EMAIL);
 
         // Roles 입력 안했을 시에 예외처리
-        if(!request.getRole().equals("USER")){
-            throw  new GlobalException(GlobalErrorCode._INVALID_ROLE);
+        if (!request.getRole().equals("USER")) {
+            throw new GlobalException(GlobalErrorCode._INVALID_ROLE);
         }
 
         String password = passwordEncoder.encode(request.getPassword());
@@ -136,6 +136,8 @@ public class MemberService {
                 .semester(newMember.getSemester())
                 .admissionYear(newMember.getAdmissionYear())
                 .detailMajor(newMember.getDetailMajor())
+                .prevSubjectIdList(new ArrayList<>())
+                .timetableList(new ArrayList<>())
                 .build();
         member.getRoles().add(request.getRole());
 
@@ -295,13 +297,15 @@ public class MemberService {
             timetableGeneratorRepository.save(timetableGenerator);
             timetableGenerator.getPrevSubjectIdList().addAll(member.getPrevSubjectIdList());
             timetableGenerator.getCurriculumSubjectIdList().addAll(crawlGradeInfo.getCurriculumSubjectIdList());
-        }
-        else {
-            timetableGenerator = TimetableGenerator.builder()
+        } else {
+            timetableGenerator = TimetableGenerator
+                    .builder()
                     .tableYear(member.getLevel())
                     .semester(member.getSemester())
                     .prevSubjectIdList(member.getPrevSubjectIdList())
                     .curriculumSubjectIdList(crawlGradeInfo.getCurriculumSubjectIdList())
+                    .timetableGeneratorSubjectList(new ArrayList<>())
+                    .timetableGeneratorTimetableList(new ArrayList<>())
                     .build();
             timetableGenerator.setMember(member);
 
@@ -336,85 +340,5 @@ public class MemberService {
     public MemberResponseDto getMember(Long id) {
         return new MemberResponseDto(memberRepository.findById(id).
                 orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)));
-    }
-
-    //test 유저 생성
-    @Transactional
-    public Long createTestMember() {
-        Member member;
-        member = Member.builder().email("test@email.com").password(passwordEncoder.encode("testPassword"))
-                .username("testUser").level(3).classType("가").major("소프트").semester(1).university("숭실대학교").build();
-        member.getRoles().add("USER1");
-
-
-        Requirement requirement = Requirement.builder()
-                .member(member)
-                .requirementComponentList(new ArrayList<>())
-                .build();
-
-        RequirementComponent requirementComponent1 = RequirementComponent.builder()
-                .requirement(requirement)
-                .requirementArgument("testArgument1")
-                .requirementCategory("testCategory1")
-                .requirementCriteria(3.0)
-                .requirementComplete(1.0)
-                .requirementResult("부족")
-                .build();
-
-        RequirementComponent requirementComponent2 = RequirementComponent.builder()
-                .requirement(requirement)
-                .requirementArgument("testArgument2")
-                .requirementCategory("testCategory2")
-                .requirementCriteria(3.0)
-                .requirementComplete(3.0)
-                .requirementResult("충족")
-                .build();
-
-        requirement.addRequirementComponent(requirementComponent1);
-        requirement.addRequirementComponent(requirementComponent2);
-
-        //grade
-        Grade grade = Grade.builder()
-                .member(member)
-                .averageGrade("4.5")
-                .totalCredit(110.5)
-                .semesterGradeList(new ArrayList<>())
-                .build();
-
-        ArrayList<SemesterSubject> semesterSubjectList1 = new ArrayList<>();
-        semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject1", "4.5"));
-        semesterSubjectList1.add(SemesterSubject.createSemesterSubject("testSubject2", "4.5"));
-
-        SemesterGrade semesterGrade1 = SemesterGrade.builder()
-                .grade(grade)
-                .semesterAverageGrade("4.5")
-                .semesterSubjectList(semesterSubjectList1)
-                .build();
-        grade.addSemesterGrade(semesterGrade1);
-
-
-        ArrayList<SemesterSubject> semesterSubjectList2 = new ArrayList<>();
-        semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject4", "4.0"));
-        semesterSubjectList2.add(SemesterSubject.createSemesterSubject("testSubject5", "3.0"));
-
-        SemesterGrade semesterGrade2 = SemesterGrade.builder()
-                .grade(grade)
-                .semesterAverageGrade("3.5")
-                .semesterSubjectList(semesterSubjectList2)
-                .build();
-        grade.addSemesterGrade(semesterGrade2);
-
-
-        TimetableGenerator newTimetableGenerator;
-        newTimetableGenerator = TimetableGenerator.builder()
-                .tableYear(2024)
-                .semester(1).build();
-        newTimetableGenerator.setMember(member);
-//        newTimetableGenerator.setPrevSubjectIdList(crawlMemberInfo.getPrevSubjectIdList());
-//        newTimetableGenerator.setCurriculumSubjectIdList(crawlMemberInfo.getCurriculumSubjectIdList());
-
-        memberRepository.save(member);
-
-        return member.getMemberId();
     }
 }
