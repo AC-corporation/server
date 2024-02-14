@@ -211,7 +211,6 @@ public class TimetableGeneratorService {
                 SubjectSpecification.builder()
                         .majorClassification("교필")
                         .year(String.valueOf(memberLevel))
-                        .subjectTarget(majorConvertor(member.getMajor()))
                         .build()
         )));
 
