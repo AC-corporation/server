@@ -20,11 +20,11 @@ public class MemberController {
         return ApiResponse.onSuccess("mapping test");
     }
 
-    @Operation(summary = "test 유저 생성", description = "회원가입 서비스 작동하지 않을 때 test 유저 생성")
-    @PostMapping("/test/createUser")
-    public ApiResponse createTestMember() {
-        return ApiResponse.onSuccess("테스트 유저 생성에 성공했습니다", memberService.createTestMember());
-    }
+//    @Operation(summary = "test 유저 생성", description = "회원가입 서비스 작동하지 않을 때 test 유저 생성")
+//    @PostMapping("/test/createUser")
+//    public ApiResponse createTestMember() {
+//        return ApiResponse.onSuccess("테스트 유저 생성에 성공했습니다", memberService.createTestMember());
+//    }
 
     //회원가입
     @Operation(summary = "회원가입", description = "회원 생성")
