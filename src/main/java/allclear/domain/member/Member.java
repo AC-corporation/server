@@ -6,10 +6,14 @@ import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetableGenerator.TimetableGenerator;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,9 +24,10 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Member implements UserDetails{
+public class Member implements UserDetails {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "member_id")
     private Long memberId;
 
@@ -67,6 +72,7 @@ public class Member implements UserDetails{
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
@@ -94,25 +100,22 @@ public class Member implements UserDetails{
         return true;
     }
 
-    public void setRequirement(Requirement requirement)
-    {
+    public void setRequirement(Requirement requirement) {
         this.requirement = requirement;
     }
 
-    public void setGrade(Grade grade){
+    public void setGrade(Grade grade) {
         this.grade = grade;
     }
 
-    public void setTimetableGenerator(TimetableGenerator timetableGenerator)
-    {
+    public void setTimetableGenerator(TimetableGenerator timetableGenerator) {
         this.timetableGenerator = timetableGenerator;
     }
 
-    public void updateMember(String username, String university, String major,String classType,String email,
-                             int level,int semester, String admissionYear, String detailMajor){
+    public void updateMember(String username, String university, String major, String classType,
+                             int level, int semester, String admissionYear, String detailMajor) {
         this.username = username;
         this.university = university;
-        this.email = email;
         this.major = major;
         this.classType = classType;
         this.level = level;
