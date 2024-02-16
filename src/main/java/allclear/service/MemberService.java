@@ -204,7 +204,7 @@ public class MemberService {
 
         Member newMember = crawlMemberInfo.getMember();
         member.updateMember(newMember.getUsername(), newMember.getUniversity(), newMember.getMajor(),
-                newMember.getClassType(), newMember.getEmail(), newMember.getLevel(), newMember.getSemester(),
+                newMember.getClassType(), newMember.getLevel(), newMember.getSemester(),
                 newMember.getAdmissionYear(), newMember.getDetailMajor());
         memberRepository.save(member);
     }
