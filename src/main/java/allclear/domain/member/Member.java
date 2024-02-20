@@ -129,6 +129,10 @@ public class Member implements UserDetails {
         this.prevSubjectIdList = prevSubjectIdList;
     }
 
+    public void changePassword(String newPassword){
+        this.password= newPassword;
+    }
+
 }
 
 

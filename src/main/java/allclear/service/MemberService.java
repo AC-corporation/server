@@ -341,4 +341,23 @@ public class MemberService {
         return new MemberResponseDto(memberRepository.findById(id).
                 orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS)));
     }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(ChangePasswordDto request){
+        String email = request.getUserId();
+        String password = request.getCurrentPassword();
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+        Long memberId = member.getMemberId();
+
+        //비밀번호 확인
+        if (!passwordEncoder.matches(password, member.getPassword())) {
+            throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
+        }
+
+        member.changePassword(passwordEncoder.encode(request.getNewPassword()));
+
+    }
 }
