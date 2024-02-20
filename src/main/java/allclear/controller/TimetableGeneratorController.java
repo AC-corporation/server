@@ -36,11 +36,11 @@ public class TimetableGeneratorController {
         return ApiResponse.onSuccess("step3 성공했습니다", timetableGeneratorService.suggestMajorSubject(userId));
     }
 
-    @Operation(summary = "전공 기초/필수", description = "생성할 시간표에 선택한 과목 등록")
-    @PostMapping("/step3/{userId}")
-    public ApiResponse step3(@PathVariable Long userId, @RequestBody Step3RequestDto requestDto) {
+    @Operation(summary = "시간표 생성기에 과목 추가", description = "생성할 시간표에 선택한 과목 등록")
+    @PostMapping("/step3to7/{userId}")
+    public ApiResponse addTimetableGeneratorSubject(@PathVariable Long userId, @RequestBody Step3to7RequestDto requestDto) {
         timetableGeneratorService.addActualTimetableGeneratorSubjects(userId, requestDto);
-        return ApiResponse.onSuccess("step3 성공했습니다");
+        return ApiResponse.onSuccess("시간표 생성기 과목 추가 성공했습니다");
     }
 
     //==step4==//
@@ -50,13 +50,6 @@ public class TimetableGeneratorController {
         return ApiResponse.onSuccess("step4 성공했습니다", timetableGeneratorService.suggestLiberalArtsSubject(userId));
     }
 
-    @Operation(summary = "교양 필수", description = "생성할 시간표에 선택한 과목 등록")
-    @PostMapping("/step4/{userId}")
-    public ApiResponse step4(@PathVariable Long userId, @RequestBody Step4RequestDto requestDto) {
-        timetableGeneratorService.addActualTimetableGeneratorSubjects(userId, requestDto);
-        return ApiResponse.onSuccess("step4 성공했습니다");
-    }
-
     //==step5==//
     @Operation(summary = "전공 선택 과목 추천")
     @GetMapping("/step5/{userId}")
@@ -64,25 +57,11 @@ public class TimetableGeneratorController {
         return ApiResponse.onSuccess("step5 성공했습니다", timetableGeneratorService.suggestMajorElectiveSubject(userId));
     }
 
-    @Operation(summary = "전공 선택", description = "생성할 시간표에 선택한 과목 등록")
-    @PostMapping("/step5/{userId}")
-    public ApiResponse step6(@PathVariable Long userId, @RequestBody Step5RequestDto requestDto) {
-        timetableGeneratorService.addActualTimetableGeneratorSubjects(userId, requestDto);
-        return ApiResponse.onSuccess("step5 성공했습니다");
-    }
-
     //==step6==//
     @Operation(summary = "교양 선택 과목 추천")
     @GetMapping("/step6/{userId}")
     public ApiResponse step6(@PathVariable Long userId) {
         return ApiResponse.onSuccess("step6 과목 추천 성공했습니다", timetableGeneratorService.suggestLiberalArtsElectiveSubject(userId));
-    }
-
-    @Operation(summary = "교양 선택", description = "생성할 시간표에 선택한 과목 등록")
-    @PostMapping("/step6/{userId}")
-    public ApiResponse step6(@PathVariable Long userId, @RequestBody Step6RequestDto requestDto) {
-        timetableGeneratorService.addActualTimetableGeneratorSubjects(userId, requestDto);
-        return ApiResponse.onSuccess("step6 성공했습니다");
     }
 
     //==step7==//

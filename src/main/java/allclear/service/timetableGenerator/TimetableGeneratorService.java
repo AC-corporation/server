@@ -165,7 +165,7 @@ public class TimetableGeneratorService {
      * Step3~6
      * Post
      */
-    public void addActualTimetableGeneratorSubjects(Long userId, Step3to6requestDto requestDto) {
+    public void addActualTimetableGeneratorSubjects(Long userId, Step3to7RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
 
         //중복 선택된 과목 제외
