@@ -104,4 +104,12 @@ public class MemberController {
         memberService.deleteMember(userId);
         return ApiResponse.onSuccess("회원 탈퇴에 성공했습니다");
     }
+
+    // 비밀번호 변경
+    @Operation(summary = "비밀번호 변경", description =" 비밀번호 변경")
+    @PostMapping("/changePassword")
+    public ApiResponse changePassword(@RequestBody ChangePasswordDto changePasswordDto){
+        memberService.changePassword(changePasswordDto);
+        return ApiResponse.onSuccess("비밀번호변경에 성공하셨습니다.");
+    }
 }
