@@ -24,6 +24,9 @@ import allclear.repository.timetableGenerator.TimetableGeneratorSubjectRepositor
 import allclear.repository.timetableGenerator.TimetableGeneratorTimetableRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -342,7 +345,7 @@ public class TimetableGeneratorService {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
-        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 3)
+        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 2)
             throw new GlobalException(GlobalErrorCode._UNAVAILABLE_SELECTED_SUBJECT_NUMBER);
         for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
             tgSubject.setSelected(false);
@@ -378,9 +381,17 @@ public class TimetableGeneratorService {
      * Step8
      * Get
      */
-    public Step8ResponseDto getTimetableGeneratorTimetableList(Long userId) {
+    public Step8ResponseDto getTimetableGeneratorTimetableList(Long userId, int page) {
         TimetableGenerator timetableGenerator = findById(userId);
-        return new Step8ResponseDto(timetableGenerator.getTimetableGeneratorTimetableList());
+        Pageable pageable = PageRequest.of(page, 20);
+
+        Page<TimetableGeneratorTimetable> timetablePage = tgTimetableRepository.findAllByTimetableGenerator(
+                timetableGenerator, pageable
+        );
+
+        if (timetablePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+        return new Step8ResponseDto(timetablePage);
     }
 
     /**

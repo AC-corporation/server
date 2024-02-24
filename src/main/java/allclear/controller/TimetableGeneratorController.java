@@ -82,8 +82,9 @@ public class TimetableGeneratorController {
     //==step8==//
     @Operation(summary = "생성된 시간표 불러오기")
     @GetMapping("/step8/{userId}")
-    public ApiResponse step8(@PathVariable Long userId) {
-        return ApiResponse.onSuccess("step8 성공했습니다", timetableGeneratorService.getTimetableGeneratorTimetableList(userId));
+    public ApiResponse step8(@PathVariable Long userId,
+                             @RequestParam(value = "page", defaultValue = "0", required = false) int page) {
+        return ApiResponse.onSuccess("step8 성공했습니다", timetableGeneratorService.getTimetableGeneratorTimetableList(userId, page));
     }
 
     @Operation(summary = "생성된 시간표 저장")
