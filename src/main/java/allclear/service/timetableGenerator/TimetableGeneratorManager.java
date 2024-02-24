@@ -49,28 +49,35 @@ class TimetableGeneratorManager {
                 .toList();
 
         //새 시간표 생성하여 newTGTimetableList에 저장
-        generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount);
+        generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount, 0);
 
         sortTimetable(newTGTimetableList);
 
-        if (newTGTimetableList.size() >= 200)
-            newTGTimetableList = newTGTimetableList.subList(0, 200);
+        System.out.println("======================");
+        System.out.println("생성된 시간표 개수: " + newTGTimetableList.size());
+        System.out.println("======================");
+
+        if (newTGTimetableList.size() >= 1200)
+            newTGTimetableList = newTGTimetableList.subList(0, 1200);
 
         return newTGTimetableList;
     }
 
     //시간표 생성 알고리즘
     private static void generateTimetables(List<TimetableGeneratorSubject> tgSubjectList,
-                                    List<TimetableGeneratorTimetable> tgTimetableList,
-                                    Stack<TimetableGeneratorSubject> selectedSubjects,
-                                    double creditCount) {
+                                           List<TimetableGeneratorTimetable> tgTimetableList,
+                                           Stack<TimetableGeneratorSubject> selectedSubjects,
+                                           double creditCount,
+                                           int index) {
         if (creditCount > 18.5 || tgTimetableList.size() > 100000) {
             return;
         } else if (creditCount >= 17.0) {
             tgTimetableList.add(TimetableGeneratorTimetable.createTimetableGeneratorTimetable(selectedSubjects));
         }
 
-        for (TimetableGeneratorSubject checkSubject : tgSubjectList) {
+        for (TimetableGeneratorSubject checkSubject; index < tgSubjectList.size(); index++) {
+            checkSubject = tgSubjectList.get(index);
+
             //이미 선택한 과목 및 유세인트 중복 과목 넘기기
             if (isOverlappedSubject(checkSubject, selectedSubjects)) {
                 continue;
@@ -88,14 +95,14 @@ class TimetableGeneratorManager {
             }
 
             selectedSubjects.push(checkSubject);
-            generateTimetables(tgSubjectList, tgTimetableList, selectedSubjects, creditCount + checkCredit);
+            generateTimetables(tgSubjectList, tgTimetableList, selectedSubjects, creditCount + checkCredit, index + 1);
             selectedSubjects.pop();
         }
     }
 
     //유세인트 중복 과목 체크
     private static boolean isOverlappedSubject(TimetableGeneratorSubject checkSubject,
-                                        Collection<TimetableGeneratorSubject> selectedSubjects) {
+                                               Collection<TimetableGeneratorSubject> selectedSubjects) {
         if (checkSubject.getSubject() == null)
             return false;
         List<Long> selectedSubjectIdList = selectedSubjects
@@ -111,7 +118,7 @@ class TimetableGeneratorManager {
 
     //시간대 충돌 체크
     private static boolean isTimeSlotAvailable(TimetableGeneratorSubject checkSubject,
-                                        Collection<TimetableGeneratorSubject> selectedSubjects) {
+                                               Collection<TimetableGeneratorSubject> selectedSubjects) {
         //이미 선택한 과목들 시간대 추출
         List<TimetableGeneratorClassInfo> selectedClassInfoList = new ArrayList<>();
         for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
