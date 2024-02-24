@@ -165,7 +165,7 @@ public class TimetableGeneratorService {
 
     /**
      * 시간표 생성기 과목 추가 - 실제 과목
-     * Step3~6
+     * Step3~7
      * Post
      */
     public void addActualTimetableGeneratorSubjects(Long userId, Step3to7RequestDto requestDto) {
@@ -182,8 +182,13 @@ public class TimetableGeneratorService {
                 .filter(subject -> !selectedSubjectId.contains(subject.getSubjectId()))
                 .toList();
 
+        boolean isMajor;
         for (Subject subject : subjectList) {
-            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject);
+            isMajor = subject.getMajorClassification().contains(majorConvertor(timetableGenerator.getMember().getMajor()))
+                    && (subject.getMajorClassification().contains("전기")
+                        || subject.getMajorClassification().contains("전필")
+                        || subject.getMajorClassification().contains("전선"));
+            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject, isMajor);
             timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
         }
     }
