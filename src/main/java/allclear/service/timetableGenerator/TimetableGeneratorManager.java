@@ -4,6 +4,7 @@ import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.domain.timetableGenerator.TimetableGeneratorClassInfo;
 import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
 import allclear.domain.timetableGenerator.TimetableGeneratorTimetable;
+import allclear.dto.requestDto.timetableGenerator.Step7RequestDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 
@@ -16,7 +17,7 @@ import java.util.Stack;
 class TimetableGeneratorManager {
 
     //시간표 생성
-    static List<TimetableGeneratorTimetable> generateTimetables(TimetableGenerator timetableGenerator) {
+    static List<TimetableGeneratorTimetable> generateTimetables(TimetableGenerator timetableGenerator, Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = timetableGenerator.getTimetableGeneratorSubjectList();
         List<TimetableGeneratorTimetable> newTGTimetableList = new ArrayList<>();
         //필수 수강 과목 스택에 추가
@@ -37,10 +38,14 @@ class TimetableGeneratorManager {
 
         //필수 수강 과목 학점 계산
         double creditCount = 0;
+        double majorCreditCount = 0;
         for (TimetableGeneratorSubject selectedSubject : selectedSubjects) {
             if (selectedSubject.getSubject() != null)
                 creditCount += selectedSubject.getSubject().getCredit();
+            if (selectedSubject.getSubject() != null && selectedSubject.isMajor())
+                majorCreditCount += selectedSubject.getSubject().getCredit();
         }
+
         //필수 수강 과목이 아닌 과목
         List<TimetableGeneratorSubject> nonSelectedSubjects = tgSubjectList
                 .stream()
@@ -49,7 +54,7 @@ class TimetableGeneratorManager {
                 .toList();
 
         //새 시간표 생성하여 newTGTimetableList에 저장
-        generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount, 0);
+        generateTimetables(nonSelectedSubjects, newTGTimetableList, selectedSubjects, creditCount, majorCreditCount, requestDto, 0);
 
         sortTimetable(newTGTimetableList);
 
@@ -68,10 +73,12 @@ class TimetableGeneratorManager {
                                            List<TimetableGeneratorTimetable> tgTimetableList,
                                            Stack<TimetableGeneratorSubject> selectedSubjects,
                                            double creditCount,
+                                           double majorCreditCount,
+                                           Step7RequestDto requestDto,
                                            int index) {
-        if (creditCount > 18.5 || tgTimetableList.size() > 100000) {
+        if (creditCount > requestDto.getMaxCredit() || majorCreditCount > requestDto.getMaxMajorCredit())
             return;
-        } else if (creditCount >= 17.0) {
+        else if (creditCount >= requestDto.getMinCredit() && majorCreditCount >= requestDto.getMinMajorCredit()) {
             tgTimetableList.add(TimetableGeneratorTimetable.createTimetableGeneratorTimetable(selectedSubjects));
         }
 
@@ -85,7 +92,11 @@ class TimetableGeneratorManager {
 
             //과목을 추가했을 때 이수 가능한 학점 초과라면 넘기기
             double checkCredit = checkSubject.getSubject() != null ? checkSubject.getSubject().getCredit() : 0;
-            if (creditCount + checkCredit > 18.5) {
+            if (creditCount + checkCredit > requestDto.getMaxCredit()) {
+                continue;
+            }
+            double checkMajorCredit = (checkSubject.getSubject() != null && checkSubject.isMajor()) ? checkSubject.getSubject().getCredit() : 0;
+            if (majorCreditCount + checkMajorCredit > requestDto.getMaxMajorCredit()) {
                 continue;
             }
 
@@ -95,7 +106,9 @@ class TimetableGeneratorManager {
             }
 
             selectedSubjects.push(checkSubject);
-            generateTimetables(tgSubjectList, tgTimetableList, selectedSubjects, creditCount + checkCredit, index + 1);
+            generateTimetables(tgSubjectList, tgTimetableList, selectedSubjects,
+                    creditCount + checkCredit, majorCreditCount + checkMajorCredit,
+                    requestDto, index + 1);
             selectedSubjects.pop();
         }
     }

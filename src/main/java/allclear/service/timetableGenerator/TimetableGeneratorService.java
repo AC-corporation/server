@@ -372,7 +372,7 @@ public class TimetableGeneratorService {
     public void generateTimetableList(Long userId, Step7RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
         //시간표 생성
-        List<TimetableGeneratorTimetable> newTGTimetableList = generateTimetables(timetableGenerator);
+        List<TimetableGeneratorTimetable> newTGTimetableList = generateTimetables(timetableGenerator, requestDto);
         //생성기 시간표 초기화 후 생성한 시간표 넣기
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
@@ -471,6 +471,8 @@ public class TimetableGeneratorService {
      * 시간표 생성기 과목 삭제
      */
     public void deleteTimetableGeneratorSubject(Long timetableGeneratorSubjectId) {
+        tgSubjectRepository.findById(timetableGeneratorSubjectId)
+                        .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         tgSubjectRepository.deleteById(timetableGeneratorSubjectId);
     }
 
