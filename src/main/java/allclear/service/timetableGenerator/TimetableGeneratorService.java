@@ -345,7 +345,7 @@ public class TimetableGeneratorService {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
-        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 2)
+        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 1)
             throw new GlobalException(GlobalErrorCode._UNAVAILABLE_SELECTED_SUBJECT_NUMBER);
         for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
             tgSubject.setSelected(false);
