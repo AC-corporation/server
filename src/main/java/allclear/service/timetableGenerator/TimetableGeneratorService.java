@@ -345,6 +345,10 @@ public class TimetableGeneratorService {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
+        //잘못된 수강 학점 선택 예외처리
+        if (requestDto.getMinCredit() > requestDto.getMaxCredit()
+            || requestDto.getMinMajorCredit() > requestDto.getMaxMajorCredit())
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
         if (requestDto.getTimetableGeneratorSubjectIdList().size() < 1)
             throw new GlobalException(GlobalErrorCode._UNAVAILABLE_SELECTED_SUBJECT_NUMBER);
         for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
