@@ -364,7 +364,7 @@ public class TimetableGeneratorService {
      * Step 7
      * Post
      */
-    public void generateTimetableList(Long userId) {
+    public void generateTimetableList(Long userId, Step7RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
         //시간표 생성
         List<TimetableGeneratorTimetable> newTGTimetableList = generateTimetables(timetableGenerator);

@@ -11,5 +11,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class Step7RequestDto {
+    private int minCredit;
+    private int maxCredit;
+    private int minMajorCredit;
+    private int maxMajorCredit;
     private List<Long> timetableGeneratorSubjectIdList;
 }
