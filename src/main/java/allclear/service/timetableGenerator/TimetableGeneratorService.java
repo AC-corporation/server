@@ -24,6 +24,9 @@ import allclear.repository.timetableGenerator.TimetableGeneratorSubjectRepositor
 import allclear.repository.timetableGenerator.TimetableGeneratorTimetableRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -162,7 +165,7 @@ public class TimetableGeneratorService {
 
     /**
      * 시간표 생성기 과목 추가 - 실제 과목
-     * Step3~6
+     * Step3~7
      * Post
      */
     public void addActualTimetableGeneratorSubjects(Long userId, Step3to7RequestDto requestDto) {
@@ -179,8 +182,13 @@ public class TimetableGeneratorService {
                 .filter(subject -> !selectedSubjectId.contains(subject.getSubjectId()))
                 .toList();
 
+        boolean isMajor;
         for (Subject subject : subjectList) {
-            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject);
+            isMajor = subject.getMajorClassification().contains(majorConvertor(timetableGenerator.getMember().getMajor()))
+                    && (subject.getMajorClassification().contains("전기")
+                        || subject.getMajorClassification().contains("전필")
+                        || subject.getMajorClassification().contains("전선"));
+            TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject.createActualTimetableGeneratorSubject(subject, isMajor);
             timetableGenerator.addTimetableGeneratorSubject(timetableGeneratorSubject);
         }
     }
@@ -342,7 +350,11 @@ public class TimetableGeneratorService {
      */
     public void checkSelectedTimetableSubject(Step7RequestDto requestDto) {
         List<TimetableGeneratorSubject> tgSubjectList = tgSubjectRepository.findAll();
-        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 3)
+        //잘못된 수강 학점 선택 예외처리
+        if (requestDto.getMinCredit() > requestDto.getMaxCredit()
+            || requestDto.getMinMajorCredit() > requestDto.getMaxMajorCredit())
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+        if (requestDto.getTimetableGeneratorSubjectIdList().size() < 1)
             throw new GlobalException(GlobalErrorCode._UNAVAILABLE_SELECTED_SUBJECT_NUMBER);
         for (TimetableGeneratorSubject tgSubject : tgSubjectList) {
             tgSubject.setSelected(false);
@@ -357,10 +369,10 @@ public class TimetableGeneratorService {
      * Step 7
      * Post
      */
-    public void generateTimetableList(Long userId) {
+    public void generateTimetableList(Long userId, Step7RequestDto requestDto) {
         TimetableGenerator timetableGenerator = findById(userId);
         //시간표 생성
-        List<TimetableGeneratorTimetable> newTGTimetableList = generateTimetables(timetableGenerator);
+        List<TimetableGeneratorTimetable> newTGTimetableList = generateTimetables(timetableGenerator, requestDto);
         //생성기 시간표 초기화 후 생성한 시간표 넣기
         tgTimetableRepository.deleteAll(timetableGenerator.getTimetableGeneratorTimetableList());
         timetableGenerator.getTimetableGeneratorTimetableList().clear();
@@ -378,9 +390,17 @@ public class TimetableGeneratorService {
      * Step8
      * Get
      */
-    public Step8ResponseDto getTimetableGeneratorTimetableList(Long userId) {
+    public Step8ResponseDto getTimetableGeneratorTimetableList(Long userId, int page) {
         TimetableGenerator timetableGenerator = findById(userId);
-        return new Step8ResponseDto(timetableGenerator.getTimetableGeneratorTimetableList());
+        Pageable pageable = PageRequest.of(page, 20);
+
+        Page<TimetableGeneratorTimetable> timetablePage = tgTimetableRepository.findAllByTimetableGenerator(
+                timetableGenerator, pageable
+        );
+
+        if (timetablePage.getContent().isEmpty())
+            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+        return new Step8ResponseDto(timetablePage);
     }
 
     /**
@@ -451,6 +471,8 @@ public class TimetableGeneratorService {
      * 시간표 생성기 과목 삭제
      */
     public void deleteTimetableGeneratorSubject(Long timetableGeneratorSubjectId) {
+        tgSubjectRepository.findById(timetableGeneratorSubjectId)
+                        .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         tgSubjectRepository.deleteById(timetableGeneratorSubjectId);
     }
 
