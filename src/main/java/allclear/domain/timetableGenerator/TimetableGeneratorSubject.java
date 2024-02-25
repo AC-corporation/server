@@ -27,7 +27,11 @@ public class TimetableGeneratorSubject {
 
     @Setter
     @Column(name = "is_selected")
-    private boolean isSelected = false;
+    private boolean isSelected;
+
+    @Column(name = "is_major")
+    private boolean isMajor;
+
     @OneToMany(mappedBy = "timetableGeneratorSubject", cascade = CascadeType.ALL)
     @Column(name = "timetable_generator_class_info_list")
     private List<TimetableGeneratorClassInfo> timetableGeneratorClassInfoList = new ArrayList<>();
@@ -50,11 +54,13 @@ public class TimetableGeneratorSubject {
     /**
      * 실제 과목
      */
-    public static TimetableGeneratorSubject createActualTimetableGeneratorSubject(Subject subject) {
+    public static TimetableGeneratorSubject createActualTimetableGeneratorSubject(Subject subject, boolean isMajor) {
         TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject
                 .builder()
                 .subject(subject)
                 .subjectName(subject.getSubjectName())
+                .isMajor(isMajor)
+                .isSelected(false)
                 .timetableGeneratorClassInfoList(new ArrayList<>())
                 .build();
         for (ClassInfo classInfo : subject.getClassInfoList()) {
@@ -81,6 +87,8 @@ public class TimetableGeneratorSubject {
                 .builder()
                 .subject(null)
                 .subjectName(subjectName)
+                .isMajor(false)
+                .isSelected(false)
                 .timetableGeneratorClassInfoList(new ArrayList<>())
                 .build();
         for (TimetableGeneratorClassInfo classInfo : classInfoList) {
