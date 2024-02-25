@@ -344,11 +344,10 @@ public class MemberService {
 
     // 비밀번호 변경
     @Transactional
-    public void changePassword(ChangePasswordDto request){
-        String email = request.getUserId();
+    public void changePassword(Long id,ChangePasswordDto request){
         String password = request.getCurrentPassword();
 
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
         Long memberId = member.getMemberId();
 

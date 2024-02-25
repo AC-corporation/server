@@ -107,9 +107,9 @@ public class MemberController {
 
     // 비밀번호 변경
     @Operation(summary = "비밀번호 변경", description =" 비밀번호 변경")
-    @PostMapping("/changePassword")
-    public ApiResponse changePassword(@RequestBody ChangePasswordDto changePasswordDto){
-        memberService.changePassword(changePasswordDto);
+    @PostMapping("/changePassword/{userId}")
+    public ApiResponse changePassword(@PathVariable Long userId ,@RequestBody ChangePasswordDto changePasswordDto){
+        memberService.changePassword(userId, changePasswordDto);
         return ApiResponse.onSuccess("비밀번호변경에 성공하셨습니다.");
     }
 }
