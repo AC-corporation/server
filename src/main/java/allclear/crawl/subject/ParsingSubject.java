@@ -20,7 +20,7 @@ public class ParsingSubject {
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         for(int i = 0; i < subjectString.size(); ){
             subject = new Subject(); // subject 객체 생성
-            for(int j = 0; j < 10; j++){
+            for(int j = 0; j < 11; j++){
                 String str; // 임시 문자열
                 if (!subjectString.get(i).isEmpty()){
                     str = subjectString.get(i); // 문자열 리스트에서 문자열 꺼내기
@@ -35,15 +35,17 @@ public class ParsingSubject {
                         subject.setMultiMajorClassification(str);break;
                     case 2 : // 공학 인증
                         subject.setEngineeringCertification(str);break;
-                    case 3 : // 과목 번호
+                    case 3 : // 교과 영역
+                        subject.setLiberalArtsClassification(str);break;
+                    case 4 : // 과목 번호
                         subject.setSubjectId(Long.parseLong(str));break;
-                    case 4 : // 과목명
+                    case 5 : // 과목명
                         subject.setSubjectName(str);break;
-                    case 5 : // 분반
+                    case 6 : // 분반
                         subject.setClassType(str);break;
-                    case 6 : // 개설 학과
+                    case 7 : // 개설 학과
                         subject.setDepartment(str);break;
-                    case 7 : // 시간/학점(설계)
+                    case 8 : // 시간/학점(설계)
                         int slashIndex = str.indexOf("/"); // "/" 문자 위치
                         int bracesIndex = 0; // "(" 문자 위치
                         subject.setSubjectTime(Double.parseDouble(str.substring(0, slashIndex - 1))); // 시간
@@ -53,7 +55,7 @@ public class ParsingSubject {
                             subject.setDesign(Integer.parseInt(str.substring(bracesIndex + 1, bracesIndex + 2))); // 설계
                         }
                         break;
-                    case 8 : // 강의 시간 및 강의실
+                    case 9 : // 강의 시간 및 강의실
                         ArrayList<String> classInfoString = new ArrayList<>(Arrays.asList(str.split("\n")));
                         // 개행문자로 구분된 문자열을 split을 이용해 분할 후 리스트로 변환
                         for(int k = 0; k < classInfoString.size(); k++){
@@ -62,7 +64,7 @@ public class ParsingSubject {
                             classInfo.setSubject(subject);
                         }
                         break;
-                    case 9 : // 수강대상
+                    case 10 : // 수강대상
                         subject.setSubjectTarget(str);
                 }
                 i = i + 1;

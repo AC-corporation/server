@@ -49,20 +49,28 @@ public class SubjectService {
             if (foundSubject == null) {
                 subjectRepository.save(subject);
             } else {
-                foundSubject.updateSubject(subject.getSubjectName(), subject.getMajorClassification(),
+                // subject 업데이트
+                foundSubject.updateSubject(subject.getSubjectId(), subject.getSubjectName(), subject.getMajorClassification(),
                         subject.getMultiMajorClassification(), subject.getLiberalArtsClassification(),
                         subject.getEngineeringCertification(), subject.getClassType(), subject.getCredit(),
                         subject.getDesign(), subject.getSubjectTime(), subject.getSubjectTarget());
+
                 // classInfo 연관관계 삭제 및 DB 삭제
                 List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
                 for (ClassInfo removeClassInfo : removeClassInfoList) {
-                    removeClassInfo.setSubject(null);
+                    classInfoRepository.delete(removeClassInfo); // 삭제
                 }
+                classInfoRepository.flush(); // 즉시 DB 반영
                 removeClassInfoList.clear();
-                classInfoRepository.deleteAll(removeClassInfoList);
-                foundSubject.setClassInfoList(subject.getClassInfoList()); // 업데이트 내용 DB 저장
+
+                // classInfo 업데이트
+                List<ClassInfo> newClassInfoList = subject.getClassInfoList();
+                for (ClassInfo classInfo : newClassInfoList) {
+                    classInfo.setSubject(foundSubject);
+                }
                 subjectRepository.save(foundSubject);
             }
+            subjectRepository.flush();
         }
     }
 

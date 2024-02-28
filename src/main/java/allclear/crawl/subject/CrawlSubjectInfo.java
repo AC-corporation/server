@@ -355,7 +355,7 @@ public class CrawlSubjectInfo {
         scroll.sendKeys(Keys.PAGE_UP).perform(); // 콤보박스 상단으로 이동, 전체 선택
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[3]/div/div/div/table/tbody/tr/td/div/div/table/tbody/tr/td[3]"));
         target.click(); // 검색 클릭
-        crawlTable(3,10, scroll); // 크롤링 수행
+        crawlTable(3,11, scroll); // 크롤링 수행
     }
 
     public void crawlChapelSubjects(Actions scroll){ // 채플 크롤링
@@ -430,7 +430,7 @@ public class CrawlSubjectInfo {
             try {
                 int td; // 열
                 for(td = 2; td <= 15; td++){
-                    if (td == 5 || td == 9 || td == 12 || td == 13) // 크롤링 불필요 요소
+                    if (td == 9 || td == 12 || td == 13) // 크롤링 불필요 요소, 교수, 수강인원, 여석
                         continue;
                     else if(td == 6){ // 과목번호 크롤링
                         targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[5]/td/table/tbody/tr/td/table/tbody/tr[2]/td/div/div/div/span/span/table/tbody/tr[2]/td/div/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[" +
