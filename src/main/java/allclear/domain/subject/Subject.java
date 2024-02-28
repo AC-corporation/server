@@ -17,7 +17,7 @@ public class Subject {
     private Long subjectId; //과목 번호
     @Column(name = "subject_name")
     private String subjectName; //과목 이름
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
     @Column(name = "class_info_list")
     private List<ClassInfo> classInfoList; //강의 시간, 요일, 강의실, 교수명
 
@@ -41,9 +41,10 @@ public class Subject {
     private String subjectTarget; //수강 대상
 
 
-    public void updateSubject(String subjectName, String majorClassification, String multiMajorClassification,
+    public void updateSubject(Long subjectId, String subjectName, String majorClassification, String multiMajorClassification,
                               String liberalArtsClassification, String engineeringCertification,
                               String classType, Double credit, Integer design, Double subjectTime, String subjectTarget) {
+        this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.majorClassification = majorClassification;
         this.multiMajorClassification = multiMajorClassification;
