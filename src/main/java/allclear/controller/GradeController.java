@@ -2,24 +2,26 @@ package allclear.controller;
 
 import allclear.dto.responseDto.grade.GradeResponseDto;
 import allclear.dto.responseDto.grade.SemesterGradeResponseDto;
+import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.jwt.JwtTokenProvider;
 import allclear.global.response.ApiResponse;
 import allclear.service.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/grade")
 public class GradeController {
     private final GradeService gradeService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "전체 성적 조회", description = "전체 성적 조회")
     @GetMapping("/getGrade/{userId}")
-    public ApiResponse<GradeResponseDto> getGrade(@PathVariable Long userId){
+    public ApiResponse<GradeResponseDto> getGrade(@PathVariable Long userId,@RequestHeader("Authorization") String authorizationHeader){
+        if(!jwtTokenProvider.compareMember(authorizationHeader,userId))
+            return ApiResponse.onFailure(GlobalErrorCode._UNAUTHORIZED,null);
         return ApiResponse.onSuccess("전체 성적 조회에 성공했습니다",gradeService.getGrade(userId));
     }
 

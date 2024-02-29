@@ -80,7 +80,7 @@ public class MemberService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
+        JwtToken jwtToken = jwtTokenProvider.generateToken(authentication,memberId);
 
         JwtToken response = JwtToken.builder().grantType(jwtToken.getGrantType())
                 .refreshToken(jwtToken.getRefreshToken()).accessToken(jwtToken.getAccessToken())
@@ -330,9 +330,15 @@ public class MemberService {
 
     //회원 탈퇴
     @Transactional
-    public void deleteMember(Long id) {
-        memberRepository.findById(id)
+    public void deleteMember(Long id,DeleteMemberDto deleteMemberDto) {
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+
+        //비밀번호 확인
+        if (!passwordEncoder.matches(deleteMemberDto.getPassword(), member.getPassword())) {
+            throw new GlobalException(GlobalErrorCode._PASSWORD_MISMATCH);
+        }
+
         memberRepository.deleteById(id);
     }
 
@@ -358,5 +364,27 @@ public class MemberService {
 
         member.changePassword(passwordEncoder.encode(request.getNewPassword()));
 
+    }
+    @Transactional
+    public void createTestMember(MemberSignupRequestDto requestDto){
+        Member member;
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        member = Member.builder()
+                .email(requestDto.getEmail())
+                .password(password)
+                .username("test")
+                .university("test")
+                .major("test")
+                .classType("test")
+                .level(4)
+                .semester(2)
+                .admissionYear("test")
+                .detailMajor("test")
+                .prevSubjectIdList(new ArrayList<>())
+                .timetableList(new ArrayList<>())
+                .build();
+        member.getRoles().add(requestDto.getRole());
+
+        memberRepository.save(member);
     }
 }

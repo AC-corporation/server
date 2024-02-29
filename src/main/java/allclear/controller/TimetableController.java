@@ -2,6 +2,8 @@ package allclear.controller;
 
 import allclear.dto.requestDto.timetable.CreateTimetableRequestDto;
 import allclear.dto.requestDto.timetable.UpdateTimetableRequestDto;
+import allclear.global.exception.code.GlobalErrorCode;
+import allclear.global.jwt.JwtTokenProvider;
 import allclear.global.response.ApiResponse;
 import allclear.service.TimetableService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,13 +15,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/timetable")
 public class TimetableController {
     private final TimetableService timetableService;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     //==시간표==//
     @Operation(summary = "시간표 생성")
     @PostMapping("/{userId}")
     public ApiResponse createTimetable(@PathVariable Long userId,
-                                       @RequestBody CreateTimetableRequestDto requestDto) {
+                                       @RequestBody CreateTimetableRequestDto requestDto
+    ,@RequestHeader("Authorization") String authorizationHeader) {
+        if(!jwtTokenProvider.compareMember(authorizationHeader,userId))
+            return ApiResponse.onFailure(GlobalErrorCode._UNAUTHORIZED);
         Long timetableId = timetableService.createTimetable(userId, requestDto);
         return ApiResponse.onSuccess("시간표 생성에 성공했습니다", timetableId);
     }

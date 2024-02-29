@@ -32,7 +32,7 @@ public class AuthService{
         RefreshToken alreadyToken = refreshTokenRepository.findByRefreshToken(refreshToken);
         if(alreadyToken != null) {
             Authentication authentication = jwtTokenProvider.getAuthentication(alreadyToken.getAccessToken());
-            JwtToken newJwtToken = jwtTokenProvider.generateToken(authentication);
+            JwtToken newJwtToken = jwtTokenProvider.generateToken(authentication, alreadyToken.getMember().getMemberId());
             ReissueToken reissueToken = ReissueToken.builder().accessToken(newJwtToken.getAccessToken())
                     .refreshToken(newJwtToken.getRefreshToken()).grantType(newJwtToken.getGrantType()).build();
             alreadyToken.updateRefreshToken(newJwtToken.getAccessToken(), newJwtToken.getRefreshToken());

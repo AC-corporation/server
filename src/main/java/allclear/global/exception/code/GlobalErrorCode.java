@@ -32,6 +32,7 @@ public enum GlobalErrorCode {
     _INVALID_REFRESHTOKEN(HttpStatus.UNAUTHORIZED,"4201","유효하지 않은 토큰입니다"),
     _EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED,"4202","기간이 만료된 토큰입니다"),
     _INVALID_ROLE(HttpStatus.BAD_REQUEST,"4203","잘못된 유저 권한입니다."),
+    _NO_MATCH_MEMBER(HttpStatus.UNAUTHORIZED,"4204","토큰이 해당 유저와 연동되지않습니다"),
 
     //시간표 생성기
     _SCHEDULE_OVERLAPPED(HttpStatus.BAD_REQUEST, "4301", "중복된 일정입니다"),

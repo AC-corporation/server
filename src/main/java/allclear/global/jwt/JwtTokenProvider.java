@@ -1,9 +1,13 @@
 package allclear.global.jwt;
 
+import allclear.domain.member.Member;
 import allclear.dto.responseDto.jwt.JwtToken;
+import allclear.global.exception.GlobalException;
+import allclear.global.exception.code.GlobalErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 import java.security.Key;
@@ -23,7 +28,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-
+@Getter
 public class JwtTokenProvider {
     private final Key key;
 
@@ -33,7 +38,7 @@ public class JwtTokenProvider {
     }
 
     // Member 정보를 가지고 AccessToken, RefreshToken을 생성하는 메서드
-    public JwtToken generateToken(Authentication authentication) {
+    public JwtToken generateToken(Authentication authentication,Long memberId) {
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -46,6 +51,7 @@ public class JwtTokenProvider {
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
+                .claim("memberId",memberId)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -71,6 +77,7 @@ public class JwtTokenProvider {
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
+
 
         // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
@@ -113,8 +120,6 @@ public class JwtTokenProvider {
     }
 
 
-
-
     // accessToken
     private Claims parseClaims(String accessToken) {
         try {
@@ -125,6 +130,37 @@ public class JwtTokenProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
+        }
+    }
+
+    // 멤버아이디 비교해주는 함수
+    public Boolean compareMember(String header,Long userId){
+
+        if(header == null)
+        {
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+        }
+
+        Long tokenUserId;
+        String role;
+        String accessToken = header.replace("Bearer ", "");
+
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(accessToken)
+                .getBody();
+        tokenUserId = ((Integer)claims.get("memberId")).longValue();
+        role = (String)claims.get("auth");
+        System.out.println(role);
+
+        if(role.equals("ROLE_ADMIN"))
+        {
+            return true;
+        }
+        if(userId.equals(tokenUserId))
+            return true;
+        else {
+            throw new GlobalException(GlobalErrorCode._NO_MATCH_MEMBER);
         }
     }
 }
