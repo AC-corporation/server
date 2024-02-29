@@ -365,26 +365,26 @@ public class MemberService {
         member.changePassword(passwordEncoder.encode(request.getNewPassword()));
 
     }
-    @Transactional
-    public void createTestMember(MemberSignupRequestDto requestDto){
-        Member member;
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        member = Member.builder()
-                .email(requestDto.getEmail())
-                .password(password)
-                .username("test")
-                .university("test")
-                .major("test")
-                .classType("test")
-                .level(4)
-                .semester(2)
-                .admissionYear("test")
-                .detailMajor("test")
-                .prevSubjectIdList(new ArrayList<>())
-                .timetableList(new ArrayList<>())
-                .build();
-        member.getRoles().add(requestDto.getRole());
-
-        memberRepository.save(member);
-    }
+//    @Transactional
+//    public void createTestMember(MemberSignupRequestDto requestDto){
+//        Member member;
+//        String password = passwordEncoder.encode(requestDto.getPassword());
+//        member = Member.builder()
+//                .email(requestDto.getEmail())
+//                .password(password)
+//                .username("test")
+//                .university("test")
+//                .major("test")
+//                .classType("test")
+//                .level(4)
+//                .semester(2)
+//                .admissionYear("test")
+//                .detailMajor("test")
+//                .prevSubjectIdList(new ArrayList<>())
+//                .timetableList(new ArrayList<>())
+//                .build();
+//        member.getRoles().add(requestDto.getRole());
+//
+//        memberRepository.save(member);
+//    }
 }

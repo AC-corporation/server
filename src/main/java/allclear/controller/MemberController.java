@@ -134,10 +134,10 @@ public class MemberController {
         return ApiResponse.onSuccess("비밀번호변경에 성공하셨습니다.");
     }
 
-    @Operation(summary="testUser")
-    @PostMapping("/t")
-    public ApiResponse createTest(@RequestBody MemberSignupRequestDto requestDto){
-        memberService.createTestMember(requestDto);
-        return ApiResponse.onSuccess("테스트유저생성");
-    }
+//    @Operation(summary="testUser")
+//    @PostMapping("/t")
+//    public ApiResponse createTest(@RequestBody MemberSignupRequestDto requestDto){
+//        memberService.createTestMember(requestDto);
+//        return ApiResponse.onSuccess("테스트유저생성");
+//    }
 }
