@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/reissue").permitAll()
                 .requestMatchers("/user/test/createUser").permitAll()
                 .requestMatchers("/user/signup/emailIsValid").permitAll()
+                .requestMatchers("/user/t").permitAll()
                 // 이 밖에 모든 요청에 대해서 인증을 필요로 한다는 설정
                 .anyRequest().authenticated()
                 .and()
