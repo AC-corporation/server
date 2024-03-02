@@ -56,7 +56,7 @@ public class LoginUsaint {
         //사용자 정보 획득을 위한 로그인
         driver.get(loginUrl); // 로그인 접속
         try {
-            Thread.sleep(100); // 0.1초 동안 실행을 멈추기
+            Thread.sleep(500); // 0.1초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
