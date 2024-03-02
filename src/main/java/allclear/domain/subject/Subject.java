@@ -23,9 +23,9 @@ public class Subject {
 
 
     private String department; //개설 학과
-    @Column(name = "major_classification")
+    @Column(name = "major_classification",  length = 100000)
     private String majorClassification; //이수 구분(주전공)
-    @Column(name = "multi_major_classification")
+    @Column(name = "multi_major_classification",  length = 100000)
     private String multiMajorClassification; //이수 구분(다전공)
     @Column(name = "liberal_arts_classification")
     private String liberalArtsClassification; //교과 영역(교양 구분)
@@ -55,6 +55,22 @@ public class Subject {
         this.design = design;
         this.subjectTime = subjectTime;
         this.subjectTarget = subjectTarget;
+    }
+
+    public void addClassification(String majorClassification, String multiMajorClassification) {
+
+        if (majorClassification != null && !majorClassification.isEmpty()) {
+            if (!this.majorClassification.contains(majorClassification)) {
+                this.majorClassification = this.majorClassification + "," + majorClassification;
+            }
+        }
+
+        if (multiMajorClassification != null && !multiMajorClassification.isEmpty()) {
+            if (!this.multiMajorClassification.contains(multiMajorClassification)) {
+                this.multiMajorClassification = this.multiMajorClassification + "," + multiMajorClassification;
+            }
+        }
+
     }
 
     public void setClassInfoList(List<ClassInfo> classInfoList) {
