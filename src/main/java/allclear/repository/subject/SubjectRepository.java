@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpecificationExecutor<Subject> {
+public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpecificationExecutor<Subject>, SubjectRepositoryCustom {
     Page<Subject> findAll(Pageable pageable);
 }
