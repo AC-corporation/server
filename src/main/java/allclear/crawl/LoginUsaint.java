@@ -55,10 +55,25 @@ public class LoginUsaint {
 
         //사용자 정보 획득을 위한 로그인
         driver.get(loginUrl); // 로그인 접속
+        try {
+            Thread.sleep(100); // 0.1초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         WebElement memberNameElement = driver.findElement(By.name("userid")); // id 설정
         WebElement passwordElement = driver.findElement(By.name("pwd")); // password 설정
         memberNameElement.sendKeys(usaintId); // id 입력
+        try {
+            Thread.sleep(300); // 0.3초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         passwordElement.sendKeys(usaintPassword); // password 입력
+        try {
+            Thread.sleep(300); // 0.3초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
         loginButton.click(); // 로그인 버튼 클릭
 

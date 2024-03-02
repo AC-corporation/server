@@ -12,9 +12,8 @@ public class CrawalTest {
     @Test
     public static void main(String[] args) {
 
-        LoginUsaint loginUsaint = new LoginUsaint("20203058", "Jjw112233$");
-        Member member = new Member();
-        CrawlGradeAndCurriculumInfo crawlGradeAndCurriculumInfo = new CrawlGradeAndCurriculumInfo(loginUsaint.driver, member);
+
+        //CrawlGradeAndCurriculumInfo crawlGradeAndCurriculumInfo = new CrawlGradeAndCurriculumInfo(loginUsaint.driver, member);
         /*
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "비밀번호");
         Member member = crawlMemberInfo.getMember();

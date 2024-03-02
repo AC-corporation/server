@@ -30,6 +30,10 @@ public class ParsingSubject {
                 }
                 switch (j){
                     case 0 : // 이수 구분(주전공)
+                        if (!str.isEmpty() && str.substring(3).equals("건축학")) { // 건축학전공과 건축학부 구별위한 조치
+                            subject.setMajorClassification(str + "전공");
+                            break;
+                        }
                         subject.setMajorClassification(str);break;
                     case 1 : // 이수 구분(다전공)
                         subject.setMultiMajorClassification(str);break;
