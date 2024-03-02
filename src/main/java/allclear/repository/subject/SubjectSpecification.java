@@ -23,7 +23,9 @@ public class SubjectSpecification {
     private String category2;
     private String professor; //교수명
     private String department; //개설 학과
-    private String majorClassification; //이수 구분(주전공)
+    private String majorClassification; // 이수구분
+    private List<String> majorClassificationList; //이수 구분(주전공) 리스트
+    private String liberalArtsClassification; // 교과영역 구분
     private Double credit; //학점
     private String subjectTarget; //수강 대상
     private String year; //수강 학년
@@ -79,8 +81,18 @@ public class SubjectSpecification {
                     orPredicates.add(cb.like(root.get("majorClassification"), "%" + specification.getCategory2() + "%"));
                 predicates.add(cb.or(orPredicates.toArray(new Predicate[0])));
             }
+            if (specification.getMajorClassificationList() != null && !specification.getMajorClassificationList().isEmpty()) {
+                List<Predicate> majorClassificationPredicates = new ArrayList<>();
+                for (String majorClassification : specification.getMajorClassificationList()) {
+                    majorClassificationPredicates.add(cb.like(root.get("majorClassification"), "%" + majorClassification + "%"));
+                }
+                predicates.add(cb.or(majorClassificationPredicates.toArray(new Predicate[0])));
+            }
             if (specification.getMajorClassification() != null && !specification.getMajorClassification().isEmpty()) {
                 predicates.add(cb.like(root.get("majorClassification"), "%" + specification.getMajorClassification() + "%"));
+            }
+            if (specification.getLiberalArtsClassification() != null && !specification.getLiberalArtsClassification().isEmpty()) {
+                predicates.add(cb.like(root.get("liberalArtsClassification"), "%" + specification.getLiberalArtsClassification() + "%"));
             }
             if (specification.getCredit() != null) {
                 predicates.add(cb.like(root.get("credit"), "%" + specification.getCredit() + "%"));
