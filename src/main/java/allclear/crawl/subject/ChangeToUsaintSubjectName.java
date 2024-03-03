@@ -63,9 +63,9 @@ public class ChangeToUsaintSubjectName {
             case "기계공학부": changeList.add("기계"); break;
             case "산업·정보시스템공학과": changeList.add("산업·정보"); break;
             case "건축학부": changeList.add("건축학부"); break;
-            case "건축공학전공": changeList.add("건축공학"); break;
+            case "건축공학전공": changeList.add("건축공학전공"); break;
             case "건축학전공": changeList.add("건축학전공"); break;
-            case "실내건축전공": changeList.add("실내건축"); break;
+            case "실내건축전공": changeList.add("실내건축전공"); break;
             case "전자정보공학부 전자공학전공": changeList.add("전자공학"); break;
             case "전자정보공학부 IT융합전공": changeList.add("IT융합"); break;
             case "컴퓨터학부": changeList.add("컴퓨터"); break;
