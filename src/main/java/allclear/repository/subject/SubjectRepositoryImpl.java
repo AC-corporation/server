@@ -141,7 +141,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
             if (liberalArtsClassification == null)
                 liberalArtsClassification = "";
 
-            return subject.liberalArtsClassification.like(liberalArtsClassificationYear + "%" + liberalArtsClassification + "%");
+            return subject.liberalArtsClassification.like("%" + liberalArtsClassificationYear + "%" + liberalArtsClassification + "%");
         }
 
         return null;
