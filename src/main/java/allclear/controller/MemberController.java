@@ -116,7 +116,7 @@ public class MemberController {
 
     //회원탈퇴
     @Operation(summary = "회원탈퇴", description = "회원탈퇴")
-    @DeleteMapping("/{userId}")
+    @PostMapping("/{userId}")
     public ApiResponse delete(@PathVariable Long userId,@RequestBody DeleteMemberDto deleteMemberDto,@RequestHeader("Authorization") String authorizationHeader) {
         if(!jwtTokenProvider.compareMember(authorizationHeader,userId))
             return ApiResponse.onFailure(GlobalErrorCode._UNAUTHORIZED);
