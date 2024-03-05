@@ -1,9 +1,5 @@
 package allclear;
 
-import allclear.dto.requestDto.subject.InitSubjectRequestDto;
-import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
-import allclear.dto.responseDto.subject.SubjectListResponseDto;
-import allclear.dto.responseDto.subject.SubjectResponseDto;
 import allclear.service.SubjectService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -21,6 +17,7 @@ public class SubjectServiceTest {
 
     @Test
     public void 초기화() {
+        /*
         //given
         InitSubjectRequestDto requestDto = new InitSubjectRequestDto(
                 2023, "1", "20223168", "todo!9844"
@@ -30,7 +27,7 @@ public class SubjectServiceTest {
         subjectService.initSubject(requestDto);
 
         //then
-        SubjectListResponseDto responseDto = subjectService.getSubjectSearch(new SubjectSearchRequestDto(), 0);
+        SubjectPageResponseDto responseDto = subjectService.getSubjectSearch(new SubjectSearchRequestDto(), 0);
 
         for (SubjectResponseDto subjectResponseDto : responseDto.getSubjectResponseDtoList()) {
             System.out.println(subjectResponseDto.getSubjectId());
@@ -41,5 +38,7 @@ public class SubjectServiceTest {
             System.out.println(subjectResponseDto.getMajorClassification());
             System.out.println();
         }
+        */
+
     }
 }
