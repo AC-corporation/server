@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,6 +114,16 @@ public class TimetableService {
      */
     @Transactional
     public void deleteTimetable(Long id) {
-        timetableRepository.deleteById(id);
+        Timetable timetable = timetableRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        Member member = timetable.getMember();
+        List<Timetable> timetableList = member.getTimetableList();
+        if (member.getTimetableList().size() <= 1)
+            throw new GlobalException(GlobalErrorCode._FORBIDDEN);
+
+        timetableList.removeIf(deleteTimetable -> Objects.equals(deleteTimetable.getTimetableId(), id));
+        member.updateBasicTimetableId(timetableList.get(timetableList.size() - 1).getTimetableId());
+        memberRepository.flush();
+        timetableRepository.delete(timetable);
     }
 }
