@@ -44,6 +44,12 @@ public class TimetableController {
         return ApiResponse.onSuccess("시간표 조회에 성공했습니다", timetableService.getTimetable(timetableId));
     }
 
+    @Operation(summary = "시간표 전체 조회")
+    @GetMapping("/list/{userId}")
+    public ApiResponse getTimetableList(@PathVariable Long userId) {
+        return ApiResponse.onSuccess("시간표 전체 조회에 성공했습니다", timetableService.getTimetableList(userId));
+    }
+
     @Operation(summary = "시간표 삭제")
     @DeleteMapping("/{timetableId}")
     public ApiResponse deleteTimetable(@PathVariable Long timetableId) {

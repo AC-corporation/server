@@ -8,6 +8,7 @@ import allclear.domain.timetable.TimetableSubject;
 import allclear.dto.requestDto.timetable.CreateTimetableRequestDto;
 import allclear.dto.requestDto.timetable.TimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetable.UpdateTimetableRequestDto;
+import allclear.dto.responseDto.timetable.TimetableListResponseDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
@@ -106,6 +107,16 @@ public class TimetableService {
         timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
         memberRepository.flush();
         return new TimetableResponseDto(timetable);
+    }
+
+    /**
+     * 전체 시간표 조회
+     * Get
+     */
+    public TimetableListResponseDto getTimetableList(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+        return new TimetableListResponseDto(member.getTimetableList());
     }
 
     /**
