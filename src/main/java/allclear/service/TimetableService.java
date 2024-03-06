@@ -98,6 +98,7 @@ public class TimetableService {
         Timetable timetable = timetableRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
         return new TimetableResponseDto(timetable);
     }
 
