@@ -8,6 +8,7 @@ import allclear.domain.timetable.TimetableSubject;
 import allclear.dto.requestDto.timetable.CreateTimetableRequestDto;
 import allclear.dto.requestDto.timetable.TimetableSubjectRequestDto;
 import allclear.dto.requestDto.timetable.UpdateTimetableRequestDto;
+import allclear.dto.responseDto.timetable.TimetableListResponseDto;
 import allclear.dto.responseDto.timetable.TimetableResponseDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +51,8 @@ public class TimetableService {
                 .build();
         timetable.setMember(member);
         timetableRepository.save(timetable);
+        member.updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
         return timetable.getTimetableId();
     }
 
@@ -88,6 +93,8 @@ public class TimetableService {
         }
         timetable.setTableName(request.getTableName());
         timetableRepository.save(timetable);
+        timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
     }
 
     /**
@@ -97,7 +104,19 @@ public class TimetableService {
     public TimetableResponseDto getTimetable(Long id) {
         Timetable timetable = timetableRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
         return new TimetableResponseDto(timetable);
+    }
+
+    /**
+     * 전체 시간표 조회
+     * Get
+     */
+    public TimetableListResponseDto getTimetableList(Long id) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._ACCOUNT_NOT_FOUND));
+        return new TimetableListResponseDto(member.getTimetableList());
     }
 
     /**
@@ -106,6 +125,16 @@ public class TimetableService {
      */
     @Transactional
     public void deleteTimetable(Long id) {
-        timetableRepository.deleteById(id);
+        Timetable timetable = timetableRepository.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        Member member = timetable.getMember();
+        List<Timetable> timetableList = member.getTimetableList();
+        if (member.getTimetableList().size() <= 1)
+            throw new GlobalException(GlobalErrorCode._FORBIDDEN);
+
+        timetableList.removeIf(deleteTimetable -> Objects.equals(deleteTimetable.getTimetableId(), id));
+        member.updateBasicTimetableId(timetableList.get(timetableList.size() - 1).getTimetableId());
+        memberRepository.flush();
+        timetableRepository.delete(timetable);
     }
 }
