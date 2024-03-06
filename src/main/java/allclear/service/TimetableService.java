@@ -48,6 +48,8 @@ public class TimetableService {
                 .build();
         timetable.setMember(member);
         timetableRepository.save(timetable);
+        member.updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
         return timetable.getTimetableId();
     }
 
@@ -88,6 +90,8 @@ public class TimetableService {
         }
         timetable.setTableName(request.getTableName());
         timetableRepository.save(timetable);
+        timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
+        memberRepository.flush();
     }
 
     /**
