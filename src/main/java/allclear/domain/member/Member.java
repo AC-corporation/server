@@ -65,6 +65,9 @@ public class Member implements UserDetails {
     @Column(name = "timetable_list")
     private List<Timetable> timetableList = new ArrayList<>();
 
+    @Column(name = "basic_timetable_id")
+    private Long basicTimetableId;
+
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
 
@@ -112,6 +115,10 @@ public class Member implements UserDetails {
         this.timetableGenerator = timetableGenerator;
     }
 
+    public void updateBasicTimetableId(Long timetableId) {
+        this.basicTimetableId = timetableId;
+    }
+
     public void updateMember(String username, String university, String major, String classType,
                              int level, int semester, String admissionYear, String detailMajor) {
         this.username = username;
@@ -122,7 +129,6 @@ public class Member implements UserDetails {
         this.semester = semester;
         this.admissionYear = admissionYear;
         this.detailMajor = detailMajor;
-
     }
 
     public void setPrevSubjectIdList(List<Long> prevSubjectIdList) {

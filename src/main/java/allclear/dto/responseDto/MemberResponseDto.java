@@ -21,6 +21,7 @@ public class MemberResponseDto {
     private String classType; //분반
     private Integer level; //학년
     private Integer semester; //학기
+    private Long basicTimetableId; //기본 시간표 ID
 
     public MemberResponseDto(Member member){
         this.memberId = member.getMemberId();
@@ -32,5 +33,6 @@ public class MemberResponseDto {
         this.classType = member.getClassType();
         this.level = member.getLevel();
         this.semester = member.getSemester();
+        this.basicTimetableId = member.getBasicTimetableId();
     }
 }

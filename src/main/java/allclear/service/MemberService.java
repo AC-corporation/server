@@ -12,6 +12,7 @@ import allclear.domain.member.EmailCode;
 import allclear.domain.member.Member;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.requirement.RequirementComponent;
+import allclear.domain.timetable.Timetable;
 import allclear.domain.timetableGenerator.TimetableGenerator;
 import allclear.dto.requestDto.member.*;
 import allclear.dto.responseDto.MemberResponseDto;
@@ -25,6 +26,7 @@ import allclear.repository.grade.GradeRepository;
 import allclear.repository.member.EmailCodeRepository;
 import allclear.repository.member.MemberRepository;
 import allclear.repository.requirement.RequirementRepository;
+import allclear.repository.timetable.TimetableRepository;
 import allclear.repository.timetableGenerator.TimetableGeneratorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -141,6 +144,18 @@ public class MemberService {
                 .build();
         member.getRoles().add(request.getRole());
 
+        //기본 시간표 추가
+        Timetable timetable = Timetable
+                .builder()
+                .tableName("새 시간표")
+                .tableYear(LocalDate.now().getYear())
+                .semester(LocalDate.now().getMonthValue() <= 6 ? 1 : 2)
+                .timetableSubjectList(new ArrayList<>())
+                .build();
+        timetable.setMember(member);
+
+        memberRepository.save(member);
+        member.updateBasicTimetableId(timetable.getTimetableId());
         memberRepository.save(member);
         return member.getMemberId();
     }
@@ -365,26 +380,4 @@ public class MemberService {
         member.changePassword(passwordEncoder.encode(request.getNewPassword()));
 
     }
-//    @Transactional
-//    public void createTestMember(MemberSignupRequestDto requestDto){
-//        Member member;
-//        String password = passwordEncoder.encode(requestDto.getPassword());
-//        member = Member.builder()
-//                .email(requestDto.getEmail())
-//                .password(password)
-//                .username("test")
-//                .university("test")
-//                .major("test")
-//                .classType("test")
-//                .level(4)
-//                .semester(2)
-//                .admissionYear("test")
-//                .detailMajor("test")
-//                .prevSubjectIdList(new ArrayList<>())
-//                .timetableList(new ArrayList<>())
-//                .build();
-//        member.getRoles().add(requestDto.getRole());
-//
-//        memberRepository.save(member);
-//    }
 }

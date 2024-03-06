@@ -97,6 +97,7 @@ public class TimetableService {
     public TimetableResponseDto getTimetable(Long id) {
         Timetable timetable = timetableRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+        timetable.getMember().updateBasicTimetableId(timetable.getTimetableId());
         return new TimetableResponseDto(timetable);
     }
 
