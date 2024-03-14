@@ -54,6 +54,7 @@ public class SubjectSpecification {
                         cb.like(root.get("multiMajorClassification"), likeSearchString),
                         cb.like(root.get("engineeringCertification"), likeSearchString),
                         cb.like(root.get("subjectTarget"), likeSearchString),
+                        cb.like(root.get("liberalArtsClassification"), likeSearchString),
                         cb.like(root.get("subjectId").as(String.class), likeSearchString),
                         cb.like(root.get("credit").as(String.class), likeSearchString),
                         cb.like(classInfoJoin.get("professor"), likeSearchString),
@@ -123,6 +124,10 @@ public class SubjectSpecification {
                     );
                 }
             }
+            if (specification.getLiberalArtsClassification() != null && !specification.getLiberalArtsClassification().isEmpty()) {
+                predicates.add(cb.like(root.get("liberalArtsClassification"), "%" + specification.getLiberalArtsClassification() + "%"));
+            }
+            predicates.add(cb.notLike(root.get("subjectTarget"), "%" + "순수외국인입학생" + "%"));
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

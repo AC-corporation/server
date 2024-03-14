@@ -300,6 +300,11 @@ public class TimetableGeneratorService {
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         TimetableGenerator timetableGenerator = member.getTimetableGenerator();
 
+        //졸업요건 조회
+        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
+                .stream()
+                .filter(requirementComponent -> requirementComponent.getRequirementCategory().equals("교양선택")).toList();
+
         //조회할 과목 학년 저장
         Integer memberLevel = member.getLevel();
         if (LocalDate.now().getMonthValue() < 3 && member.getSemester() == 2)
@@ -307,23 +312,36 @@ public class TimetableGeneratorService {
         //조회할 과목 전공 저장
         String major = majorConvertor(member.getMajor());
 
+        List<Subject> subjectList = new ArrayList<>();
 
         //교양 선택 과목 조회
-        List<Subject> subjectList = new ArrayList<>(subjectRepository.findAll(SubjectSpecification.subjectFilter(
-                SubjectSpecification.builder()
-                        .majorClassification("교선")
-                        .year(String.valueOf(memberLevel))
-                        .build()
-        )));
+        for (RequirementComponent requirementComponent : requirementComponentList) {
+            if (requirementComponent.getRequirementArgument().contains("통합조건")
+                || requirementComponent.getRequirementResult().equals("부족")) {
+                String liberalArt = liberalArtConvertor(requirementComponent.getRequirementArgument());
+                subjectList.addAll((subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                        SubjectSpecification.builder()
+                                .majorClassification("교선")
+                                .year(String.valueOf(memberLevel))
+                                .liberalArtsClassification(liberalArt)
+                                .build()
+                ))));
+            }
+        }
+        if (subjectList.isEmpty()) {
+            subjectList.addAll((subjectRepository.findAll(SubjectSpecification.subjectFilter(
+                    SubjectSpecification.builder()
+                            .majorClassification("교선")
+                            .year(String.valueOf(memberLevel))
+                            .build()
+            ))));
+        }
 
         //불필요 과목 삭제
         removeUnnecessarySubject(subjectList, timetableGenerator.getPrevSubjectIdList());
         //과목 정렬
         sortSubject(subjectList, major, memberLevel);
-        //졸업요건 조회
-        List<RequirementComponent> requirementComponentList = member.getRequirement().getRequirementComponentList()
-                .stream()
-                .filter(requirementComponent -> requirementComponent.getRequirementCategory().equals("교양선택")).toList();
+
         return new Step3to6ResponseDto(requirementComponentList, subjectList);
     }
 
@@ -515,5 +533,13 @@ public class TimetableGeneratorService {
         subjectList.sort(Comparator
                 .comparing((Subject o) -> o.getSubjectTarget().contains(major) ? 0 : 1)
                 .thenComparing(o -> o.getSubjectTarget().contains(String.valueOf(level)) ? 0 : 1));
+    }
+
+    //교과영역 문자열 변환
+    private String liberalArtConvertor(String liberalArt) {
+        return liberalArt.contains("공동체/리더십") ? "공동체/리더십"
+                : liberalArt.contains("의사소통/글로벌") ? "의사소통/글로벌"
+                : liberalArt.contains("창의융합") ? "창의/융합"
+                : liberalArt;
     }
 }
