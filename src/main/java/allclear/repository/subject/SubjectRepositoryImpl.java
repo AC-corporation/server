@@ -65,18 +65,18 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
     }
 
     private BooleanExpression majorClassificationCondition(SubjectSearchRequestDto request) { // 이수구분 주전공
-        String courseClassification = request.getCourseClassification(); // 교과목 분류
+        String courseClassification = request.getSubjectClassification(); // 교과목 분류
         List<String> majorClassificationList = null;
         BooleanExpression totalCondition = null; // 최종 반환되는 조건
 
         if (courseClassification == null || courseClassification.isEmpty()) {
             return null;
         }
-        if (courseClassification.contains("전공") && request.getMajor() == null) // 교과목 분류가 전공일 경우 반드시 학과를 포함
+        if (courseClassification.contains("전공") && request.getMajorName() == null) // 교과목 분류가 전공일 경우 반드시 학과를 포함
             throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
-        if (request.getMajor() != null) { // 전기, 전필, 전선, 전공별
-            majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajor());
+        if (request.getMajorName() != null) { // 전기, 전필, 전선, 전공별
+            majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());
             if (majorClassificationList.isEmpty()) // 학과가 조회되지 않을 경우
                 throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
             if (courseClassification.equals("전공기초/필수")) {
@@ -119,13 +119,13 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
     }
 
     private BooleanExpression liberalArtsClassificationCondition(SubjectSearchRequestDto request){ // 교과영역 구분
-        String courseClassification = request.getCourseClassification(); // 교과목 분류
+        String courseClassification = request.getSubjectClassification(); // 교과목 분류
 
         if (courseClassification == null)
             return null;
 
         if (courseClassification.equals("교양필수")) {
-            String liberalArtsClassification = request.getRequiredSubjectLiberalArtsClassification();
+            String liberalArtsClassification = request.getRequiredElectivesClassification();
             if (liberalArtsClassification == null)
                 liberalArtsClassification = "";
             if (liberalArtsClassification.contains("전체"))
@@ -134,8 +134,8 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
             return subject.liberalArtsClassification.like("%" + liberalArtsClassification + "%");
         }
         else if (courseClassification.equals("교양선택")) {
-            String liberalArtsClassificationYear = request.getOptionalSubjectLiberalArtsClassificationYear();
-            String liberalArtsClassification = request.getOptionalSubjectLiberalArtsClassification();
+            String liberalArtsClassificationYear = request.getElectivesYear();
+            String liberalArtsClassification = request.getElectivesClassification();
             if (liberalArtsClassificationYear == null)
                 liberalArtsClassificationYear = "";
             if (liberalArtsClassification == null)
@@ -148,7 +148,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
     }
 
     private BooleanExpression subjectNameCondition(SubjectSearchRequestDto request){ // 교과영역 구분(과목명), 교필
-        String subjectName = request.getRequiredSubjectName();
+        String subjectName = request.getRequiredElectivesName();
 
         if (subjectName == null || subjectName.isEmpty()) {
             return null;
