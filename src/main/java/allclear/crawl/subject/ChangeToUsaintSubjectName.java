@@ -30,7 +30,7 @@ public class ChangeToUsaintSubjectName {
             case "예술창작학부 영화예술전공": changeList.add("영화예술"); break;
             case "스포츠학부": changeList.add("스포츠"); break;
             case "생활체육전공": changeList.add("생활체육전공"); break;
-            case "스프츠사이언스전공": changeList.add("스포츠사이언스전공"); break;
+            case "스포츠사이언스전공": changeList.add("스포츠사이언스전공"); break;
             case "수학과": changeList.add("수학"); break;
             case "물리학과": changeList.add("물리"); break;
             case "화학과": changeList.add("화학"); break;

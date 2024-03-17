@@ -25,7 +25,7 @@ public class LoginUsaint {
             loginUsaint(usaintId, usaintPassword);
         }
         catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
+            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
     }
 
@@ -56,10 +56,11 @@ public class LoginUsaint {
         //사용자 정보 획득을 위한 로그인
         driver.get(loginUrl); // 로그인 접속
         try {
-            Thread.sleep(500); // 0.1초 동안 실행을 멈추기
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         WebElement memberNameElement = driver.findElement(By.name("userid")); // id 설정
         WebElement passwordElement = driver.findElement(By.name("pwd")); // password 설정
         memberNameElement.sendKeys(usaintId); // id 입력
@@ -75,6 +76,7 @@ public class LoginUsaint {
             e.printStackTrace();
         }
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
+
         loginButton.click(); // 로그인 버튼 클릭
 
         try {
@@ -83,12 +85,8 @@ public class LoginUsaint {
             e.printStackTrace();
         }
 
-        try {
-            WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
-            homeButton.click(); // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭, 클릭이 안 될 경우 예외 처리
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
-        }
+        WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
+        homeButton.click(); // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭, 클릭이 안 될 경우 예외 처리
 
         try {
             Thread.sleep(3000); // 3초 동안 실행을 멈추기
