@@ -37,7 +37,7 @@ public class CrawlSubjectInfo {
             loginUsaint(usaintId, usaintPassword);
         }
         catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_UNAVAILABLE);
+            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
         }
 
         // 조회 연도 및 학기 설정
@@ -96,10 +96,26 @@ public class CrawlSubjectInfo {
 
         // 사용자 정보 획득을 위한 로그인
         driver.get(loginUrl); // 로그인 접속
+        try {
+            Thread.sleep(500); // 0.5초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         WebElement memberNameElement = driver.findElement(By.name("userid"));
         WebElement passwordElement = driver.findElement(By.name("pwd"));
         memberNameElement.sendKeys(usaintId); // 아이디 입력
+        try {
+            Thread.sleep(300); // 0.3초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         passwordElement.sendKeys(usaintPassword); // 비밀번호 입력
+        try {
+            Thread.sleep(300); // 0.3초 동안 실행을 멈추기
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         WebElement loginButton = driver.findElement(By.xpath("//*[@id=\"sLogin\"]/div/div[1]/form/div/div[2]/a"));
         loginButton.click(); // 로그인 버튼 클릭
 
@@ -109,19 +125,14 @@ public class CrawlSubjectInfo {
             e.printStackTrace();
         }
 
-        try {
-            WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
-            homeButton.click(); // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭, 클릭이 안 될 경우 예외 처리
-        } catch (Exception e) {
-            throw new GlobalException(GlobalErrorCode._USAINT_LOGIN_FAILED);
-        }
+        WebElement homeButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[1]"));
+        homeButton.click(); // 로그인이 정상적으로 완료되었는지 확인하기 위해 홈버튼 클릭, 클릭이 안 될 경우 예외 처리
 
         try {
-            Thread.sleep(1000); // 1초 동안 실행을 멈추기
+            Thread.sleep(2000); // 2초 동안 실행을 멈추기
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     public void setYearSemester(int year, String semester, Actions scroll){ // 크롤링 년도 및 학기 설정

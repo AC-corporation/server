@@ -91,7 +91,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
 
         assert courseClassification != null;
         if (courseClassification.contains("전공")) {
-            List<String> majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());;
+            List<String> majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());
             if (majorClassificationList.isEmpty()) // 학과가 조회되지 않을 경우
                 throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
@@ -101,22 +101,30 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
                             .or(subject.majorClassification.like("%" + "전필-" + majorClassification + "%"));
                     totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
-                return totalCondition;
             }
             else if (courseClassification.equals("전공선택")) {
                 for (String majorClassification : majorClassificationList) {
                     BooleanExpression condition = subject.majorClassification.like("%" + "전선-" + majorClassification + "%");
                     totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
-                return totalCondition;
             }
             else if (courseClassification.contains("전공별")) {
                 for (String majorClassification : majorClassificationList) {
-                    BooleanExpression condition = subject.majorClassification.like("%" + majorClassification + "%");
+                    BooleanExpression condition = subject.majorClassification.like("%" + "전선-" + majorClassification + "%")
+                            .or(subject.majorClassification.like("%" + "전필-" + majorClassification + "%"))
+                            .or(subject.majorClassification.like("%" + "전기-" + majorClassification + "%"))
+                            .or(subject.majorClassification.like("%" + "교직전공-" + majorClassification + "%"));
                     totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
-                return totalCondition;
             }
+            if (majorClassificationList.get(0).equals("회계")) {
+                assert totalCondition != null;
+                totalCondition = totalCondition.and(subject.majorClassification.notLike("전선-회계세무"))
+                        .and(subject.majorClassification.notLike("전필-회계세무"))
+                        .and(subject.majorClassification.notLike("전기-회계세무"))
+                        .and(subject.majorClassification.notLike("교직전공-회계세무"));
+            }
+            return totalCondition;
         }
         else if (courseClassification.equals("교양필수")) {
             return subject.majorClassification.like("%" + "교필" + "%");
