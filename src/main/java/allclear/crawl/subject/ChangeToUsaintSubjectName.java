@@ -23,7 +23,7 @@ public class ChangeToUsaintSubjectName {
             case "독어독문학과": changeList.add("독문"); break;
             case "불어불문학과": changeList.add("불문"); break;
             case "중어중문학과": changeList.add("중문"); break;
-            case "일어일문학과": changeList.add("일문"); changeList.add("일어일문"); break;
+            case "일어일문학과": changeList.add("일문"); break;
             case "철학과": changeList.add("철학"); break;
             case "사학과": changeList.add("사학"); break;
             case "예술창작학부 문예창작전공": changeList.add("문예창작"); break;

@@ -65,7 +65,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
     }
 
     private BooleanExpression majorClassificationCondition(SubjectSearchRequestDto request) { // 이수구분 주전공
-        String courseClassification = request.getSubjectClassification(); // 교과목 분류
+        String courseClassification = request.getCourseClassification(); // 교과목 분류
         List<String> majorClassificationList = null;
         BooleanExpression totalCondition = null; // 최종 반환되는 조건
 
@@ -119,7 +119,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
     }
 
     private BooleanExpression liberalArtsClassificationCondition(SubjectSearchRequestDto request){ // 교과영역 구분
-        String courseClassification = request.getSubjectClassification(); // 교과목 분류
+        String courseClassification = request.getCourseClassification(); // 교과목 분류
 
         if (courseClassification == null)
             return null;

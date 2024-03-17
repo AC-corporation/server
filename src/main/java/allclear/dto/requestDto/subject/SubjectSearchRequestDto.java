@@ -16,7 +16,7 @@ public class SubjectSearchRequestDto {
     @Nullable
     private String searchString; //아무 검색 기능
     @Nullable
-    private String subjectClassification; // 과목 분류(ex : 전공 기초/필수, 교양선택, 교양필수, 채플 ...)
+    private String courseClassification; // 과목 분류(ex : 전공 기초/필수, 교양선택, 교양필수, 채플 ...)
 
     // 전공 과목 해당 변수
     @Nullable
