@@ -91,7 +91,7 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
 
         assert courseClassification != null;
         if (courseClassification.contains("전공")) {
-            List<String> majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());;
+            List<String> majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());
             if (majorClassificationList.isEmpty()) // 학과가 조회되지 않을 경우
                 throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
