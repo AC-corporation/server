@@ -48,16 +48,16 @@ public class CrawlSubjectInfo {
         }
 
         // 크롤링
-        //try {
+        try {
             crawlMajorSubjects(scroll); // 학부 전공 크롤링
             crawlRequiredGeneralSubjects(scroll); // 교양 필수 크롤링
             crawlOptionalGeneralSubjects(scroll); // 교양 선택 크롤링
             crawlChapelSubjects(scroll); // 채플 크롤링
             crawlTeachingSubjects(scroll); // 교직 크롤링
-        //}
-        //catch (Exception e){
-        //    throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
-        //}
+        }
+        catch (Exception e){
+            throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
+        }
 
         // 파싱
         try {
@@ -90,7 +90,7 @@ public class CrawlSubjectInfo {
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
 
-        driver = new ChromeDriver();
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         scroll = new Actions(driver);
 
