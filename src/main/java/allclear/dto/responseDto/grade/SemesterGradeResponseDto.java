@@ -15,6 +15,7 @@ import java.util.List;
 public class SemesterGradeResponseDto {
     private Long semesterGradeId;
     private String semesterAverageGrade; // 평균 학점
+    private String semesterTitle; // 학기명
     private List<SemesterSubjectResponseDto> semesterSubjectDtoList; // 학기 과목 리스트
 
     public static SemesterGradeResponseDto from(SemesterGrade grade){
@@ -26,6 +27,7 @@ public class SemesterGradeResponseDto {
         return SemesterGradeResponseDto.builder()
                 .semesterGradeId(grade.getSemesterGradeId())
                 .semesterAverageGrade(grade.getSemesterAverageGrade())
+                .semesterTitle(grade.getSemesterTitle())
                 .semesterSubjectDtoList(semesterSubjectDtoList)
                 .build();
     }
