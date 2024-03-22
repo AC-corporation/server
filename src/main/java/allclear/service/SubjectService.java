@@ -18,7 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @EnableCaching
@@ -40,19 +42,22 @@ public class SubjectService {
         );
 
         List<Subject> subjectList = subjectInfo.getSubjects();
-        Subject subject;
-        Subject foundSubject;
+        Set<Long> subjectSet = new HashSet<>(); // 중복 크롤링된 과목 여부 확인 set
+        Subject subject; // 크롤링이 새로된 과목
+        Subject foundSubject; // 원래 DB에 존재하던 과목
         for (int i = 0; i < subjectList.size(); i++) {
             subject = subjectList.get(i);
             foundSubject = subjectRepository.findById(subject.getSubjectId()).orElse(null);
-            if (foundSubject == null) {
+            if (foundSubject == null) { // DB에 원래 존재하지 않던 과목인 경우, 바로 DB에 save
                 subjectRepository.save(subject);
+                subjectSet.add(subject.getSubjectId()); // set에 subjectId 저장
             }
             else
             {
                 // subject 업데이트
-                if (foundSubject.getSubjectName().equals(subject.getSubjectName())) // 동일 과목 이수 구분 추가
+                if (subjectSet.contains(subject.getSubjectId())) { // 중복 크롤링 된 과목일 경우, 이수구분만 추가
                     foundSubject.addClassification(subject.getMajorClassification(), subject.getMultiMajorClassification());
+                }
                 else {
                     foundSubject.updateSubject(subject.getSubjectId(), subject.getSubjectName(), subject.getMajorClassification(),
                             subject.getMultiMajorClassification(), subject.getLiberalArtsClassification(),
@@ -72,6 +77,7 @@ public class SubjectService {
                     for (ClassInfo classInfo : newClassInfoList) {
                         classInfo.setSubject(foundSubject);
                     }
+                    subjectSet.add(subject.getSubjectId()); // set에 subjectId 저장
                 }
                 subjectRepository.save(foundSubject);
             }
