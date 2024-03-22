@@ -61,13 +61,13 @@ public class Subject {
 
         if (majorClassification != null && !majorClassification.isEmpty()) {
             if (!this.majorClassification.contains(majorClassification)) {
-                this.majorClassification = this.majorClassification + "," + majorClassification;
+                this.majorClassification = this.majorClassification + "/" + majorClassification;
             }
         }
 
         if (multiMajorClassification != null && !multiMajorClassification.isEmpty()) {
             if (!this.multiMajorClassification.contains(multiMajorClassification)) {
-                this.multiMajorClassification = this.multiMajorClassification + "," + multiMajorClassification;
+                this.multiMajorClassification = this.multiMajorClassification + "/" + multiMajorClassification;
             }
         }
 

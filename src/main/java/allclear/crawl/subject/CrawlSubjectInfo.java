@@ -13,7 +13,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ 학기 변경의 경우
+ 단과대학 개수, 단과대학별 학과 개수, 교양필수 과목 개수, 채플 과목 개수가 변경되었는지 확인 필요
+ */
 public class CrawlSubjectInfo {
     @Getter
     private ArrayList<Subject> subjects = new ArrayList<>(); // subject 객체들 저장
@@ -22,6 +28,7 @@ public class CrawlSubjectInfo {
     private ArrayList<String> optionalGeneralSubjects = new ArrayList<>(); // 교양 선택 과목
     private ArrayList<String> chapelSubjects = new ArrayList<>(); // 채플 과목
     private ArrayList<String> teachingSubjects = new ArrayList<>(); // 교직 이수 과목
+    private final int majorUniversityCount = 11; // 단과대학 개수, 유세인트 수정 시 변경 필요
     private final int requiredGeneralSubjectCount = 34; // 교양 필수 과목 개수, 유세인트 변경 시 수정 필요
     private final int chapelSubjectCount = 3; // 채플 과목 개수, 현재 3개의 채플 과목 존재, 변경 시 수정 필요
 
@@ -30,6 +37,7 @@ public class CrawlSubjectInfo {
     WebElement target; // 크롤링 할 요소
     String targetPath; // 크롤링 할 요소가 있는 경로
     String targetText; // 크롤링 할 문자
+
 
     public CrawlSubjectInfo(Integer year, String semester, String usaintId, String usaintPassword) {
         // 로그인
@@ -58,6 +66,9 @@ public class CrawlSubjectInfo {
         catch (Exception e){
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
+
+        // 크롤링 후 웹 드라이버 닫기
+        closeDriver();
 
         // 파싱
         try {
@@ -90,7 +101,7 @@ public class CrawlSubjectInfo {
         // 로그인 페이지 주소
         String loginUrl = "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp";
 
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
         scroll = new Actions(driver);
 
@@ -209,7 +220,6 @@ public class CrawlSubjectInfo {
     }
 
     public void crawlMajorSubjects(Actions scroll){ // 학부전공별 과목 크롤링 환경 설정
-        int majorUniversityCount = 11; // 단과대학 개수, 유세인트 수정 시 변경 필요
         int majorCount = 0; // 단과대학별 학과 개수
 
         for(int i = 0;i < majorUniversityCount;i++){ // 단과대학 개수만큼 반복
@@ -226,7 +236,7 @@ public class CrawlSubjectInfo {
                 e.printStackTrace();
             }
 
-            switch (i){ // 단과대학별 학과 개수 설정
+            switch (i){ // 단과대학별 학과 개수 설정, 유세인트 수정 시 변경 필요
                 case 0 : majorCount = 12; break; // 인문대학, 스포츠학부 추가 검색 필요
                 case 1 : majorCount = 5; break; // 자연과학대학
                 case 2 : majorCount = 2; break; // 법과대학
@@ -267,7 +277,7 @@ public class CrawlSubjectInfo {
 
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5, scroll); // 크롤링 수행
+                        crawlTable(1,8, scroll); // 크롤링 수행
                     }
                 }
                 else if (i == 6 && j == 5) {
@@ -283,7 +293,7 @@ public class CrawlSubjectInfo {
                         }
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5, scroll); // 크롤링 수행
+                        crawlTable(1,8, scroll); // 크롤링 수행
                     }
                 }
                 else if (i == 7 && j == 4){
@@ -299,7 +309,7 @@ public class CrawlSubjectInfo {
                         }
                         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                         target.click(); // 검색 클릭
-                        crawlTable(1,5, scroll); // 크롤링 수행
+                        crawlTable(1,8, scroll); // 크롤링 수행
                     }
                 }
                 else{ // 그 외 모든 학과
@@ -311,7 +321,7 @@ public class CrawlSubjectInfo {
 
                     target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[1]/div/div/span/span/table/tbody/tr/td/table/tbody/tr/td[5]"));
                     target.click(); // 검색 클릭
-                    crawlTable(1,6, scroll); // 크롤링 수행
+                    crawlTable(1,8, scroll); // 크롤링 수행
                 }
             }
         }
@@ -397,7 +407,7 @@ public class CrawlSubjectInfo {
 
             target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[4]/div/div/table/tbody/tr/td[5]"));
             target.click(); // 검색 클릭
-            crawlTable(4,3, scroll); // 크롤링 수행
+            crawlTable(4,5, scroll); // 크롤링 수행
         }
     }
 
@@ -413,7 +423,7 @@ public class CrawlSubjectInfo {
 
         target = driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[3]/td/table/tbody/tr[3]/td/div[5]/div/div"));
         target.click(); // 검색 클릭
-        crawlTable(5,3, scroll); // 크롤링 수행
+        crawlTable(5,5, scroll); // 크롤링 수행
     }
 
     public void crawlTable(int subjectFlag, int timeSleepTime, Actions scroll){ // 테이블 크롤링 수행
@@ -483,8 +493,19 @@ public class CrawlSubjectInfo {
 
             }
         }
+
+        try {
+            Thread.sleep(1000); // 다음 항목으로 넘어가기 전, 1초 동안 실행을 멈추기
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
     public void closeDriver() {
+
+        // driver를 닫을 때 발생하는 예외 로그 처리
+        // Selenium 로거의 레벨 설정
+        Logger logger = Logger.getLogger("org.openqa.selenium");
+        logger.setLevel(Level.OFF);
         driver.quit();
     }
 }
