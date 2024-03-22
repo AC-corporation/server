@@ -20,6 +20,9 @@ public class SemesterGrade {
     @Column(name = "semester_grade_id")
     private Long semesterGradeId;
 
+    @Column(name = "semester__title")
+    private String semesterTitle; // 학기명 ex) 2024학년도1학기
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "grade_id")
     private Grade grade;
@@ -28,7 +31,6 @@ public class SemesterGrade {
     private String semesterAverageGrade;
 
     @OneToMany(mappedBy = "semesterGrade", cascade = CascadeType.ALL, orphanRemoval = true)
-//    @Column(name = "semester_subject_list")
     private List<SemesterSubject> semesterSubjectList;
 
     public void setGrade(Grade grade){
@@ -50,10 +52,11 @@ public class SemesterGrade {
     }
 
     //==생성 메서드==//
-    public static SemesterGrade createSemesterGrade(Grade grade, String semesterAverageGrade, ArrayList<SemesterSubject> semesterSubjects) {
+    public static SemesterGrade createSemesterGrade(Grade grade, String semesterAverageGrade, String semesterTitle, ArrayList<SemesterSubject> semesterSubjects) {
         SemesterGrade semesterGrade = SemesterGrade.builder()
                 .grade(grade)
                 .semesterAverageGrade(semesterAverageGrade)
+                .semesterTitle(semesterTitle)
                 .build();
         for (SemesterSubject semesterSubject : semesterSubjects) {
             semesterGrade.addSemesterSubject(semesterSubject);
