@@ -1,14 +1,15 @@
 package allclear.domain.requirement;
 
-import allclear.domain.member.Member;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
+
+import allclear.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -16,7 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Requirement {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "requirement_id")
     private Long requirementId;
 
@@ -27,24 +29,20 @@ public class Requirement {
     @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RequirementComponent> requirementComponentList;
 
-
-    //==연관관계 메서드==//
-    public void setMember(Member member){
+    // ==연관관계 메서드==//
+    public void setMember(Member member) {
         this.member = member;
         member.setRequirement(this);
     }
 
-    public void addRequirementComponent(RequirementComponent requirementComponent){
+    public void addRequirementComponent(RequirementComponent requirementComponent) {
         requirementComponent.setRequirement(this);
 
         if (requirementComponentList == null) {
             requirementComponentList = new ArrayList<>();
             requirementComponentList.add(requirementComponent);
-        }
-        else {
+        } else {
             requirementComponentList.add(requirementComponent);
         }
     }
 }
-
-

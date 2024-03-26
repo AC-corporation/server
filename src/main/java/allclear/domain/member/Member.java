@@ -1,23 +1,25 @@
 package allclear.domain.member;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import jakarta.persistence.*;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import allclear.domain.auth.RefreshToken;
 import allclear.domain.grade.Grade;
 import allclear.domain.requirement.Requirement;
 import allclear.domain.timetable.Timetable;
 import allclear.domain.timetableGenerator.TimetableGenerator;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -39,14 +41,17 @@ public class Member implements UserDetails {
 
     @Column(name = "member_name")
     private String username;
+
     private String university;
     private String major;
     private String detailMajor; // 세부 전공 ex) 건축학부 건축공학 전공
 
     @Column(name = "class_type")
-    private String classType; //분반
-    private int level; //학년
-    private int semester; //학기
+    private String classType; // 분반
+
+    private int level; // 학년
+    private int semester; // 학기
+
     @Column(name = "admission_year")
     private String admissionYear; // 입학연도
 
@@ -71,16 +76,13 @@ public class Member implements UserDetails {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
     private RefreshToken refreshToken;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
@@ -119,8 +121,15 @@ public class Member implements UserDetails {
         this.basicTimetableId = timetableId;
     }
 
-    public void updateMember(String username, String university, String major, String classType,
-                             int level, int semester, String admissionYear, String detailMajor) {
+    public void updateMember(
+            String username,
+            String university,
+            String major,
+            String classType,
+            int level,
+            int semester,
+            String admissionYear,
+            String detailMajor) {
         this.username = username;
         this.university = university;
         this.major = major;
@@ -135,10 +144,7 @@ public class Member implements UserDetails {
         this.prevSubjectIdList = prevSubjectIdList;
     }
 
-    public void changePassword(String newPassword){
-        this.password= newPassword;
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
-
 }
-
-

@@ -1,10 +1,11 @@
 package allclear.repository.grade;
 
-import allclear.domain.grade.Grade;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import allclear.domain.grade.Grade;
 
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long> {

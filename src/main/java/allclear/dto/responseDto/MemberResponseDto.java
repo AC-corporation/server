@@ -18,12 +18,12 @@ public class MemberResponseDto {
     private String memberName;
     private String university;
     private String major;
-    private String classType; //분반
-    private Integer level; //학년
-    private Integer semester; //학기
-    private Long basicTimetableId; //기본 시간표 ID
+    private String classType; // 분반
+    private Integer level; // 학년
+    private Integer semester; // 학기
+    private Long basicTimetableId; // 기본 시간표 ID
 
-    public MemberResponseDto(Member member){
+    public MemberResponseDto(Member member) {
         this.memberId = member.getMemberId();
         this.email = member.getEmail();
         this.password = member.getPassword();

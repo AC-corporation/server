@@ -1,18 +1,19 @@
 package allclear.crawl.Requirement;
 
+import java.util.ArrayList;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import allclear.domain.requirement.Requirement;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
 import lombok.Getter;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import java.util.ArrayList;
 
 public class CrawlRequirementInfo {
 
-    @Getter
-    private Requirement requirement;
+    @Getter private Requirement requirement;
 
     private ArrayList<String> requirementComponentList = new ArrayList<>();
 
@@ -27,27 +28,27 @@ public class CrawlRequirementInfo {
 
         try {
             crawlRequirementComponent();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_CRAWLING_FAILED);
         }
 
         try {
             requirement = ParsingRequirement.parsingRequirementString(requirementComponentList);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new GlobalException(GlobalErrorCode._USAINT_PARSING_FAILED);
         }
-
     }
 
     public void crawlRequirementComponent() { // 졸업요건 조회 크롤링 함수
 
         // 학사 관리 버튼 클릭
-        WebElement managementButton = driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
+        WebElement managementButton =
+                driver.findElement(
+                        By.xpath("/html/body/div[2]/div/div[2]/header/div[2]/div[1]/ul/li[3]"));
         managementButton.click();
         // 성적/졸업 버튼 클릭
-        WebElement gradeAndGraduationButton = driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
+        WebElement gradeAndGraduationButton =
+                driver.findElement(By.xpath("//*[@id=\"8d3da4feb86b681d72f267880ae8cef5\"]"));
         gradeAndGraduationButton.click();
 
         try {
@@ -57,7 +58,8 @@ public class CrawlRequirementInfo {
         }
 
         // 졸업사정표 버튼 클릭
-        WebElement graduationRequirementButton = driver.findElement(By.xpath("//*[@id=\"30f2303171c98bdf57db799d0b834646\"]/a"));
+        WebElement graduationRequirementButton =
+                driver.findElement(By.xpath("//*[@id=\"30f2303171c98bdf57db799d0b834646\"]/a"));
         graduationRequirementButton.click();
 
         try {
@@ -85,22 +87,26 @@ public class CrawlRequirementInfo {
         while (true) {
 
             for (int td = 1; td <= 6; td++) {
-                targetPath = "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[4]/td/" +
-                        "table/tbody[2]/tr/td/div/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[" + tr + "]/td[" + td + "]";
+                targetPath =
+                        "/html/body/table/tbody/tr/td/div/table/tbody/tr/td/table/tbody/tr[4]/td/"
+                                + "table/tbody[2]/tr/td/div/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr["
+                                + tr
+                                + "]/td["
+                                + td
+                                + "]";
                 try {
                     target = driver.findElement(By.xpath(targetPath));
                     targetText = target.getText().strip();
 
                     if (targetText.equals("채플")) // 채플까지 도달하면 종료
-                        exit_flag = true;
+                    exit_flag = true;
                 } catch (Exception e) {
                     targetText = ""; // 요소가 없는 경우
                     continue;
                 }
                 requirementComponentList.add(targetText);
             }
-            if (exit_flag)
-                break;
+            if (exit_flag) break;
             tr = tr + 1;
         }
 

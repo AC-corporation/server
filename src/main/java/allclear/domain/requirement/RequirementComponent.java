@@ -1,6 +1,7 @@
 package allclear.domain.requirement;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -10,7 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 public class RequirementComponent {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "requirement_component_id")
     private Long requirementComponentId;
 
@@ -19,22 +21,21 @@ public class RequirementComponent {
     private Requirement requirement;
 
     @Column(name = "requirement_category")
-    private String requirementCategory; //이수구분
+    private String requirementCategory; // 이수구분
 
     @Column(name = "requirement_argument")
-    private String requirementArgument; //졸업요건
+    private String requirementArgument; // 졸업요건
 
     @Column(name = "requirement_criteria")
-    private Double requirementCriteria; //기준값
+    private Double requirementCriteria; // 기준값
+
     @Column(name = "requirement_complete")
-    private Double requirementComplete; //계산값
+    private Double requirementComplete; // 계산값
 
     @Column(name = "requirement_result")
-    private String requirementResult; //중족여부
+    private String requirementResult; // 중족여부
 
-    public void setRequirement(Requirement requirement)
-    {
-        this.requirement =requirement;
+    public void setRequirement(Requirement requirement) {
+        this.requirement = requirement;
     }
-
 }

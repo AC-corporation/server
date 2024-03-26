@@ -1,19 +1,20 @@
 package allclear;
 
-import allclear.service.SubjectService;
 import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import allclear.service.SubjectService;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
 public class SubjectServiceTest {
-    @Autowired
-    private SubjectService subjectService;
+    @Autowired private SubjectService subjectService;
 
     @Test
     public void 초기화() {

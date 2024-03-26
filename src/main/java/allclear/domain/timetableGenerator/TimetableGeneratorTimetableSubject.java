@@ -1,6 +1,7 @@
 package allclear.domain.timetableGenerator;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

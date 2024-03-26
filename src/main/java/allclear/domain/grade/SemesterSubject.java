@@ -1,6 +1,7 @@
 package allclear.domain.grade;
 
 import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,15 +28,14 @@ public class SemesterSubject {
     @JoinColumn(name = "semester_grade_id")
     private SemesterGrade semesterGrade;
 
-
-    //==초기화 메서드==//
+    // ==초기화 메서드==//
     public void setSemesterGrade(SemesterGrade semesterGrade) {
         this.semesterGrade = semesterGrade;
     }
 
-
-    //==생성 메서드==//
-    public static SemesterSubject createSemesterSubject(String semesterSubjectName, String semesterSubjectScore) {
+    // ==생성 메서드==//
+    public static SemesterSubject createSemesterSubject(
+            String semesterSubjectName, String semesterSubjectScore) {
         return SemesterSubject.builder()
                 .semesterSubjectName(semesterSubjectName)
                 .semesterSubjectScore(semesterSubjectScore)

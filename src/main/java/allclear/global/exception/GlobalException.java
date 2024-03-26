@@ -7,14 +7,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
     private GlobalErrorCode errorCode;
 
-    public ErrorResponseDto getErrorReason(){
+    public ErrorResponseDto getErrorReason() {
         return this.errorCode.getReason();
     }
 
-    public ErrorResponseDto getErrorReasonHttpStatus(){
+    public ErrorResponseDto getErrorReasonHttpStatus() {
         return this.errorCode.getReasonHttpStatus();
     }
 }

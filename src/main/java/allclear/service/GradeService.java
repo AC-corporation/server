@@ -1,5 +1,8 @@
 package allclear.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import allclear.domain.grade.Grade;
 import allclear.domain.grade.SemesterGrade;
 import allclear.domain.member.Member;
@@ -11,8 +14,6 @@ import allclear.repository.grade.GradeRepository;
 import allclear.repository.grade.SemesterGradeRepository;
 import allclear.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,27 +25,26 @@ public class GradeService {
 
     private final SemesterGradeRepository semesterGradeRepository;
 
-
-    public Grade findByMemberId(Long memberId){
-        Member targetMember = memberRepository.findById(memberId).orElseThrow
-                (() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
+    public Grade findByMemberId(Long memberId) {
+        Member targetMember =
+                memberRepository
+                        .findById(memberId)
+                        .orElseThrow(() -> new GlobalException(GlobalErrorCode._NO_CONTENTS));
         return targetMember.getGrade();
     }
 
-     //전체 성적 조회
-    public GradeResponseDto getGrade(Long memberId){
+    // 전체 성적 조회
+    public GradeResponseDto getGrade(Long memberId) {
         Grade grade = findByMemberId(memberId);
-        if (grade == null)
-            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+        if (grade == null) throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return GradeResponseDto.from(grade);
     }
 
-
-    //학기별 성적 조회
-    public SemesterGradeResponseDto getSemesterGrade(Long semesterGradeId){
-        SemesterGrade semesterGrade = semesterGradeRepository.findById(semesterGradeId).orElse(null);
-        if (semesterGrade == null)
-            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+    // 학기별 성적 조회
+    public SemesterGradeResponseDto getSemesterGrade(Long semesterGradeId) {
+        SemesterGrade semesterGrade =
+                semesterGradeRepository.findById(semesterGradeId).orElse(null);
+        if (semesterGrade == null) throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return SemesterGradeResponseDto.from(semesterGrade);
     }
 }

@@ -1,10 +1,9 @@
 package allclear.dto.responseDto.grade;
 
+import java.util.List;
+
 import allclear.domain.grade.Grade;
 import lombok.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Builder
 @Data
@@ -16,11 +15,9 @@ public class GradeResponseDto {
     private String averageGrade; // 전체 평균 학점
     private List<SemesterGradeResponseDto> semesterGradeDtoList; // 학기별 성적 리스트
 
-    public static GradeResponseDto from (Grade grade){
-        List<SemesterGradeResponseDto> semesterGradeDtoList = grade.getSemesterGradeList()
-                .stream()
-                .map(SemesterGradeResponseDto::from)
-                .toList();
+    public static GradeResponseDto from(Grade grade) {
+        List<SemesterGradeResponseDto> semesterGradeDtoList =
+                grade.getSemesterGradeList().stream().map(SemesterGradeResponseDto::from).toList();
 
         return GradeResponseDto.builder()
                 .totalCredit(grade.getTotalCredit())
