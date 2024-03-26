@@ -1,12 +1,13 @@
 package allclear.domain.timetableGenerator;
 
-import allclear.domain.subject.ClassInfo;
-import allclear.domain.subject.Subject;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
+
+import allclear.domain.subject.ClassInfo;
+import allclear.domain.subject.Subject;
+import lombok.*;
 
 @Entity
 @Getter
@@ -21,9 +22,10 @@ public class TimetableGeneratorSubject {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subject_id")
-    private Subject subject; //null 인 경우 유저가 정의한 과목
+    private Subject subject; // null 인 경우 유저가 정의한 과목
+
     @Column(name = "subject_name")
-    private String subjectName; //과목 이름
+    private String subjectName; // 과목 이름
 
     @Setter
     @Column(name = "is_selected")
@@ -41,56 +43,49 @@ public class TimetableGeneratorSubject {
     @JoinColumn(name = "timetable_generator_id")
     private TimetableGenerator timetableGenerator;
 
-
-    //==연관관계 메서드==//
+    // ==연관관계 메서드==//
     public void addTimetableGeneratorClassInfo(TimetableGeneratorClassInfo classInfo) {
         this.timetableGeneratorClassInfoList.add(classInfo);
         classInfo.setTimetableGeneratorSubject(this);
     }
 
+    // ==생성 메서드==//
 
-    //==생성 메서드==//
-
-    /**
-     * 실제 과목
-     */
-    public static TimetableGeneratorSubject createActualTimetableGeneratorSubject(Subject subject, boolean isMajor) {
-        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject
-                .builder()
-                .subject(subject)
-                .subjectName(subject.getSubjectName())
-                .isMajor(isMajor)
-                .isSelected(false)
-                .timetableGeneratorClassInfoList(new ArrayList<>())
-                .build();
+    /** 실제 과목 */
+    public static TimetableGeneratorSubject createActualTimetableGeneratorSubject(
+            Subject subject, boolean isMajor) {
+        TimetableGeneratorSubject timetableGeneratorSubject =
+                TimetableGeneratorSubject.builder()
+                        .subject(subject)
+                        .subjectName(subject.getSubjectName())
+                        .isMajor(isMajor)
+                        .isSelected(false)
+                        .timetableGeneratorClassInfoList(new ArrayList<>())
+                        .build();
         for (ClassInfo classInfo : subject.getClassInfoList()) {
             timetableGeneratorSubject.addTimetableGeneratorClassInfo(
-                    TimetableGeneratorClassInfo
-                            .builder()
+                    TimetableGeneratorClassInfo.builder()
                             .professor(classInfo.getProfessor())
                             .classDay(classInfo.getClassDay())
                             .startTime(classInfo.getStartTime())
                             .endTime(classInfo.getEndTime())
                             .classRoom(classInfo.getClassRoom())
-                            .build()
-            );
+                            .build());
         }
         return timetableGeneratorSubject;
     }
 
-    /**
-     * 유저가 정의한 과목
-     */
-    public static TimetableGeneratorSubject createCustomTimetableGeneratorSubject(String subjectName,
-                                                                                  List<TimetableGeneratorClassInfo> classInfoList) {
-        TimetableGeneratorSubject timetableGeneratorSubject = TimetableGeneratorSubject
-                .builder()
-                .subject(null)
-                .subjectName(subjectName)
-                .isMajor(false)
-                .isSelected(false)
-                .timetableGeneratorClassInfoList(new ArrayList<>())
-                .build();
+    /** 유저가 정의한 과목 */
+    public static TimetableGeneratorSubject createCustomTimetableGeneratorSubject(
+            String subjectName, List<TimetableGeneratorClassInfo> classInfoList) {
+        TimetableGeneratorSubject timetableGeneratorSubject =
+                TimetableGeneratorSubject.builder()
+                        .subject(null)
+                        .subjectName(subjectName)
+                        .isMajor(false)
+                        .isSelected(false)
+                        .timetableGeneratorClassInfoList(new ArrayList<>())
+                        .build();
         for (TimetableGeneratorClassInfo classInfo : classInfoList) {
             timetableGeneratorSubject.addTimetableGeneratorClassInfo(classInfo);
         }

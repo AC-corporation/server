@@ -1,6 +1,5 @@
 spring:
   datasource:
-#   DB ?? ??? ?
     url: jdbc:h2:tcp://localhost/~/allclear
 #    url: jdbc:h2:mem:test
     username: sa
@@ -9,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
 #       show_sql: true
@@ -33,6 +32,9 @@ spring:
           timeout: 5000
           writetimeout: 5000
     auth-code-expiration-millis: 1800000
+
+jwt:
+  secret: 6c65196a00708c73ff2feecaf2df24666826b58d355bc9091c321bf1994f359f
 
 
 logging.level:

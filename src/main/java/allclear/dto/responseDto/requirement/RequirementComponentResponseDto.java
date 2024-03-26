@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequirementComponentResponseDto {
     private Long requirementComponentId;
-    private String requirementCategory; //이수구분
-    private String requirementArgument; //졸업요건
-    private Double requirementCriteria; //기준값
-    private Double requirementComplete; //계산값
-    private String requirementResult; //중족여부
+    private String requirementCategory; // 이수구분
+    private String requirementArgument; // 졸업요건
+    private Double requirementCriteria; // 기준값
+    private Double requirementComplete; // 계산값
+    private String requirementResult; // 중족여부
 
-    public static RequirementComponentResponseDto from(RequirementComponent component){
+    public static RequirementComponentResponseDto from(RequirementComponent component) {
         return RequirementComponentResponseDto.builder()
                 .requirementComponentId(component.getRequirementComponentId())
                 .requirementCategory(component.getRequirementCategory())
@@ -28,5 +28,4 @@ public class RequirementComponentResponseDto {
                 .requirementResult(component.getRequirementResult())
                 .build();
     }
-
 }

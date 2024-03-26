@@ -1,27 +1,31 @@
 package allclear.repository.subject;
 
+import static allclear.domain.subject.QSubject.subject;
+
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import allclear.crawl.subject.ChangeToUsaintSubjectName;
 import allclear.domain.subject.Subject;
 import allclear.dto.requestDto.subject.SubjectSearchRequestDto;
 import allclear.global.exception.GlobalException;
 import allclear.global.exception.code.GlobalErrorCode;
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import java.util.List;
-import static allclear.domain.subject.QSubject.subject;
 
 @RequiredArgsConstructor
-public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
+public class SubjectRepositoryImpl implements SubjectRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Subject> search(SubjectSearchRequestDto request, Pageable pageable){
+    public Page<Subject> search(SubjectSearchRequestDto request, Pageable pageable) {
         String courseClassification = request.getCourseClassification(); // 교과목 분류
         String year = request.getYear(); // 검색 년도
         String searchText = request.getSearchString(); // 검색 문자
@@ -29,26 +33,36 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
 
         checkInputValue(request); // 예외 처리 해주는 함수
         if (courseClassification != null && !courseClassification.isEmpty()) {
-            results =  queryFactory.
-                    select(subject).from(subject).where(yearCondition(request), anyCondition(request),
-                            majorClassificationCondition(request), liberalArtsClassificationCondition(request),
-                            subjectNameCondition(request))
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
-        }
-        else if (year != null || searchText != null){
-            results = queryFactory.select(subject).from(subject).where(yearCondition(request),
-                        anyCondition(request))
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-                        .fetchResults();
-        }
-        else {
-            results = queryFactory.select(subject).from(subject)
-                    .offset(pageable.getOffset())
-                    .limit(pageable.getPageSize())
-                    .fetchResults();
+            results =
+                    queryFactory
+                            .select(subject)
+                            .from(subject)
+                            .where(
+                                    yearCondition(request),
+                                    anyCondition(request),
+                                    majorClassificationCondition(request),
+                                    liberalArtsClassificationCondition(request),
+                                    subjectNameCondition(request))
+                            .offset(pageable.getOffset())
+                            .limit(pageable.getPageSize())
+                            .fetchResults();
+        } else if (year != null || searchText != null) {
+            results =
+                    queryFactory
+                            .select(subject)
+                            .from(subject)
+                            .where(yearCondition(request), anyCondition(request))
+                            .offset(pageable.getOffset())
+                            .limit(pageable.getPageSize())
+                            .fetchResults();
+        } else {
+            results =
+                    queryFactory
+                            .select(subject)
+                            .from(subject)
+                            .offset(pageable.getOffset())
+                            .limit(pageable.getPageSize())
+                            .fetchResults();
         }
 
         List<Subject> subjectList = results.getResults(); // 조회된 과목 리스트
@@ -57,23 +71,26 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
         return new PageImpl<>(subjectList, pageable, totalCount);
     }
 
-    private BooleanExpression yearCondition(SubjectSearchRequestDto request){ // 수강학년
+    private BooleanExpression yearCondition(SubjectSearchRequestDto request) { // 수강학년
         String year = request.getYear();
 
         if (year == null || year.isEmpty()) {
             return null;
         }
-        return subject.subjectTarget.like("%" + year + "%").or(subject.subjectTarget.like("%" + "전체" + "%"));
+        return subject.subjectTarget
+                .like("%" + year + "%")
+                .or(subject.subjectTarget.like("%" + "전체" + "%"));
     }
 
-    private BooleanExpression anyCondition(SubjectSearchRequestDto request){ // 검색문자
+    private BooleanExpression anyCondition(SubjectSearchRequestDto request) { // 검색문자
         String searchText = request.getSearchString();
 
         if (searchText == null || searchText.isEmpty()) {
             return null;
         }
 
-        return subject.subjectName.like("%" + searchText + "%")
+        return subject.subjectName
+                .like("%" + searchText + "%")
                 .or(subject.department.like("%" + searchText + "%"))
                 .or(subject.majorClassification.like("%" + searchText + "%"))
                 .or(subject.majorClassification.like("%" + searchText + "%"))
@@ -85,91 +102,104 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
                 .or(subject.classInfoList.any().classDay.like("%" + searchText + "%"));
     }
 
-    private BooleanExpression majorClassificationCondition(SubjectSearchRequestDto request) { // 이수구분 주전공
+    private BooleanExpression majorClassificationCondition(
+            SubjectSearchRequestDto request) { // 이수구분 주전공
         String courseClassification = request.getCourseClassification(); // 교과목 분류
         BooleanExpression totalCondition = null; // 최종 반환되는 조건
 
         assert courseClassification != null;
         if (courseClassification.contains("전공")) {
-            List<String> majorClassificationList = ChangeToUsaintSubjectName.change(request.getMajorName());
+            List<String> majorClassificationList =
+                    ChangeToUsaintSubjectName.change(request.getMajorName());
             if (majorClassificationList.isEmpty()) // 학과가 조회되지 않을 경우
-                throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
+            throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
 
             if (courseClassification.equals("전공기초/필수")) {
                 for (String majorClassification : majorClassificationList) {
-                    BooleanExpression condition = subject.majorClassification.like("%" + "전기-" + majorClassification + "%")
-                            .or(subject.majorClassification.like("%" + "전필-" + majorClassification + "%"));
-                    totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
+                    BooleanExpression condition =
+                            subject.majorClassification
+                                    .like("%" + "전기-" + majorClassification + "%")
+                                    .or(
+                                            subject.majorClassification.like(
+                                                    "%" + "전필-" + majorClassification + "%"));
+                    totalCondition =
+                            (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
-            }
-            else if (courseClassification.equals("전공선택")) {
+            } else if (courseClassification.equals("전공선택")) {
                 for (String majorClassification : majorClassificationList) {
-                    BooleanExpression condition = subject.majorClassification.like("%" + "전선-" + majorClassification + "%");
-                    totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
+                    BooleanExpression condition =
+                            subject.majorClassification.like(
+                                    "%" + "전선-" + majorClassification + "%");
+                    totalCondition =
+                            (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
-            }
-            else if (courseClassification.contains("전공별")) {
+            } else if (courseClassification.contains("전공별")) {
                 for (String majorClassification : majorClassificationList) {
-                    BooleanExpression condition = subject.majorClassification.like("%" + "전선-" + majorClassification + "%")
-                            .or(subject.majorClassification.like("%" + "전필-" + majorClassification + "%"))
-                            .or(subject.majorClassification.like("%" + "전기-" + majorClassification + "%"))
-                            .or(subject.majorClassification.like("%" + "교직전공-" + majorClassification + "%"));
-                    totalCondition = (totalCondition == null) ? condition : totalCondition.or(condition);
+                    BooleanExpression condition =
+                            subject.majorClassification
+                                    .like("%" + "전선-" + majorClassification + "%")
+                                    .or(
+                                            subject.majorClassification.like(
+                                                    "%" + "전필-" + majorClassification + "%"))
+                                    .or(
+                                            subject.majorClassification.like(
+                                                    "%" + "전기-" + majorClassification + "%"))
+                                    .or(
+                                            subject.majorClassification.like(
+                                                    "%" + "교직전공-" + majorClassification + "%"));
+                    totalCondition =
+                            (totalCondition == null) ? condition : totalCondition.or(condition);
                 }
             }
             if (majorClassificationList.get(0).equals("회계")) {
                 assert totalCondition != null;
-                totalCondition = totalCondition.and(subject.majorClassification.notLike("전선-회계세무"))
-                        .and(subject.majorClassification.notLike("전필-회계세무"))
-                        .and(subject.majorClassification.notLike("전기-회계세무"))
-                        .and(subject.majorClassification.notLike("교직전공-회계세무"));
+                totalCondition =
+                        totalCondition
+                                .and(subject.majorClassification.notLike("전선-회계세무"))
+                                .and(subject.majorClassification.notLike("전필-회계세무"))
+                                .and(subject.majorClassification.notLike("전기-회계세무"))
+                                .and(subject.majorClassification.notLike("교직전공-회계세무"));
             }
             return totalCondition;
-        }
-        else if (courseClassification.equals("교양필수")) {
+        } else if (courseClassification.equals("교양필수")) {
             return subject.majorClassification.like("%" + "교필" + "%");
-        }
-        else if (courseClassification.equals("교양선택")) {
+        } else if (courseClassification.equals("교양선택")) {
             return subject.majorClassification.like("%" + "교선" + "%");
-        }
-        else if (courseClassification.equals("채플")) {
+        } else if (courseClassification.equals("채플")) {
             return subject.majorClassification.like("%" + "채플" + "%");
-        }
-        else if (courseClassification.equals("교직")) {
+        } else if (courseClassification.equals("교직")) {
             return subject.majorClassification.like("%" + "교직" + "%");
         }
 
         return null;
     }
 
-    private BooleanExpression liberalArtsClassificationCondition(SubjectSearchRequestDto request){ // 교과영역 구분
+    private BooleanExpression liberalArtsClassificationCondition(
+            SubjectSearchRequestDto request) { // 교과영역 구분
         String courseClassification = request.getCourseClassification(); // 교과목 분류
 
         assert courseClassification != null;
         if (courseClassification.equals("교양필수")) {
             String liberalArtsClassification = request.getRequiredElectivesClassification();
-            if (liberalArtsClassification == null)
-                liberalArtsClassification = "";
-            if (liberalArtsClassification.contains("전체"))
-                return null;
+            if (liberalArtsClassification == null) liberalArtsClassification = "";
+            if (liberalArtsClassification.contains("전체")) return null;
 
             return subject.liberalArtsClassification.like("%" + liberalArtsClassification + "%");
-        }
-        else if (courseClassification.equals("교양선택")) {
+        } else if (courseClassification.equals("교양선택")) {
             String liberalArtsClassificationYear = request.getElectivesYear();
             String liberalArtsClassification = request.getElectivesClassification();
-            if (liberalArtsClassificationYear == null)
-                liberalArtsClassificationYear = "";
-            if (liberalArtsClassification == null)
-                liberalArtsClassification = "";
+            if (liberalArtsClassificationYear == null) liberalArtsClassificationYear = "";
+            if (liberalArtsClassification == null) liberalArtsClassification = "";
 
-            return subject.liberalArtsClassification.like("%" + liberalArtsClassificationYear + "%" + liberalArtsClassification + "%");
+            return subject.liberalArtsClassification.like(
+                    "%" + liberalArtsClassificationYear + "%" + liberalArtsClassification + "%");
         }
 
         return null;
     }
 
-    private BooleanExpression subjectNameCondition(SubjectSearchRequestDto request){ // 교과영역 구분(과목명), 교필
+    private BooleanExpression subjectNameCondition(
+            SubjectSearchRequestDto request) { // 교과영역 구분(과목명), 교필
         String subjectName = request.getRequiredElectivesName();
         String courseClassification = request.getCourseClassification(); // 교과목 분류
 
@@ -195,33 +225,35 @@ public class SubjectRepositoryImpl implements SubjectRepositoryCustom{
             if (courseClassification.contains("전공")) {
                 if (request.getMajorName() == null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getElectivesYear() != null || request.getElectivesClassification() != null)
+                if (request.getElectivesYear() != null
+                        || request.getElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getRequiredElectivesName() != null || request.getRequiredElectivesClassification() != null)
+                if (request.getRequiredElectivesName() != null
+                        || request.getRequiredElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-            }
-            else if (courseClassification.equals("교양필수")) {
+            } else if (courseClassification.equals("교양필수")) {
                 if (request.getMajorName() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getElectivesYear() != null || request.getElectivesClassification() != null)
+                if (request.getElectivesYear() != null
+                        || request.getElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-            }
-            else if (courseClassification.equals("교양선택")) {
+            } else if (courseClassification.equals("교양선택")) {
                 if (request.getMajorName() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getRequiredElectivesName() != null || request.getRequiredElectivesClassification() != null)
+                if (request.getRequiredElectivesName() != null
+                        || request.getRequiredElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-            }
-            else if (courseClassification.contains("채플") || courseClassification.contains("교직")) {
+            } else if (courseClassification.contains("채플") || courseClassification.contains("교직")) {
                 if (request.getMajorName() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getElectivesYear() != null || request.getElectivesClassification() != null)
+                if (request.getElectivesYear() != null
+                        || request.getElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
-                if (request.getRequiredElectivesName() != null || request.getRequiredElectivesClassification() != null)
+                if (request.getRequiredElectivesName() != null
+                        || request.getRequiredElectivesClassification() != null)
                     throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
             }
-        }
-        else {
+        } else {
             if (request.getMajorName() != null)
                 throw new GlobalException(GlobalErrorCode._BAD_REQUEST);
             if (request.getElectivesYear() != null)

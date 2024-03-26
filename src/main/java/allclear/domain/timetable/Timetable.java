@@ -1,11 +1,11 @@
 package allclear.domain.timetable;
 
-import allclear.domain.member.Member;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
+
+import allclear.domain.member.Member;
+import lombok.*;
 
 @Entity
 @Getter
@@ -20,10 +20,12 @@ public class Timetable {
 
     @Setter
     @Column(name = "table_name")
-    private String tableName; //시간표 이름
+    private String tableName; // 시간표 이름
+
     @Column(name = "table_year")
-    private Integer tableYear; //학년도
-    private Integer semester; //학기
+    private Integer tableYear; // 학년도
+
+    private Integer semester; // 학기
 
     @OneToMany(mappedBy = "timetable", cascade = CascadeType.ALL)
     @Column(name = "timetable_subject_list")
@@ -33,8 +35,7 @@ public class Timetable {
     @JoinColumn(name = "member_id")
     private Member member;
 
-
-    //==연관관계 메서드==//
+    // ==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
         member.getTimetableList().add(this);

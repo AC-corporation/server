@@ -1,19 +1,13 @@
 package allclear.crawl;
 
-import allclear.crawl.Grade.CrawlGradeAndCurriculumInfo;
-import allclear.domain.grade.Grade;
-import allclear.domain.member.Member;
-import allclear.domain.requirement.Requirement;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class CrawalTest {
     @Test
     public static void main(String[] args) {
 
-
-        //CrawlGradeAndCurriculumInfo crawlGradeAndCurriculumInfo = new CrawlGradeAndCurriculumInfo(loginUsaint.driver, member);
+        // CrawlGradeAndCurriculumInfo crawlGradeAndCurriculumInfo = new
+        // CrawlGradeAndCurriculumInfo(loginUsaint.driver, member);
         /*
         CrawlMemberInfo crawlMemberInfo = new CrawlMemberInfo("20203058", "비밀번호");
         Member member = crawlMemberInfo.getMember();
@@ -38,9 +32,6 @@ public class CrawalTest {
         }
 
          */
-
-
-
 
         /*
         ArrayList<String> tmpList = crawlMemberInfo.getRequirementComponentList();

@@ -1,11 +1,11 @@
 package allclear.dto.responseDto.timetableGenerator;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import allclear.domain.timetableGenerator.TimetableGeneratorSubject;
 import allclear.dto.responseDto.timetable.TimetableSubjectResponseDto;
 import lombok.Getter;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class Step7ResponseDto {
@@ -13,9 +13,9 @@ public class Step7ResponseDto {
     ;
 
     public Step7ResponseDto(List<TimetableGeneratorSubject> timetableGeneratorSubjectList) {
-        timetableGeneratorSubjectResponseDtoList = timetableGeneratorSubjectList
-                .stream()
-                .map(TimetableSubjectResponseDto::new)
-                .collect(Collectors.toList());
+        timetableGeneratorSubjectResponseDtoList =
+                timetableGeneratorSubjectList.stream()
+                        .map(TimetableSubjectResponseDto::new)
+                        .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package allclear.controller;
 
+import org.springframework.web.bind.annotation.*;
+
 import allclear.dto.requestDto.timetable.CreateTimetableRequestDto;
 import allclear.dto.requestDto.timetable.UpdateTimetableRequestDto;
 import allclear.global.exception.code.GlobalErrorCode;
@@ -8,7 +10,6 @@ import allclear.global.response.ApiResponse;
 import allclear.service.TimetableService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,14 +18,14 @@ public class TimetableController {
     private final TimetableService timetableService;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-    //==시간표==//
+    // ==시간표==//
     @Operation(summary = "시간표 생성")
     @PostMapping("/{userId}")
-    public ApiResponse createTimetable(@PathVariable Long userId,
-                                       @RequestBody CreateTimetableRequestDto requestDto
-    ,@RequestHeader("Authorization") String authorizationHeader) {
-        if(!jwtTokenProvider.compareMember(authorizationHeader,userId))
+    public ApiResponse createTimetable(
+            @PathVariable Long userId,
+            @RequestBody CreateTimetableRequestDto requestDto,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        if (!jwtTokenProvider.compareMember(authorizationHeader, userId))
             return ApiResponse.onFailure(GlobalErrorCode._UNAUTHORIZED);
         Long timetableId = timetableService.createTimetable(userId, requestDto);
         return ApiResponse.onSuccess("시간표 생성에 성공했습니다", timetableId);
@@ -32,8 +33,8 @@ public class TimetableController {
 
     @Operation(summary = "시간표 업데이트")
     @PutMapping("/{timetableId}")
-    public ApiResponse updateTimetable(@PathVariable Long timetableId,
-                                       @RequestBody UpdateTimetableRequestDto requestDto) {
+    public ApiResponse updateTimetable(
+            @PathVariable Long timetableId, @RequestBody UpdateTimetableRequestDto requestDto) {
         timetableService.updateTimetable(timetableId, requestDto);
         return ApiResponse.onSuccess("시간표 업데이트에 성공했습니다");
     }
@@ -47,7 +48,8 @@ public class TimetableController {
     @Operation(summary = "시간표 전체 조회")
     @GetMapping("/list/{userId}")
     public ApiResponse getTimetableList(@PathVariable Long userId) {
-        return ApiResponse.onSuccess("시간표 전체 조회에 성공했습니다", timetableService.getTimetableList(userId));
+        return ApiResponse.onSuccess(
+                "시간표 전체 조회에 성공했습니다", timetableService.getTimetableList(userId));
     }
 
     @Operation(summary = "시간표 삭제")

@@ -1,14 +1,15 @@
 package allclear.domain.grade;
 
-import allclear.domain.member.Member;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
+
+import allclear.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Builder
 @Entity
@@ -30,13 +31,12 @@ public class Grade {
     private List<SemesterGrade> semesterGradeList;
 
     @Column(name = "total_credit")
-    private Double totalCredit; //총 이수 학점
+    private Double totalCredit; // 총 이수 학점
 
     @Column(name = "average_grade")
     private String averageGrade;
 
-
-    //==연관관계 메서드==//
+    // ==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
         member.setGrade(this);
@@ -46,8 +46,7 @@ public class Grade {
         if (semesterGradeList == null) {
             semesterGradeList = new ArrayList<>();
             semesterGradeList.add(semesterGrade);
-        }
-        else {
+        } else {
             semesterGradeList.add(semesterGrade);
         }
     }

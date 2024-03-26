@@ -1,9 +1,9 @@
 package allclear.repository.timetable;
 
-import allclear.domain.timetable.TimetableSubject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import allclear.domain.timetable.TimetableSubject;
+
 @Repository
-public interface TimetableSubjectRepository extends JpaRepository<TimetableSubject, Long> {
-}
+public interface TimetableSubjectRepository extends JpaRepository<TimetableSubject, Long> {}

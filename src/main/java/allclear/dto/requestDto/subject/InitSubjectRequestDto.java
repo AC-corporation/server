@@ -1,6 +1,7 @@
 package allclear.dto.requestDto.subject;
 
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,12 +10,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class InitSubjectRequestDto {
-    @NotBlank
-    private Integer year;
-    @NotBlank
-    private String semester;
-    @NotBlank
-    private String usaintId;
-    @NotBlank
-    private String usaintPassword;
+    @NotBlank private Integer year;
+    @NotBlank private String semester;
+    @NotBlank private String usaintId;
+    @NotBlank private String usaintPassword;
 }

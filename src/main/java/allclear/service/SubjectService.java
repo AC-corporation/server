@@ -1,5 +1,16 @@
 package allclear.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import allclear.crawl.subject.CrawlSubjectInfo;
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
@@ -12,15 +23,6 @@ import allclear.global.exception.code.GlobalErrorCode;
 import allclear.repository.subject.ClassInfoRepository;
 import allclear.repository.subject.SubjectRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @EnableCaching
@@ -29,17 +31,15 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final ClassInfoRepository classInfoRepository;
 
-    /**
-     * 과목 생성(업데이트)
-     */
+    /** 과목 생성(업데이트) */
     @Transactional
     public void initSubject(InitSubjectRequestDto request) {
-        CrawlSubjectInfo subjectInfo = new CrawlSubjectInfo(
-                request.getYear(),
-                request.getSemester(),
-                request.getUsaintId(),
-                request.getUsaintPassword()
-        );
+        CrawlSubjectInfo subjectInfo =
+                new CrawlSubjectInfo(
+                        request.getYear(),
+                        request.getSemester(),
+                        request.getUsaintId(),
+                        request.getUsaintPassword());
 
         List<Subject> subjectList = subjectInfo.getSubjects();
         Set<Long> subjectSet = new HashSet<>(); // 중복 크롤링된 과목 여부 확인 set
@@ -51,18 +51,25 @@ public class SubjectService {
             if (foundSubject == null) { // DB에 원래 존재하지 않던 과목인 경우, 바로 DB에 save
                 subjectRepository.save(subject);
                 subjectSet.add(subject.getSubjectId()); // set에 subjectId 저장
-            }
-            else
-            {
+            } else {
                 // subject 업데이트
                 if (subjectSet.contains(subject.getSubjectId())) { // 중복 크롤링 된 과목일 경우, 이수구분만 추가
-                    foundSubject.addClassification(subject.getMajorClassification(), subject.getMultiMajorClassification());
-                }
-                else {
-                    foundSubject.updateSubject(subject.getSubjectId(), subject.getSubjectName(), subject.getMajorClassification(),
-                            subject.getMultiMajorClassification(), subject.getLiberalArtsClassification(),
-                            subject.getEngineeringCertification(), subject.getClassType(), subject.getCredit(),
-                            subject.getDesign(), subject.getSubjectTime(), subject.getSubjectTarget());
+                    foundSubject.addClassification(
+                            subject.getMajorClassification(),
+                            subject.getMultiMajorClassification());
+                } else {
+                    foundSubject.updateSubject(
+                            subject.getSubjectId(),
+                            subject.getSubjectName(),
+                            subject.getMajorClassification(),
+                            subject.getMultiMajorClassification(),
+                            subject.getLiberalArtsClassification(),
+                            subject.getEngineeringCertification(),
+                            subject.getClassType(),
+                            subject.getCredit(),
+                            subject.getDesign(),
+                            subject.getSubjectTime(),
+                            subject.getSubjectTarget());
 
                     // classInfo 연관관계 삭제 및 DB 삭제
                     List<ClassInfo> removeClassInfoList = foundSubject.getClassInfoList();
@@ -85,20 +92,16 @@ public class SubjectService {
         }
     }
 
-    //==과목 조회==//
+    // ==과목 조회==//
 
-    /**
-     * 단건 조회
-     * Get
-     */
+    /** 단건 조회 Get */
     public SubjectResponseDto getSubject(Long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
-        if (subject == null)
-            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+        if (subject == null) throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
         return new SubjectResponseDto(subject);
     }
 
-    //전체 조회
+    // 전체 조회
     public SubjectListResponseDto getSubjectList(int page) {
         Pageable pageable = PageRequest.of(page, 30);
 
@@ -109,18 +112,14 @@ public class SubjectService {
         return new SubjectListResponseDto(subjectPage);
     }
 
-    /**
-     * 검색 조회
-     * Get
-     */
+    /** 검색 조회 Get */
     @Transactional
     public SubjectListResponseDto getSubjectSearch(SubjectSearchRequestDto request, int page) {
 
         Pageable pageable = PageRequest.of(page, 30);
 
         Page<Subject> subjectPage = subjectRepository.search(request, pageable);
-        if (subjectPage.isEmpty())
-            throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
+        if (subjectPage.isEmpty()) throw new GlobalException(GlobalErrorCode._NO_CONTENTS);
 
         return new SubjectListResponseDto(subjectPage);
     }
