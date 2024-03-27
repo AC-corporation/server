@@ -3,6 +3,7 @@ package allclear.crawl.subject;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import allclear.domain.subject.ClassInfo;
 import allclear.domain.subject.Subject;
@@ -92,6 +93,7 @@ public class ParsingSubject {
                 }
                 i = i + 1;
             }
+            mergeClassInfo(subject.getClassInfoList());
             subjects.add(subject);
         }
         return subjects;
@@ -167,5 +169,37 @@ public class ParsingSubject {
                         .classRoom(classRoom)
                         .build();
         return classInfo;
+    }
+
+    // 20분 이내로 떨어져 있는 강의 시간대 병합
+    private static void mergeClassInfo(List<ClassInfo> classInfoList) {
+        List<ClassInfo> mergedClassInfoList = new ArrayList<>();
+
+        for (int i = 0; i < classInfoList.size(); ) {
+            ClassInfo current = classInfoList.get(i);
+
+            int j = i;
+            LocalTime endTime = current.getEndTime();
+            for (; j + 1 < classInfoList.size(); j++) {
+                ClassInfo next = classInfoList.get(j + 1);
+                if (!current.getClassDay().equals(next.getClassDay())
+                        || next.getStartTime().isAfter(endTime.plusMinutes(20))
+                        || next.getStartTime().isBefore(current.getStartTime())) break;
+                endTime = next.getEndTime();
+            }
+            ClassInfo mergedClassInfo =
+                    ClassInfo.builder()
+                            .classDay(current.getClassDay())
+                            .classRoom(current.getClassRoom())
+                            .startTime(current.getStartTime())
+                            .endTime(classInfoList.get(j).getEndTime())
+                            .build();
+            i = j + 1;
+            mergedClassInfoList.add(mergedClassInfo);
+        }
+
+        // classInfoList를 병합된 결과로 업데이트
+        classInfoList.clear();
+        classInfoList.addAll(mergedClassInfoList);
     }
 }
